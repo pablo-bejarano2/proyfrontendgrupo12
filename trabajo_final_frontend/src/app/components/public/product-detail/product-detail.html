@@ -1,0 +1,335 @@
+<div class="container-fluid p-4">
+  <!-- Breadcrumb con clases estándar de Bootstrap -->
+  <nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a href="#" class="text-decoration-none">Home</a>
+      </li>
+      <li class="breadcrumb-item">
+        <a href="#" class="text-decoration-none">Apparel</a>
+      </li>
+      <li class="breadcrumb-item">
+        <a href="#" class="text-decoration-none">Sweatshirts</a>
+      </li>
+      <li class="breadcrumb-item active" aria-current="page">
+        Forever
+        Lover
+        Sweat
+      </li>
+    </ol>
+  </nav>
+
+  <div class="row g-4">
+    <!-- Sección de imágenes -->
+    <div class="col-lg-7">
+      <div class="row">
+        <!-- Miniaturas con clases de Bootstrap -->
+        <div class="col-2">
+          <div class="d-flex flex-column gap-2" [class.opacity-100]="imagesInView">
+            @for (
+              thumbnail of thumbnails; track $index) {
+              <img [src]="thumbnail.src"
+                   [alt]="thumbnail.alt"
+                   class="img-thumbnail rounded cursor-pointer"
+                   [class.border-dark]="$index === activeThumbnailIndex"
+                   (click)="selectThumbnail($index)">
+            }
+          </div>
+        </div>
+
+        <!-- Imagen principal -->
+        <div class="col-10">
+          <div class="position-relative overflow-hidden rounded" #mainImageContainer>
+            @for (
+              image of mainImages; track $index) {
+              <img [src]="image"
+                   alt="Forever Lover Sweat"
+                   class="img-fluid rounded shadow-sm"
+                   [class.d-block]="$index === activeThumbnailIndex"
+                   [class.d-none]="$index !== activeThumbnailIndex"
+                   #mainProductImage>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Detalles del producto con clases de Bootstrap -->
+    <div class="col-lg-5" #productDetailsSection>
+      <div class="ps-lg-4">
+        <!-- Título del producto -->
+        <h1 class="display-4 fw-bold mb-3">
+          Forever
+          Lover
+          Sweat</h1>
+
+        <!-- Precio y guía de tallas -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <div class="fs-3 fw-bold">
+            $89.99
+          </div>
+          <a href="#" class="text-decoration-underline fw-bold">SIZE
+            GUIDE</a>
+        </div>
+
+        <!-- Selección de tallas con botones de Bootstrap -->
+        <div class="mb-4">
+          <div class="btn-group" role="group" aria-label="Size selection">
+            @for (
+              size of sizes; track size) {
+              <button type="button"
+                      class="btn"
+                      [class.btn-dark]="size === selectedSize"
+                      [class.btn-outline-dark]="size !== selectedSize"
+                      (click)="selectSize(size)">
+                {{ size }}
+              </button>
+            }
+          </div>
+        </div>
+
+        <!-- Botones de compra -->
+        <div class="d-flex gap-2 mb-4">
+          <button class="btn btn-primary flex-grow-1 text-white fw-bold py-2" (click)="addToBag()">
+            ADD
+            TO
+            BAG
+          </button>
+          <button class="btn btn-outline-dark"
+                  [class.btn-danger]="wishlistActive"
+                  [class.text-white]="wishlistActive"
+                  (click)="toggleWishlist()">
+            <i class="bi bi-heart"></i>
+          </button>
+        </div>
+
+        <!-- SKU del producto -->
+        <div class="text-muted small mb-4">
+          Product
+          SKU:
+          1035045S
+        </div>
+
+        <!-- Acordeón con componente nativo de Bootstrap -->
+        <div class="accordion accordion-flush" id="productAccordion">
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed fw-bold"
+                      type="button"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#details"
+                      aria-expanded="false"
+                      aria-controls="details">
+                DETAILS
+              </button>
+            </h2>
+            <div id="details" class="accordion-collapse collapse" data-bs-parent="#productAccordion">
+              <div class="accordion-body">
+                <p>
+                  Comfortable
+                  and
+                  stylish
+                  sweatshirt
+                  made
+                  from
+                  premium
+                  cotton
+                  blend.
+                  Features
+                  a
+                  relaxed
+                  fit
+                  and
+                  soft
+                  interior
+                  lining
+                  for
+                  maximum
+                  comfort.</p>
+                <ul class="list-unstyled">
+                  <li>
+                    <i class="bi bi-check2 me-2"></i>80%
+                    Cotton,
+                    20%
+                    Polyester
+                  </li>
+                  <li>
+                    <i class="bi bi-check2 me-2"></i>Machine
+                    washable
+                  </li>
+                  <li>
+                    <i class="bi bi-check2 me-2"></i>Relaxed
+                    fit
+                  </li>
+                  <li>
+                    <i class="bi bi-check2 me-2"></i>Ribbed
+                    cuffs
+                    and
+                    hem
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed fw-bold"
+                      type="button"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#shipping"
+                      aria-expanded="false"
+                      aria-controls="shipping">
+                SHIPPING
+                /
+                RETURNS
+              </button>
+            </h2>
+            <div id="shipping" class="accordion-collapse collapse" data-bs-parent="#productAccordion">
+              <div class="accordion-body">
+                <h6 class="fw-bold">
+                  Shipping</h6>
+                <p>
+                  Free
+                  shipping
+                  on
+                  orders
+                  over
+                  $50.
+                  Standard
+                  delivery
+                  takes
+                  3-5
+                  business
+                  days.</p>
+                <h6 class="fw-bold">
+                  Returns</h6>
+                <p>
+                  30-day
+                  return
+                  policy.
+                  Items
+                  must
+                  be
+                  in
+                  original
+                  condition
+                  with
+                  tags
+                  attached.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed fw-bold"
+                      type="button"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#payment"
+                      aria-expanded="false"
+                      aria-controls="payment">
+                BUY
+                NOW,
+                PAY
+                LATER
+              </button>
+            </h2>
+            <div id="payment" class="accordion-collapse collapse" data-bs-parent="#productAccordion">
+              <div class="accordion-body">
+                <p>
+                  Split
+                  your
+                  purchase
+                  into
+                  4
+                  interest-free
+                  payments
+                  with
+                  our
+                  payment
+                  partners.</p>
+                <ul class="list-unstyled">
+                  <li>
+                    <i class="bi bi-check2 me-2"></i>No
+                    interest
+                    or
+                    fees
+                    when
+                    you
+                    pay
+                    on
+                    time
+                  </li>
+                  <li>
+                    <i class="bi bi-check2 me-2"></i>25%
+                    due
+                    today,
+                    25%
+                    in
+                    2
+                    weeks,
+                    25%
+                    in
+                    4
+                    weeks,
+                    25%
+                    in
+                    6
+                    weeks
+                  </li>
+                  <li>
+                    <i class="bi bi-check2 me-2"></i>Instant
+                    approval
+                    decision
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <h1 class="display-1 fw-bold mb-3">RECOMMENDED</h1>
+    <div class="container">
+      <div class="row g-3">
+        @for (
+          product of products; track product.id; let
+          i = $index) {
+          <div class="col-12 col-md-4">
+            <div class="card text-center h-100 product-card"
+                 (mouseenter)="setHover(i, true)"
+                 (mouseleave)="setHover(i, false)">
+              <img [src]="hoveredIndex === i && product.images[1] ? product.images[1] : product.images[0]"
+                   class="card-img-top img-fluid"
+                   style="aspect-ratio: 1/1; object-fit: cover;"
+                   [alt]="product.name">
+              <div class="card-body d-flex flex-column justify-content-center position-relative">
+                <div class="product-content" [class.opacity-0]="hoveredIndex === i">
+                  <h5 class="card-title">{{ product.name }}</h5>
+                  <p class="card-text fw-bold text-primary">
+                    ${{ product.price }}</p>
+                </div>
+                <div class="product-hover position-absolute top-50 start-50 translate-middle w-100"
+                     [class.opacity-0]="hoveredIndex !== i">
+                  <h6 class="text-muted mb-2">
+                    Talles
+                    disponibles</h6>
+                  <div class="d-flex flex-wrap justify-content-center gap-1">
+                    @for (
+                      size of product.sizes; track size) {
+                      <span class="badge bg-secondary">
+                {{ size }}
+              </span>
+                    }
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+  </div>
+</div>

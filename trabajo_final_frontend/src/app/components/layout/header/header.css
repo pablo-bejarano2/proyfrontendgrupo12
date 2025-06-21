@@ -4,10 +4,12 @@
   padding: 1rem 2rem;
 }
 
-.logo-text {
-  font-weight: bold;
-  font-size: 1.5rem;
-  color: #00bcd4;
+.logo-img {
+  height: 120px;      
+  max-width: 150px;  
+  width: auto;       
+  object-fit: contain;
+  display: block;
 }
 
 .logo-text:hover {

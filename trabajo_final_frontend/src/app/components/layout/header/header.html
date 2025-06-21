@@ -1,1 +1,39 @@
-<p>header works!</p>
+<nav class="navbar navbar-expand-lg custom-navbar">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">
+      <img src="assets/logo.jpg" alt="oversizex Logo" height="40">
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link custom-link" href="#">Inicio</a>
+        </li>
+        <!-- Dropdown con hover y clic -->
+        <li class="nav-item dropdown hover-dropdown">
+          <a class="nav-link custom-link dropdown-toggle" href="#tienda" id="tiendaDropdown" role="button">
+            Tienda
+          </a>
+          <ul class="dropdown-menu custom-dropdown">
+            <li><a class="dropdown-item" href="#remeras">Remeras</a></li>
+            <li><a class="dropdown-item" href="#buzos">Buzos</a></li>
+            <li><a class="dropdown-item" href="#accesorios">Accesorios</a></li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link custom-link" href="#contacto">Contacto</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link custom-link" href="#politicas">Políticas</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link custom-link" href="#cuenta">Cuenta</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

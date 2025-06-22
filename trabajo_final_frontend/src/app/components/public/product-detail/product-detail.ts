@@ -41,24 +41,33 @@ export class ProductDetailComponent {
     {
       id: 1,
       name: 'Producto 1',
-      price: 89.99,
-      images: 'assets/buzo-blanco-espalda.webp',
+      price: 19999.99,
+      images: [
+        'assets/buzo-blanco-espalda.webp',
+        'assets/buzo-blanco-frente.webp'
+      ],
       sizes: ['S', 'M', 'L', 'XL'],
       hover: false
     },
     {
       id: 2,
       name: 'Producto 2',
-      price: 89.99,
-      images: 'assets/buzo-blanco-espalda.webp',
+      price: 19999.99,
+      images: [
+        'assets/buzo-blanco-espalda.webp',
+        'assets/buzo-blanco-frente.webp'
+      ],
       sizes: ['S', 'M', 'L', 'XL'],
       hover: false
     },
     {
       id: 3,
       name: 'Producto 1',
-      price: 89.99,
-      images: 'assets/buzo-blanco-espalda.webp',
+      price: 19999.99,
+      images: [
+        'assets/buzo-blanco-espalda.webp',
+        'assets/buzo-blanco-frente.webp'
+      ],
       sizes: ['S', 'M', 'L', 'XL'],
       hover: false
     },

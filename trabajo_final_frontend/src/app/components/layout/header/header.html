@@ -43,8 +43,26 @@
         <li class="nav-item">
           <a class="nav-link custom-link" href="#politicas">Políticas</a>
         </li>
-        <li class="nav-item">
+        <!--<li class="nav-item">
           <a class="nav-link custom-link" [routerLink]="['/form']">Cuenta</a>
+        </li>-->
+        <li class="nav-item" *ngIf="!loginService.usuarioLoggedIn()">
+          <button
+            class="btn btn-outline-info me-2"
+            [routerLink]="['/form']"
+            style="margin-top: 6px"
+          >
+            <i class="fa-solid fa-user"></i>
+          </button>
+        </li>
+        <li class="nav-item" *ngIf="loginService.usuarioLoggedIn()">
+          <button
+            class="btn btn-outline-danger"
+            style="margin-top: 6px"
+            (click)="logout()"
+          >
+            <i class="fa-solid fa-right-from-bracket"></i>
+          </button>
         </li>
       </ul>
     </div>

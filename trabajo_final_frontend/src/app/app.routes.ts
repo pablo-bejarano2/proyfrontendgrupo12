@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { Home } from './components/public/home/home';
-import { Formulario } from './components/formulario/formulario';
+import { Formulario } from './components/public/formulario/formulario';
 
 export const routes: Routes = [
   { path: 'home', component: Home },

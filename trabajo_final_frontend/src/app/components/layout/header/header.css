@@ -5,9 +5,9 @@
 }
 
 .logo-img {
-  height: 120px;      
-  max-width: 150px;  
-  width: auto;       
+  height: auto;
+  max-width: 150px;
+  width: auto;
   object-fit: contain;
   display: block;
 }
@@ -22,11 +22,10 @@
   font-weight: 500;
   position: relative;
   transition: color 0.3s ease;
-
 }
 
 .nav-link.custom-link::after {
-  content: '';
+  content: "";
   display: block;
   width: 0%;
   height: 2px;

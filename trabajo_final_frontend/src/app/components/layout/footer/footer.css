@@ -36,7 +36,6 @@
 .footer-right h4,
 .footer-center h4 {
   text-align: center;
-  width: 100%;
   margin-bottom: 10px;
 }
 
@@ -67,7 +66,7 @@
 
 .subscribe-form button {
   padding: 10px 20px;
-  background-color: #00bcd4; 
+  background-color: #00bcd4;
   color: #fff;
   font-weight: 600;
   border: none;
@@ -130,14 +129,14 @@
     gap: 32px;
     padding: 0 10px;
   }
+
   .footer-left,
   .footer-center,
   .footer-right {
     width: 100%;
-    min-width: unset;
     padding: 0;
-    margin-bottom: 0;
   }
+
   .footer-logo {
     width: 140px;
     height: 140px;
@@ -146,25 +145,14 @@
 
 @media (max-width: 768px) {
   .footer-content {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
     gap: 24px;
   }
-  .footer-left,
-  .footer-center,
-  .footer-right {
-    width: 100%;
-    margin-bottom: 0;
-  }
-  .footer-right h4 {
-    text-align: left;
-    width: 100%;
-  }
+
   .subscribe-form {
     flex-direction: column;
     align-items: center;
   }
+
   .subscribe-form input,
   .subscribe-form button {
     width: 80%;

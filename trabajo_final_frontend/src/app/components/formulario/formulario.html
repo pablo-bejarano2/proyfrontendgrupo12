@@ -1,0 +1,121 @@
+<div class="form">
+  <button
+    routerLink="/"
+    type="button"
+    class="btn btn-custom-back position-absolute"
+    style="top: 20px; left: 20px; z-index: 10"
+    (click)="irHome()"
+  >
+    <i class="fa-solid fa-arrow-left"></i>
+  </button>
+
+  <div class="logo text-center">
+    <img src="assets/logo.png" alt="Logo" />
+  </div>
+
+  <div class="login-card">
+    <ul class="nav nav-tabs mb-3" id="loginTabs" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button
+          class="nav-link active"
+          id="login-tab"
+          data-bs-toggle="tab"
+          data-bs-target="#login"
+          type="button"
+          role="tab"
+          (click)="cambiarAccion('login')"
+        >
+          Iniciar Sesión
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button
+          class="nav-link"
+          id="register-tab"
+          data-bs-toggle="tab"
+          data-bs-target="#register"
+          type="button"
+          role="tab"
+          (click)="cambiarAccion('register')"
+        >
+          Crear Cuenta
+        </button>
+      </li>
+    </ul>
+
+    <form>
+      <div class="mb-3" *ngIf="accion === 'register'">
+        <label for="nombres" class="form-label">Nombres</label>
+        <input
+          type="text"
+          class="form-control"
+          id="nombres"
+          placeholder="Tu nombre"
+        />
+      </div>
+      <div class="mb-3" *ngIf="accion === 'register'">
+        <label for="apellido" class="form-label">Apellido</label>
+        <input
+          type="text"
+          class="form-control"
+          id="apellido"
+          placeholder="Tu apellido"
+        />
+      </div>
+      <div class="mb-3" *ngIf="accion === 'register'">
+        <label for="email" class="form-label">Correo electrónico</label>
+        <input
+          type="email"
+          class="form-control"
+          id="email"
+          placeholder="Tu correo electrónico"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="username" class="form-label">Usuario</label>
+        <input
+          type="text"
+          class="form-control"
+          id="username"
+          placeholder="Tu usuario"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label">Contraseña</label>
+        <div class="input-group">
+          <input
+            [type]="mostrarPassword ? 'text' : 'password'"
+            class="form-control"
+            id="password"
+            placeholder="Tu contraseña"
+          />
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="cambioPassword()"
+            tabindex="-1"
+            style="border: none"
+          >
+            <i
+              class="fa-solid"
+              [ngClass]="mostrarPassword ? ' fa-eye-slash' : ' fa-eye'"
+            ></i>
+          </button>
+        </div>
+      </div>
+      <div
+        *ngIf="accion === 'login'"
+        class="d-flex justify-content-between align-items-center mb-3"
+      >
+        <div class="form-check">
+          <input type="checkbox" class="form-check-input" id="rememberMe" />
+          <label class="form-check-label" for="rememberMe">Recordarme</label>
+        </div>
+        <div class="form-text"><a href="#">¿Olvidaste tu contraseña?</a></div>
+      </div>
+      <button type="submit" class="btn btn-form w-100">
+        {{ accion === 'register' ? 'CREAR CUENTA' : 'INICIAR SESIÓN' }}
+      </button>
+    </form>
+  </div>
+</div>

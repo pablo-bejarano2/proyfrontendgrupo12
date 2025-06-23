@@ -1,0 +1,252 @@
+/* products.component.css */
+
+/* Page Header */
+.page-header {
+  text-align: center;
+  padding: 2rem 0;
+  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 2rem;
+}
+
+.page-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #000;
+  margin: 0;
+}
+
+/* Filter Bar */
+.search-box input {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 0.5rem;
+}
+
+.product-count {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  color: #666;
+}
+
+.filter-controls select {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+/* Product Cards */
+.product-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  background: white;
+  height: 100%;
+}
+
+.product-card:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.product-image-container {
+  position: relative;
+  width: 100%;
+  height: 280px;
+  overflow: hidden;
+  background: #f8f9fa;
+}
+
+.brand-logo {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 5px 8px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.product-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.product-card:hover .product-image {
+  transform: scale(1.05);
+}
+
+.product-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.product-card:hover .product-overlay {
+  opacity: 1;
+}
+
+.product-info {
+  padding: 1rem;
+}
+
+.product-name {
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0 0 0.5rem 0;
+  color: #000;
+  line-height: 1.2;
+}
+
+.product-price {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #666;
+  margin: 0;
+}
+
+/* Pagination */
+.pagination {
+  margin-top: 2rem;
+}
+
+.page-link {
+  color: #000;
+  border: 1px solid #ddd;
+  padding: 0.5rem 0.75rem;
+}
+
+.page-link:hover {
+  background-color: #f8f9fa;
+  border-color: #ddd;
+  color: #000;
+}
+
+.page-item.active .page-link {
+  background-color: #000;
+  border-color: #000;
+  color: white;
+}
+
+/* Footer */
+.site-footer {
+  background-color: #f8f9fa;
+  padding: 3rem 0 2rem 0;
+  margin-top: 4rem;
+  border-top: 1px solid #e0e0e0;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+.footer-content h5,
+.footer-content h6 {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 1rem;
+  color: #000;
+}
+
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-links li {
+  margin-bottom: 0.5rem;
+}
+
+.footer-links a {
+  color: #666;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+  color: #000;
+}
+
+.brand-logo-large {
+  text-align: center;
+  margin: 2rem 0 1rem 0;
+}
+
+.brand-logo-large h1 {
+  font-size: 4rem;
+  font-weight: 900;
+  letter-spacing: 4px;
+  color: #FFD700;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  margin: 0;
+  background: linear-gradient(45deg, #FFD700, #FFA500);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.copyright {
+  text-align: center;
+  color: #666;
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .page-title {
+    font-size: 2rem;
+  }
+
+  .product-count {
+    margin: 1rem 0;
+    justify-content: flex-start;
+  }
+
+  .filter-controls {
+    margin-bottom: 1rem;
+  }
+
+  .brand-logo-large h1 {
+    font-size: 2.5rem;
+    letter-spacing: 2px;
+  }
+}
+
+@media (max-width: 576px) {
+  .product-image-container {
+    height: 220px;
+  }
+
+  .page-title {
+    font-size: 1.5rem;
+    letter-spacing: 1px;
+  }
+}
+
+.form-control:focus,
+.form-select:focus {
+  box-shadow: none !important;
+  border-color: #000000; /* O el color que prefieras */
+}

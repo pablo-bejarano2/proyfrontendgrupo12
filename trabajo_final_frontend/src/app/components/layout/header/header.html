@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg custom-navbar">
   <div class="container-fluid">
     <a class="navbar-brand" href="#">
-      <img src="assets/logo.jpg" alt="oversizex Logo" class="logo-img" />
+      <img src="assets/logo-removebg.png" alt="oversizex Logo" class="logo-img" />
     </a>
 
     <button
@@ -19,7 +19,7 @@
     >
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link custom-link" href="#">Inicio</a>
+          <a class="nav-link custom-link" [routerLink]="['']">Inicio</a>
         </li>
         <!-- Dropdown con hover y clic -->
         <li class="nav-item dropdown hover-dropdown">
@@ -38,10 +38,10 @@
           </ul>
         </li>
         <li class="nav-item">
-          <a class="nav-link custom-link" href="#contacto">Contacto</a>
+          <a class="nav-link custom-link" [routerLink]="['/contact']">Contacto</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link custom-link" href="#politicas">Políticas</a>
+          <a class="nav-link custom-link">Políticas</a>
         </li>
         <li class="nav-item">
           <a class="nav-link custom-link" href="#cuenta">Cuenta</a>

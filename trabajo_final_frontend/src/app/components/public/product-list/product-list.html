@@ -5,7 +5,7 @@
     </div>
     <!-- Barra de búsqueda -->
     <div class="row mb-3">
-      <div class="col-12">
+      <div class="col-12 col-sm-6 col-md-4">
         <div class="input-group search-box">
           <span class="input-group-text bg-transparent border-0 border-bottom rounded-0 px-2">
             <!-- icono de búsqueda -->
@@ -20,46 +20,96 @@
       </div>
     </div>
     <!-- Grid de productos y controles a la derecha -->
-    <div class="col-md-3 mb-4">
-      <div class="accordion accordion-flush" id="productFilterAccordion">
-        <app-accordion color="#00bcd4">
-          <ng-template accordionItem title="Filtrar por Color">
-            @for (color of colors; track color) {
-              <div class="form-check mb-2">
-                <input class="form-check-input"
-                       type="checkbox"
-                       [value]="color"
-                       [(ngModel)]="selectedColors[color]"
-                       (change)="onFilterChange()"
-                       [id]="'color-' + color">
-                <label class="form-check-label" [for]="'color-' + color">
-                  {{ color | titlecase }}
-                </label>
-              </div>
-            }
-          </ng-template>
-          <ng-template accordionItem title="Filtrar por Precio">
-            <div class="d-flex align-items-center gap-2">
-              <input type="number" class="form-control" placeholder="Mín" [(ngModel)]="priceRange.min" (change)="onFilterChange()" min="0">
-              <span>-</span>
-              <input type="number" class="form-control" placeholder="Máx" [(ngModel)]="priceRange.max" (change)="onFilterChange()" min="0">
-            </div>
-          </ng-template>
-          <ng-template accordionItem title="Filtrar por Categoría">
-            <select class="form-select" [(ngModel)]="selectedCategory" (change)="onFilterChange()">
-              <option value="">Todas</option>
-              @for (category of categories; track category) {
-                <option [value]="category">{{ category | titlecase }}</option>
+    <button class="btn btn-outline-primary d-md-none mb-3" (click)="openFilterModal()">
+      <span class="navbar-toggler-icon"></span> Filter by
+    </button>
+    <div class="col-md-3 mb-4 d-none d-md-block">
+      <div class="col-md-3 mb-4">
+        <div class="accordion accordion-flush" id="productFilterAccordion">
+          <app-accordion color="#00bcd4">
+            <ng-template accordionItem title="Filtrar por Color">
+              @for (color of colors; track color) {
+                <div class="form-check mb-2">
+                  <input class="form-check-input"
+                         type="checkbox"
+                         [value]="color"
+                         [(ngModel)]="selectedColors[color]"
+                         (change)="onFilterChange()"
+                         [id]="'color-' + color">
+                  <label class="form-check-label" [for]="'color-' + color">
+                    {{ color | titlecase }}
+                  </label>
+                </div>
               }
-            </select>
-          </ng-template>
-        </app-accordion>
+            </ng-template>
+            <ng-template accordionItem title="Filtrar por Precio">
+              <div class="d-flex align-items-center gap-2">
+                <input type="number" class="form-control" placeholder="Mín" [(ngModel)]="priceRange.min" (change)="onFilterChange()" min="0">
+                <span>-</span>
+                <input type="number" class="form-control" placeholder="Máx" [(ngModel)]="priceRange.max" (change)="onFilterChange()" min="0">
+              </div>
+            </ng-template>
+            <ng-template accordionItem title="Filtrar por Categoría">
+              <select class="form-select" [(ngModel)]="selectedCategory" (change)="onFilterChange()">
+                <option value="">Todas</option>
+                @for (category of categories; track category) {
+                  <option [value]="category">{{ category | titlecase }}</option>
+                }
+              </select>
+            </ng-template>
+          </app-accordion>
+        </div>
+      </div>
+    </div>
+    <!-- Modal de filtros -->
+    <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-slideout">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="filterModalLabel">Filter by</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="accordion accordion-flush" id="productFilterAccordion">
+              <app-accordion color="#00bcd4">
+                <ng-template accordionItem title="Filtrar por Color">
+                  @for (color of colors; track color) {
+                    <div class="form-check mb-2">
+                      <input class="form-check-input"
+                             type="checkbox"
+                             [value]="color"
+                             [(ngModel)]="selectedColors[color]"
+                             (change)="onFilterChange()"
+                             [id]="'color-' + color">
+                      <label class="form-check-label" [for]="'color-' + color">
+                        {{ color | titlecase }}
+                      </label>
+                    </div>
+                  }
+                </ng-template>
+                <ng-template accordionItem title="Filtrar por Precio">
+                  <div class="d-flex align-items-center gap-2">
+                    <input type="number" class="form-control" placeholder="Mín" [(ngModel)]="priceRange.min" (change)="onFilterChange()" min="0">
+                    <span>-</span>
+                    <input type="number" class="form-control" placeholder="Máx" [(ngModel)]="priceRange.max" (change)="onFilterChange()" min="0">
+                  </div>
+                </ng-template>
+                <ng-template accordionItem title="Filtrar por Categoría">
+                  <select class="form-select" [(ngModel)]="selectedCategory" (change)="onFilterChange()">
+                    <option value="">Todas</option>
+                    @for (category of categories; track category) {
+                      <option [value]="category">{{ category | titlecase }}</option>
+                    }
+                  </select>
+                </ng-template>
+              </app-accordion>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
     <div class="col-md-9">
-      <!-- Header -->
-
       <!-- Controles de cantidad y orden -->
       <div class="row mb-4">
         <div class="col-md-6">

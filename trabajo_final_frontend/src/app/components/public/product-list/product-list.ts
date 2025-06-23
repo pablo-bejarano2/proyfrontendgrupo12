@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import {
-  DecimalPipe,
   TitleCasePipe
 } from '@angular/common';
 import {
@@ -8,10 +7,9 @@ import {
 } from '@angular/forms';
 import {
   Accordion,
-  AccordionItem,
   AccordionItemDirective
 } from '../../shared/accordion/accordion';
-
+import * as bootstrap from 'bootstrap';
 
 export interface Product {
   id: number;
@@ -168,9 +166,9 @@ export class ProductList {
       this.currentPage = page;
       // Lógica para cambiar la página
     }
-
-    getBrandLogo(brand: string): string {
-      return brand ? brand : '';
-    }
+  openFilterModal() {
+    const modal = new bootstrap.Modal(document.getElementById('filterModal')!);
+    modal.show();
+  }
 
 }

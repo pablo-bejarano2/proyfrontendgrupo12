@@ -88,6 +88,7 @@ export class ProductList {
     currentPage = 1;
     hoveredIndex: number | null = null;
     totalProducts: number = 0;
+    searchTerm: string = '';
   ngOnInit() {
       this.loadProducts();
       this.colors = this.getAllColors();
@@ -104,32 +105,6 @@ export class ProductList {
       this.totalProducts = this.products.length;
     }
 
-    onFilterChange() {
-      let filtered = [...this.allProducts];
-
-      // Filtrar por color
-      const activeColors = Object.keys(this.selectedColors).filter(c => this.selectedColors[c]);
-      if (activeColors.length) {
-        filtered = filtered.filter(p => p.colors.some(color => activeColors.includes(color)));
-      }
-
-      // Filtrar por precio
-      if (this.priceRange.min) {
-        filtered = filtered.filter(p => p.price >= this.priceRange.min);
-      }
-      if (this.priceRange.max) {
-        filtered = filtered.filter(p => p.price <= this.priceRange.max);
-      }
-
-      // Filtrar por categoría
-      if (this.selectedCategory) {
-        filtered = filtered.filter(p => p.category === this.selectedCategory);
-      }
-
-      this.products = filtered;
-      this.totalProducts = filtered.length;
-      this.currentPage = 1;
-    }
 
     onSortChange(event: any) {
       const value = event.target.value;
@@ -169,6 +144,42 @@ export class ProductList {
   openFilterModal() {
     const modal = new bootstrap.Modal(document.getElementById('filterModal')!);
     modal.show();
+  }
+
+  onFilterChange() {
+    let filtered = [...this.allProducts];
+
+    // Filtrar por término de búsqueda
+    if (this.searchTerm && this.searchTerm.trim() !== '') {
+      const term = this.searchTerm.trim().toLowerCase();
+      filtered = filtered.filter(p =>
+        p.name.toLowerCase().includes(term) ||
+        (p.brand && p.brand.toLowerCase().includes(term))
+      );
+    }
+
+    // Filtrar por color
+    const activeColors = Object.keys(this.selectedColors).filter(c => this.selectedColors[c]);
+    if (activeColors.length) {
+      filtered = filtered.filter(p => p.colors.some(color => activeColors.includes(color)));
+    }
+
+    // Filtrar por precio
+    if (this.priceRange.min) {
+      filtered = filtered.filter(p => p.price >= this.priceRange.min);
+    }
+    if (this.priceRange.max) {
+      filtered = filtered.filter(p => p.price <= this.priceRange.max);
+    }
+
+    // Filtrar por categoría
+    if (this.selectedCategory) {
+      filtered = filtered.filter(p => p.category === this.selectedCategory);
+    }
+
+    this.products = filtered;
+    this.totalProducts = filtered.length;
+    this.currentPage = 1;
   }
 
 }

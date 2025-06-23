@@ -1,69 +1,9 @@
-import { Component } from '@angular/core';
-import {
-  TitleCasePipe
-} from '@angular/common';
-import {
-  FormsModule
-} from '@angular/forms';
-import {
-  Accordion,
-  AccordionItemDirective
-} from '../../shared/accordion/accordion';
+import { Component, OnInit } from '@angular/core';
+import { TitleCasePipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { Accordion, AccordionItemDirective } from '../../shared/accordion/accordion';
 import * as bootstrap from 'bootstrap';
-
-export interface Product {
-  id: number;
-  name: string;
-  price: number;
-  brand: string;
-  images: string[];
-  sizes: string[];
-  colors: string[];
-  hover: boolean;
-  category?: string; // Si tienes categoría
-}
-export const Products = [
-  {
-    id: 1,
-    name: 'Producto 1',
-    price: 19999.99,
-    brand: 'Producto 1',
-    images: [
-      'assets/buzo-blanco-espalda.webp',
-      'assets/buzo-blanco-frente.webp'
-    ],
-    sizes: ['S', 'M', 'L', 'XL'],
-    colors: ['black', 'withe'],
-    hover: false
-  },
-  {
-    id: 2,
-    name: 'Producto 2',
-    price: 19999.99,
-    brand: 'Producto 2',
-    images: [
-      'assets/buzo-blanco-espalda.webp',
-      'assets/buzo-blanco-frente.webp'
-    ],
-    sizes: ['S', 'M', 'L', 'XL'],
-    colors: ['black', 'withe'],
-    hover: false
-  },
-  {
-    id: 3,
-    name: 'Producto 1',
-    brand: 'Producto 1',
-    price: 19999.99,
-    images: [
-      'assets/buzo-blanco-espalda.webp',
-      'assets/buzo-blanco-frente.webp'
-    ],
-    sizes: ['S', 'M', 'L', 'XL'],
-    colors: ['black', 'withe'],
-    hover: false
-  },
-]
-
+import { ProductoService, Producto } from '../../../services/producto';
 
 @Component({
   selector: 'app-product-list',
@@ -72,75 +12,98 @@ export const Products = [
     TitleCasePipe,
     Accordion,
     AccordionItemDirective
-
   ],
   templateUrl: './product-list.html',
   styleUrl: './product-list.css'
 })
-export class ProductList {
-  products: Product[] = Products;
-    allProducts: Product[] = Products;
-    colors: string[] = [];
-    categories: string[] = [];
-    selectedColors: { [color: string]: boolean } = {};
-    priceRange: { min: number; max: number } = { min: 0, max: 0 };
-    selectedCategory: string = '';
-    currentPage = 1;
-    hoveredIndex: number | null = null;
-    totalProducts: number = 0;
-    searchTerm: string = '';
-  ngOnInit() {
-      this.loadProducts();
-      this.colors = this.getAllColors();
-      this.categories = this.getAllCategories();
-      this.selectedColors = {};
-      this.priceRange = { min: 0, max: 0 };
-      this.selectedCategory = '';
-      this.currentPage = 1;
-      this.hoveredIndex = -1;
-    }
+export class ProductList implements OnInit {
+  // Productos originales y filtrados
+  allProducts: Producto[] = [];
+  products: Producto[] = [];
 
-    loadProducts() {
-      this.products = [...this.allProducts];
-      this.totalProducts = this.products.length;
-    }
+  // Filtros
+  colors: string[] = [];
+  categories: string[] = [];
+  selectedColors: { [color: string]: boolean } = {};
+  priceRange: { min: number; max: number } = { min: 0, max: 0 };
+  selectedCategory: string = '';
+  currentPage = 1;
+  hoveredIndex: number | null = null;
+  totalProducts: number = 0;
+  searchTerm: string = '';
 
+  constructor(private productoService: ProductoService) {}
 
-    onSortChange(event: any) {
-      const value = event.target.value;
-      if (value === 'name') {
-        this.products.sort((a, b) => a.name.localeCompare(b.name));
-      } else if (value === 'price-low') {
-        this.products.sort((a, b) => a.price - b.price);
-      } else if (value === 'price-high') {
-        this.products.sort((a, b) => b.price - a.price);
+  ngOnInit(): void {
+    this.loadProducts();
+  }
+
+  loadProducts() {
+    this.productoService.obtenerProductos().subscribe(
+      (productos) => {
+        this.allProducts = productos;
+        this.products = [...productos];
+        this.totalProducts = this.products.length;
+
+        // Extraer colores únicos
+        this.colors = this.getAllColors();
+
+        // Extraer categorías únicas
+        this.categories = this.getAllCategories();
+
+        // Inicializar filtros
+        this.selectedColors = {};
+        this.priceRange = {
+          min: 0,
+          max: Math.max(...productos.map(p => p.precio), 0)
+        };
+      },
+      (error) => {
+        console.error('Error al obtener productos:', error);
       }
-    }
+    );
+  }
 
-    setHover(index: number, isHover: boolean) {
-      this.hoveredIndex = isHover ? index : -1;
+  onSortChange(event: any) {
+    const value = event.target.value;
+    if (value === 'name') {
+      this.products.sort((a, b) => a.nombre.localeCompare(b.nombre));
+    } else if (value === 'price-low') {
+      this.products.sort((a, b) => a.precio - b.precio);
+    } else if (value === 'price-high') {
+      this.products.sort((a, b) => b.precio - a.precio);
     }
+  }
 
-    trackByProduct(product: Product) {
-      return product.id;
-    }
+  setHover(index: number, isHover: boolean) {
+    this.hoveredIndex = isHover ? index : -1;
+  }
 
-    getAllColors(): string[] {
-      const colorSet = new Set<string>();
-      this.allProducts.forEach(p => p.colors.forEach(c => colorSet.add(c)));
-      return Array.from(colorSet);
-    }
+  trackByProduct(product: Producto) {
+    return product._id;
+  }
 
-    getAllCategories(): string[] {
-      const categorySet = new Set<string>();
-      this.allProducts.forEach(p => p.category && categorySet.add(p.category));
-      return Array.from(categorySet);
-    }
+  getAllColors(): string[] {
+    const colorSet = new Set<string>();
+    this.allProducts.forEach(p => colorSet.add(p.color));
+    return Array.from(colorSet);
+  }
 
-    onPageChange(page: number): void {
-      this.currentPage = page;
-      // Lógica para cambiar la página
-    }
+  getAllCategories(): string[] {
+    const categorySet = new Set<string>();
+    this.allProducts.forEach(p => {
+      if (p.categoria && p.categoria.nombre) {
+        categorySet.add(p.categoria.nombre);
+      }
+    });
+    return Array.from(categorySet);
+  }
+
+  onPageChange(page: number): void {
+    this.currentPage = page;
+    // Lógica para cambiar la página
+  }
+
   openFilterModal() {
     const modal = new bootstrap.Modal(document.getElementById('filterModal')!);
     modal.show();
@@ -153,33 +116,34 @@ export class ProductList {
     if (this.searchTerm && this.searchTerm.trim() !== '') {
       const term = this.searchTerm.trim().toLowerCase();
       filtered = filtered.filter(p =>
-        p.name.toLowerCase().includes(term) ||
-        (p.brand && p.brand.toLowerCase().includes(term))
+        p.nombre.toLowerCase().includes(term) ||
+        p.descripcion.toLowerCase().includes(term)
       );
     }
 
     // Filtrar por color
     const activeColors = Object.keys(this.selectedColors).filter(c => this.selectedColors[c]);
     if (activeColors.length) {
-      filtered = filtered.filter(p => p.colors.some(color => activeColors.includes(color)));
+      filtered = filtered.filter(p => activeColors.includes(p.color));
     }
 
     // Filtrar por precio
     if (this.priceRange.min) {
-      filtered = filtered.filter(p => p.price >= this.priceRange.min);
+      filtered = filtered.filter(p => p.precio >= this.priceRange.min);
     }
     if (this.priceRange.max) {
-      filtered = filtered.filter(p => p.price <= this.priceRange.max);
+      filtered = filtered.filter(p => p.precio <= this.priceRange.max);
     }
 
     // Filtrar por categoría
     if (this.selectedCategory) {
-      filtered = filtered.filter(p => p.category === this.selectedCategory);
+      filtered = filtered.filter(p =>
+        p.categoria && p.categoria.nombre === this.selectedCategory
+      );
     }
 
     this.products = filtered;
     this.totalProducts = filtered.length;
     this.currentPage = 1;
   }
-
 }

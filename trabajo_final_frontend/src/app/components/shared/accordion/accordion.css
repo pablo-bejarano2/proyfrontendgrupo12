@@ -1,0 +1,40 @@
+.accordion-flush .accordion-item {
+  border: none;
+  border-bottom: 1px solid #e5e5e5;
+  border-radius: 0;
+  background: transparent;
+}
+
+.accordion-button {
+  background: #fff;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #222;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 1rem 1.25rem;
+  transition: background 0.2s, color 0.2s;
+}
+
+.accordion-button:not(.collapsed) {
+  background: #f8f9fa;
+  color: #00bcd4;
+}
+
+.accordion-button:focus {
+  box-shadow: none;
+  outline: 2px solid #00bcd433;
+}
+
+.accordion-body {
+  background: #f9f9f9;
+  padding: 1.25rem 1.5rem;
+  font-size: 1rem;
+  color: #444;
+  border-radius: 0 0 0.5rem 0.5rem;
+}
+
+.accordion-flush .accordion-item:last-child {
+  border-bottom: none;
+}

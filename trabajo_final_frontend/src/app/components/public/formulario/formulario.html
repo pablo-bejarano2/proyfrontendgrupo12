@@ -43,7 +43,39 @@
       </li>
     </ul>
 
-    <form [formGroup]="formUsuario" (ngSubmit)="createCount()">
+    <form [formGroup]="formUsuario" (ngSubmit)="procesarFormulario()">
+      <div
+        class="text-center py-2 mb-2 bg-info bg-opacity-10 border border-info rounded"
+      >
+        <!-- Contenedor de configuración -->
+        <div
+          id="g_id_onload"
+          data-client_id="494017255948-hr66km4if477k8fcavbm6k3bio5e9s8d.apps.googleusercontent.com"
+          data-context="signin"
+          data-ux_mode="popup"
+          data-callback="handleCredentialResponse"
+          data-auto_prompt="false"
+        ></div>
+
+        <!-- Contenedor del botón -->
+        <div
+          class="g_id_signin d-flex justify-content-center"
+          data-type="standard"
+          data-shape="rectangular"
+          data-theme="outline"
+          data-text="signin_with"
+          data-size="large"
+          data-logo_alignment="left"
+        ></div>
+      </div>
+      <!-- MENSAJE DE ERROR LOGIN -->
+      <div
+        *ngIf="accion === 'login' && msglogin"
+        class="alert alert-danger py-2 my-2"
+        style="font-size: 0.98em"
+      >
+        <i class="fa-solid fa-circle-exclamation"></i> {{ msglogin }}
+      </div>
       <!-- NOMBRES -->
       <div class="mb-3" *ngIf="accion === 'register'">
         <label for="nombres" class="form-label">Nombres</label>
@@ -51,7 +83,7 @@
           type="text"
           class="form-control"
           id="nombres"
-          placeholder="Tu nombre"
+          placeholder="Ej: Juan Pablo"
           formControlName="nombres"
         />
         <div
@@ -82,7 +114,7 @@
           type="text"
           class="form-control"
           id="apellido"
-          placeholder="Tu apellido"
+          placeholder="Ej: González"
           formControlName="apellido"
         />
         <div
@@ -113,7 +145,7 @@
           type="email"
           class="form-control"
           id="email"
-          placeholder="userexample@gmail.com"
+          placeholder="usuario@gmail.com"
           formControlName="email"
         />
         <div
@@ -136,11 +168,11 @@
           type="text"
           class="form-control"
           id="username"
-          placeholder="Tu usuario"
+          [placeholder]="accion === 'register' ? 'Ej: juanpablo123' : ''"
           formControlName="username"
         />
         <div
-          *ngIf="formUsuario.get('username')?.touched && formUsuario.get('username')?.invalid"
+          *ngIf="accion === 'register' && formUsuario.get('username')?.touched && formUsuario.get('username')?.invalid"
           class="text-danger mt-1"
           style="font-size: 0.95em"
         >
@@ -150,7 +182,7 @@
           <div *ngIf="formUsuario.get('username')?.errors?.['minlength']">
             Debe tener al menos 4 caracteres.
           </div>
-          <div *ngIf="formUsuario.get('apellido')?.errors?.['pattern']">
+          <div *ngIf="formUsuario.get('username')?.errors?.['pattern']">
             No se permiten caracteres especiales ni espacios.
           </div>
         </div>
@@ -163,7 +195,7 @@
             [type]="mostrarPassword ? 'text' : 'password'"
             class="form-control"
             id="password"
-            placeholder="Tu contraseña"
+            [placeholder]="accion === 'register' ? 'Ej: Juan2024!' : ''"
             formControlName="password"
           />
           <button
@@ -180,7 +212,7 @@
           </button>
         </div>
         <div
-          *ngIf="formUsuario.get('password')?.touched && formUsuario.get('password')?.invalid"
+          *ngIf="accion === 'register' && formUsuario.get('password')?.touched && formUsuario.get('password')?.invalid"
           class="text-danger mt-1"
           style="font-size: 0.95em"
         >
@@ -213,11 +245,15 @@
           <input type="checkbox" class="form-check-input" id="rememberMe" />
           <label class="form-check-label" for="rememberMe">Recordarme</label>
         </div>
-        <div class="form-text"><a href="#">¿Olvidaste tu contraseña?</a></div>
+        <div class="form-text">
+          <a href="#" style="text-decoration: none"
+            >¿Olvidaste tu contraseña?</a
+          >
+        </div>
       </div>
       <!-- BOTÓN ENVIAR -->
       <button
-        [disabled]="formUsuario.invalid"
+        [disabled]="formUsuario.invalid && accion != 'login'"
         type="submit"
         class="btn btn-form w-100"
       >

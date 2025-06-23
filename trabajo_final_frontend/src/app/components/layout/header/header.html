@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg custom-navbar">
-  <div class="container-fluid">
+  <div class="container-md">
     <a class="navbar-brand" href="#">
       <img src="assets/logo.jpg" alt="oversizex Logo" class="logo-img" />
     </a>
@@ -43,26 +43,74 @@
         <li class="nav-item">
           <a class="nav-link custom-link" href="#politicas">Políticas</a>
         </li>
-        <!--<li class="nav-item">
-          <a class="nav-link custom-link" [routerLink]="['/form']">Cuenta</a>
-        </li>-->
-        <li class="nav-item" *ngIf="!loginService.usuarioLoggedIn()">
-          <button
-            class="btn btn-outline-info me-2"
-            [routerLink]="['/form']"
-            style="margin-top: 6px"
-          >
-            <i class="fa-solid fa-user"></i>
+        <!-- Botón de Acceder -->
+        <li
+          class="nav-item"
+          *ngIf="!loginService.usuarioLoggedIn() && !userGoogleLogged()"
+        >
+          <button class="btn-access me-2" [routerLink]="['/form']">
+            Acceder
           </button>
         </li>
-        <li class="nav-item" *ngIf="loginService.usuarioLoggedIn()">
-          <button
-            class="btn btn-outline-danger"
-            style="margin-top: 6px"
-            (click)="logout()"
+        <!-- Usuario Logueado -->
+        <li
+          class="nav-item dropdown hover-dropdown"
+          *ngIf="loginService.usuarioLoggedIn() || userGoogleLogged()"
+        >
+          <a
+            class="nav-link dropdown-toggle d-flex align-items-center justify-content-center"
+            href="#"
+            id="userDropdown"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
           >
-            <i class="fa-solid fa-right-from-bracket"></i>
-          </button>
+            <img
+              [src]="imagenGoogle"
+              alt="img_user"
+              width="40"
+              height="40"
+              class="rounded-circle me-2"
+            />
+          </a>
+          <ul
+            class="dropdown-menu dropdown-menu-end text-center"
+            aria-labelledby="userDropdown"
+          >
+            <li class="px-3 py-2">
+              <div class="d-flex align-items-center flex-column">
+                <img
+                  [src]="imagenGoogle"
+                  alt="img_user"
+                  width="60"
+                  height="60"
+                  class="rounded-circle mb-2"
+                />
+                <div class="fw-bold" style="font-size: 1.05em">
+                  {{ nombreGoogle || 'Usuario' }}
+                </div>
+                <div class="text-muted" style="font-size: 0.95em">
+                  {{ emailGoogle }}
+                </div>
+              </div>
+            </li>
+            <li><hr class="dropdown-divider" /></li>
+            <li>
+              <button class="dropdown-item text-start" type="button">
+                <i class="fa-solid fa-gear me-1"></i>Configuración
+              </button>
+            </li>
+            <li><hr class="dropdown-divider" /></li>
+            <li>
+              <button
+                class="dropdown-item text-danger text-start"
+                type="button"
+                (click)="logout()"
+              >
+                <i class="fa-solid fa-right-from-bracket me-1"></i>Cerrar Sesión
+              </button>
+            </li>
+          </ul>
         </li>
       </ul>
     </div>

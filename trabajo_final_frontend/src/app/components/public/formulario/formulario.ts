@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormsModule, NgForm } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -13,6 +13,8 @@ import {
 } from '@angular/forms';
 import { MisValidadores } from '../../../validadores/mis-validadores';
 
+declare const google: any; //para evitar errores de TypeScript
+
 @Component({
   selector: 'app-formulario',
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
@@ -20,21 +22,60 @@ import { MisValidadores } from '../../../validadores/mis-validadores';
   styleUrl: './formulario.css',
 })
 export class Formulario implements OnInit {
-  formUsuario!: FormGroup;
-  userform: Usuario = new Usuario(); //usuario mapeado al formulario
-  returnUrl!: string;
+  formUsuario!: FormGroup; //formulario de usuario
+  userform: Usuario = new Usuario(); //usuario para el alta y login
+  returnUrl!: string; //url para usar router
   msglogin!: string; // mensaje que indica si no paso el login
-  accion: string = 'login';
-  mostrarPassword: boolean = false;
+  accion: string = 'login'; //accion para el comportamiento del form
+  mostrarPassword: boolean = false; //para mostrar la contraseña
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private loginService: LoginService,
     private toastr: ToastrService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private ngZone: NgZone
   ) {
-    this.formUsuario = this.fb.group({
+    this.formUsuario = this.fb.group(this.obtenerControlesFormulario());
+  }
+
+  ngOnInit(): void {
+    this.loadGoogleScript(); // 1. Carga dinámica del script de Google
+    (window as any).handleCredentialResponse =
+      this.handleCredentialResponse.bind(this); // 2. Declara la función global que Google usará
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/home';
+  }
+
+  /*Esta función simplemente carga el script oficial de Google Identity Services.*/
+  private loadGoogleScript(): void {
+    const script = document.createElement('script');
+    script.src = 'https://accounts.google.com/gsi/client';
+    script.async = true;
+    script.defer = true;
+    document.head.appendChild(script);
+  }
+
+  handleCredentialResponse(response: any): void {
+    this.ngZone.run(() => {
+      const token = response.credential;
+      this.loginService.loginGoogle(token).subscribe(
+        (result) => {
+          //Manejar la respuesta del backend (guardar datos, redirigir, etc.)
+          sessionStorage.setItem('userGoogle', result.nombre);
+          sessionStorage.setItem('emailGoogle', result.email);
+          sessionStorage.setItem('imagenGoogle', result.imagen);
+          this.router.navigate(['/home']);
+        },
+        (error) => {
+          alert('Error al iniciar sesión con Google');
+        }
+      );
+    });
+  }
+
+  private obtenerControlesFormulario() {
+    return {
       nombres: new FormControl('', [
         Validators.required,
         Validators.minLength(3),
@@ -58,31 +99,10 @@ export class Formulario implements OnInit {
         Validators.minLength(8),
         MisValidadores.validarPassword,
       ]),
-    });
-  }
-
-  ngOnInit(): void {
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/home';
-    console.log(this.returnUrl);
-  }
-
-  cambiarAccion(nuevaAccion: string) {
-    this.accion = nuevaAccion;
-    console.log(this.accion);
-    this.limpiarFormulario();
-  }
-
-  irHome() {
-    console.log('Redirigiendo al inicio...');
-    this.router.navigate(['/home']);
-  }
-
-  cambioPassword() {
-    this.mostrarPassword = !this.mostrarPassword;
+    };
   }
 
   login() {
-    this.userform.rol = 'cliente';
     this.loginService
       .login(this.userform.username, this.userform.password)
       .subscribe(
@@ -98,7 +118,7 @@ export class Formulario implements OnInit {
             this.router.navigateByUrl(this.returnUrl);
           } else {
             //usuario no encontrado
-            this.msglogin = 'Credenciales incorrectas';
+            this.msglogin = result.msg;
           }
         },
         (error) => {
@@ -107,11 +127,10 @@ export class Formulario implements OnInit {
           console.log(error);
         }
       );
-    this.limpiarFormulario();
+    this.formUsuario.reset();
   }
 
   createCount() {
-    this.userform.rol = 'cliente';
     this.loginService.createCount(this.userform).subscribe(
       (result) => {
         console.log(result);
@@ -122,11 +141,53 @@ export class Formulario implements OnInit {
         this.toastr.error(error.error.msg || 'Error procensado la operación');
       }
     );
-    this.limpiarFormulario();
+    this.formUsuario.reset();
   }
 
-  limpiarFormulario() {
-    this.userform = new Usuario();
+  procesarFormulario() {
+    if (this.accion === 'register') {
+      this.asignarValores('cliente');
+      this.createCount();
+    } else {
+      //No permitir enviar form vacío en login
+      if (
+        !this.formUsuario.get('username')?.value ||
+        !this.formUsuario.get('password')?.value
+      ) {
+        this.msglogin = 'Debe completar usuario y contraseña';
+        return;
+      }
+      this.asignarValores();
+      this.login();
+    }
+  }
+
+  asignarValores(rol: string = '') {
+    const valores = this.formUsuario.value;
+    this.userform.nombres = valores.nombres;
+    this.userform.apellido = valores.apellido;
+    this.userform.email = valores.email;
+    this.userform.username = valores.username;
+    this.userform.password = valores.password;
+    if (rol) {
+      this.userform.rol = rol;
+    }
+    console.log('en asignarValores');
+    console.log(this.userform);
+  }
+
+  cambiarAccion(nuevaAccion: string) {
+    this.accion = nuevaAccion;
     this.msglogin = '';
+    this.formUsuario.reset();
+  }
+
+  irHome() {
+    console.log('Redirigiendo al inicio...');
+    this.router.navigate(['/home']);
+  }
+
+  cambioPassword() {
+    this.mostrarPassword = !this.mostrarPassword;
   }
 }

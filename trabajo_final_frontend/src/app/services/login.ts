@@ -25,6 +25,10 @@ export class LoginService {
     return this._http.post(this.hostBase + 'login', body, this.httpOption);
   }
 
+  public loginGoogle(token: string): Observable<any> {
+    return this._http.post<any>(this.hostBase + 'login/google', { token });
+  }
+
   public createCount(newUser: Usuario): Observable<any> {
     let body = JSON.stringify({
       username: newUser.username,

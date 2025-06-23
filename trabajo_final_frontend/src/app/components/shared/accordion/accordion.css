@@ -38,3 +38,7 @@
 .accordion-flush .accordion-item:last-child {
   border-bottom: none;
 }
+.accordion-button:focus {
+  box-shadow: 0 0 0 2px #00bcd4;
+  outline: none;
+}

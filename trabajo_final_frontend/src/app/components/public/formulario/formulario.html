@@ -70,7 +70,7 @@
       </div>
       <!-- MENSAJE DE ERROR LOGIN -->
       <div
-        *ngIf="accion === 'login' && msglogin"
+        *ngIf="msglogin"
         class="alert alert-danger py-2 my-2"
         style="font-size: 0.98em"
       >
@@ -156,7 +156,9 @@
           <div *ngIf="formUsuario.get('email')?.errors?.['required']">
             Este campo es obligatorio.
           </div>
-          <div *ngIf="formUsuario.get('email')?.errors?.['email']">
+          <div
+            *ngIf="formUsuario.get('email')?.errors?.['email'] || formUsuario.get('email')?.errors?.['emailInvalido']"
+          >
             Formato de correo inválido.
           </div>
         </div>
@@ -233,6 +235,31 @@
           </div>
           <div *ngIf="formUsuario.get('password')?.errors?.['sinEspecial']">
             Debe contener al menos un carácter especial.
+          </div>
+        </div>
+      </div>
+      <!-- REPETIR PASSWORD -->
+      <div class="mb-3" *ngIf="accion === 'register'">
+        <label for="confirmPassword" class="form-label"
+          >Repetir Contraseña</label
+        >
+        <input
+          type="text"
+          class="form-control"
+          id="confirmPassword"
+          placeholder="Repite la contraseña"
+          formControlName="confirmPassword"
+        />
+        <div
+          *ngIf="formUsuario.get('confirmPassword')?.touched"
+          class="text-danger mt-1"
+          style="font-size: 0.95em"
+        >
+          <div *ngIf="formUsuario.get('confirmPassword')?.errors?.['required']">
+            Este campo es obligatorio.
+          </div>
+          <div *ngIf="formUsuario.errors?.['passwordsMismatch']">
+            Las contraseñas no coinciden.
           </div>
         </div>
       </div>

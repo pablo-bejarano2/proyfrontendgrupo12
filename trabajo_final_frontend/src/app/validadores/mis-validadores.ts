@@ -1,4 +1,10 @@
-import { FormControl, ValidationErrors } from '@angular/forms';
+import {
+  FormControl,
+  ValidationErrors,
+  ValidatorFn,
+  FormGroup,
+  AbstractControl,
+} from '@angular/forms';
 
 export class MisValidadores {
   static validarPrimerLetra(c: FormControl): ValidationErrors | null {
@@ -32,5 +38,20 @@ export class MisValidadores {
 
     //Si hay errores los devuelve, sino devuelve null
     return Object.keys(errores).length ? errores : null;
+  }
+
+  static validarEmail(c: FormControl): ValidationErrors | null {
+    let email: string = String(c.value);
+
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+    return emailRegex.test(email) ? null : { emailInvalido: true };
+  }
+
+  // Ejemplo de validador
+  static passwordsIguales(form: AbstractControl): ValidationErrors | null {
+    const password = form.get('password')?.value;
+    const confirmPassword = form.get('confirmPassword')?.value;
+    return password === confirmPassword ? null : { passwordsMismatch: true };
   }
 }

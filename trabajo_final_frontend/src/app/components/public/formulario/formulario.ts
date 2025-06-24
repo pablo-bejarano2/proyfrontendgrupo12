@@ -1,6 +1,12 @@
 import { Component, OnInit, OnDestroy, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormControl, FormsModule, NgForm } from '@angular/forms';
+import {
+  AbstractControl,
+  FormControl,
+  FormsModule,
+  NgForm,
+  ValidationErrors,
+} from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Usuario } from '../../../models/usuario';
 import { LoginService } from '../../../services/login';
@@ -37,7 +43,9 @@ export class Formulario implements OnInit {
     private fb: FormBuilder,
     private ngZone: NgZone
   ) {
-    this.formUsuario = this.fb.group(this.obtenerControlesFormulario());
+    this.formUsuario = this.fb.group(this.obtenerControlesFormulario(), {
+      validators: MisValidadores.passwordsIguales,
+    }); //inicializa el formulario con los controles y validadores
   }
 
   ngOnInit(): void {
@@ -88,17 +96,22 @@ export class Formulario implements OnInit {
         Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$'),
         MisValidadores.validarPrimerLetra,
       ]),
-      email: new FormControl('', [Validators.required, Validators.email]),
+      email: new FormControl('', [
+        Validators.required,
+        Validators.email,
+        MisValidadores.validarEmail,
+      ]),
       username: new FormControl('', [
         Validators.required,
         Validators.minLength(4),
-        Validators.pattern('^[a-zA-Z0-9_]+$'),
+        Validators.pattern('^[a-zA-Z0-9_ ]+$'),
       ]),
       password: new FormControl('', [
         Validators.required,
         Validators.minLength(8),
         MisValidadores.validarPassword,
       ]),
+      confirmPassword: new FormControl('', [Validators.required]),
     };
   }
 
@@ -133,8 +146,14 @@ export class Formulario implements OnInit {
   createCount() {
     this.loginService.createCount(this.userform).subscribe(
       (result) => {
-        console.log(result);
-        this.toastr.success(result.msg);
+        var usuario = result;
+        console.log(usuario);
+        if (usuario.status == 1) {
+          console.log(usuario);
+          this.toastr.success(usuario.msg);
+        } else {
+          this.msglogin = usuario.msg;
+        }
       },
       (error) => {
         console.log(error);
@@ -160,6 +179,7 @@ export class Formulario implements OnInit {
       this.asignarValores();
       this.login();
     }
+    this.msglogin = '';
   }
 
   asignarValores(rol: string = '') {

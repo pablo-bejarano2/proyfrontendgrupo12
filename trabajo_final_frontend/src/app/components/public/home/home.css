@@ -1,0 +1,175 @@
+.hero-section {
+    position: relative;
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: url('/assets/home/imagen-hero.jpg') center/cover no-repeat;
+    overflow: hidden;
+}
+
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 188, 212, 0.45);
+    backdrop-filter: blur(1px);
+    z-index: 1;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    color: #fff;
+    padding: 60px 20px;
+}
+
+.hero-section h1 {
+    font-family: 'Bebas Neue', sans-serif;
+}
+
+.hero-section p {
+    font-family: 'Lato', sans-serif;
+}
+
+.hero-section h1,
+.hero-section p {
+    color: #fff;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+
+}
+
+.hero-section .btn {
+    border-radius: 30px;
+    font-weight: 600;
+    border: 2px solid #fff;
+    background: rgba(0, 188, 212, 0.7);
+    color: #fff;
+    transition: background 0.3s, color 0.3s;
+}
+
+.hero-section .btn:hover {
+    background: #fff;
+    color: #00bcd4;
+    border-color: #00bcd4;
+}
+
+/* CATEGORÍAS */
+.categorias-section {
+    padding: 60px 0;
+    background: #fff;
+}
+
+.categorias-title {
+    font-family: 'Bebas Neue', sans-serif;
+    color: #00bcd4;
+    font-weight: 700;
+    font-size: 2rem;
+    margin-bottom: 32px;
+    letter-spacing: 1px;
+}
+
+.categorias-row {
+    margin-top: 0;
+}
+
+.categoria-card {
+    border-radius: 18px;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+    background: #fafbfc;
+}
+
+.categoria-card:hover {
+    transform: translateY(-8px) scale(1.03);
+    box-shadow: 0 6px 24px rgba(0, 188, 212, 0.13);
+}
+
+.categoria-img {
+    height: 220px;
+    object-fit: cover;
+    border-bottom: 2px solid #00bcd4;
+}
+
+.categoria-nombre {
+    color: #00bcd4;
+    font-weight: 700;
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+}
+
+.categoria-desc {
+    color: #444;
+    font-size: 1rem;
+    margin-bottom: 18px;
+}
+
+.categoria-card .btn {
+    border-radius: 20px;
+    font-weight: 600;
+    background: #00bcd4;
+    color: #fff;
+    border: none;
+    padding: 8px 24px;
+    transition: background 0.2s, color 0.2s;
+    font-size: 1rem;
+    margin-top: 8px;
+}
+
+.categoria-card .btn:hover {
+    background: #0097a7;
+    color: #fff;
+}
+
+/* SOBRE NOSOTROS */
+.sobre-nosotros-section {
+    background: linear-gradient(90deg, #e0f7fa 0%, #fff 100%);
+    border-radius: 18px;
+    margin: 40px 0;
+    box-shadow: 0 2px 12px rgba(0, 188, 212, 0.07);
+    padding: 60px 0;
+}
+
+.sobre-nosotros-title {
+    font-family: 'Bebas Neue', sans-serif;
+    color: #00bcd4;
+    font-weight: 700;
+    font-size: 2.2rem;
+    margin-bottom: 18px;
+}
+
+.sobre-nosotros-desc {
+    font-family: 'Lato', sans-serif;
+    color: #444;
+    font-size: 1.15rem;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+    .hero-section {
+        min-height: 50vh;
+        padding: 40px 0;
+    }
+
+    .hero-content {
+        padding: 40px 10px;
+    }
+
+    .hero-section h1 {
+        font-size: 2rem;
+    }
+
+    .categoria-img {
+        height: 150px;
+    }
+
+    .categorias-section,
+    .sobre-nosotros-section {
+        padding: 32px 0;
+    }
+
+    .sobre-nosotros-title {
+        font-size: 1.5rem;
+    }
+}

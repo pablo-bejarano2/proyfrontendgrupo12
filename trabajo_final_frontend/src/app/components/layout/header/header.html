@@ -1,0 +1,56 @@
+<nav class="navbar navbar-expand-lg custom-navbar">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">
+      <img src="assets/logo-removebg.png" alt="oversizex Logo" class="logo-img" />
+    </a>
+
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNavDropdown"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div
+      class="collapse navbar-collapse justify-content-end"
+      id="navbarNavDropdown"
+    >
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link custom-link" [routerLink]="['']">Inicio</a>
+        </li>
+        <!-- Dropdown con hover y clic -->
+        <li class="nav-item dropdown hover-dropdown">
+          <a
+            class="nav-link custom-link dropdown-toggle"
+            [routerLink]="['/products']"
+            id="tiendaDropdown"
+            role="button"
+          >
+            Tienda
+          </a>
+          <ul class="dropdown-menu custom-dropdown">
+            @for ( categoria of categorias; track categoria.id) {
+              <li>
+                <a class="dropdown-item" [routerLink]="['/products', categoria.nombre]">
+                  {{ categoria.nombre | uppercase }}
+                </a>
+              </li>
+            }
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link custom-link" [routerLink]="['/contact']">Contacto</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link custom-link">Políticas</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link custom-link" href="#cuenta">Cuenta</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

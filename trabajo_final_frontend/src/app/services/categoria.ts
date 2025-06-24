@@ -1,4 +1,3 @@
-// trabajo_final_frontend/src/app/services/categoria.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, catchError, of } from 'rxjs';

@@ -21,15 +21,15 @@ export class Header implements OnInit {
       this.cargarCategorias();
     }
 
-    cargarCategorias(): void {
-      this.categoriaService.obtenerCategorias().subscribe(
-        (categorias) => {
-          this.categorias = categorias;
-        },
-        (error) => {
-          console.error('Error al cargar categorías:', error);
-        }
-      );
-    }
+  cargarCategorias(): void {
+    this.categoriaService.obtenerCategorias().subscribe({
+      next: (categorias) => {
+        this.categorias = categorias;
+      },
+      error: (error) => {
+        console.error('Error al cargar categorías:', error);
+      }
+    });
+  }
 
 }

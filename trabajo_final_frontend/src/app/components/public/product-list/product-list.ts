@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { Accordion, AccordionItemDirective } from '../../shared/accordion/accordion';
 import * as bootstrap from 'bootstrap';
 import { ProductoService, Producto } from '../../../services/producto';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-product-list',
@@ -32,36 +34,76 @@ export class ProductList implements OnInit {
   totalProducts: number = 0;
   searchTerm: string = '';
 
-  constructor(private productoService: ProductoService) {}
+  constructor(
+    private productoService: ProductoService,
+    private route: ActivatedRoute,
+    private router: Router) {
+  }
 
   ngOnInit(): void {
-    this.loadProducts();
+    // Primero escuchamos los parámetros de la ruta (/products/:categoryName)
+    this.route.params.subscribe(params => {
+      this.resetFilters();
+
+      if (params['categoryName']) {
+        this.selectedCategory = params['categoryName'];
+      }
+
+      this.loadProducts();
+    });
+
+    // También escuchamos los parámetros de consulta para mantener compatibilidad
+    this.route.queryParams.subscribe(params => {
+      if (params['category'] && !this.selectedCategory) {
+        this.selectedCategory = params['category'];
+        this.loadProducts();
+      }
+    });
+  }
+
+  // Resetear filtros
+  resetFilters() {
+    this.selectedColors = {};
+    this.selectedCategory = '';
+    this.priceRange = { min: 0, max: 0 };
+    this.searchTerm = '';
   }
 
   loadProducts() {
-    this.productoService.obtenerProductos().subscribe(
-      (productos) => {
-        this.allProducts = productos;
-        this.products = [...productos];
-        this.totalProducts = this.products.length;
+    if (this.selectedCategory) {
+      // Si hay una categoría seleccionada, cargar productos por categoría
+      this.productoService.obtenerProductosPorCategoria(this.selectedCategory).subscribe(
+        (productos) => {
+          this.allProducts = productos;
+          this.products = [...productos];
+          this.totalProducts = this.products.length;
 
-        // Extraer colores únicos
-        this.colors = this.getAllColors();
+          // Inicializar filtros con datos de estos productos
+          this.colors = this.getAllColors();
+          this.categories = this.getAllCategories();
+          this.priceRange.max = Math.max(...productos.map(p => p.precio), 0);
+        },
+        (error) => {
+          console.error('Error al obtener productos por categoría:', error);
+        }
+      );
+    } else {
+      // Cargar todos los productos
+      this.productoService.obtenerProductos().subscribe(
+        (productos) => {
+          this.allProducts = productos;
+          this.products = [...productos];
+          this.totalProducts = this.products.length;
 
-        // Extraer categorías únicas
-        this.categories = this.getAllCategories();
-
-        // Inicializar filtros
-        this.selectedColors = {};
-        this.priceRange = {
-          min: 0,
-          max: Math.max(...productos.map(p => p.precio), 0)
-        };
-      },
-      (error) => {
-        console.error('Error al obtener productos:', error);
-      }
-    );
+          this.colors = this.getAllColors();
+          this.categories = this.getAllCategories();
+          this.priceRange.max = Math.max(...productos.map(p => p.precio), 0);
+        },
+        (error) => {
+          console.error('Error al obtener productos:', error);
+        }
+      );
+    }
   }
 
   onSortChange(event: any) {
@@ -135,8 +177,8 @@ export class ProductList implements OnInit {
       filtered = filtered.filter(p => p.precio <= this.priceRange.max);
     }
 
-    // Filtrar por categoría
-    if (this.selectedCategory) {
+    // Filtrar por categoría (ya no es necesario si venimos de una ruta con categoría)
+    if (this.selectedCategory && !this.route.snapshot.params['categoryName']) {
       filtered = filtered.filter(p =>
         p.categoria && p.categoria.nombre === this.selectedCategory
       );

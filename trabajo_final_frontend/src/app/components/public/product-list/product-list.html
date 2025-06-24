@@ -1,9 +1,14 @@
 <div class="container-fluid">
   <div class="row">
     <div class="page-header">
-      <h1 class="page-title">MENS - APPAREL</h1>
+      <h1 class="page-title">
+        @if (selectedCategory) {
+          {{selectedCategory | titlecase}}
+        } @else {
+          Todos los productos
+        }
+      </h1>
     </div>
-  </div>
 
   <!-- Controles: search, cantidad, sort -->
   <div class="row align-items-center mb-4 py-3 border-bottom">
@@ -189,42 +194,6 @@
             <p>No se encontraron productos.</p>
           </div>
         }
-        @for (product of products; let i = $index; track trackByProduct(product)) {
-                  <div class="col-12 col-sm-6 col-md-4 mb-4">
-                    <div class="card text-center h-100 product-card"
-                         (mouseenter)="setHover(i, true)"
-                         (mouseleave)="setHover(i, false)">
-                      <div class="product-image-container">
-                        <!-- Usar la imagen del producto o una imagen por defecto -->
-                        <img [src]="product.imagenUrl || 'assets/images/no-image.jpg'"
-                             class="card-img-top product-image"
-                             [alt]="product.nombre">
-                      </div>
-                      <div class="card-body d-flex flex-column justify-content-center position-relative">
-                        <div class="product-content" [class.opacity-0]="hoveredIndex === i">
-                          <h5 class="card-title product-name">{{ product.nombre }}</h5>
-                          <p class="card-text product-price">${{ product.precio }}</p>
-                          @if (product.categoria) {
-                            <p class="card-text product-category">
-                              {{ product.categoria.nombre }}
-                            </p>
-                          }
-                        </div>
-                        <div class="product-hover position-absolute top-50 start-50 translate-middle w-100"
-                             [class.opacity-0]="hoveredIndex !== i">
-                          <h6 class="text-muted mb-2">Detalles</h6>
-                          <p class="mb-1">Color: {{ product.color }}</p>
-                          <p class="mb-1">Stock: {{ product.stock }}</p>
-                          <p class="mb-0">{{ product.descripcion }}</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                } @empty {
-                  <div class="col-12 text-center">
-                    <p>No se encontraron productos.</p>
-                  </div>
-                }
       </div>
       <!-- Paginación -->
       <div class="row mt-4">

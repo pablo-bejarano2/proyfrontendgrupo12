@@ -25,16 +25,20 @@
         <li class="nav-item dropdown hover-dropdown">
           <a
             class="nav-link custom-link dropdown-toggle"
-            href="#tienda"
+            [routerLink]="['/products']"
             id="tiendaDropdown"
             role="button"
           >
             Tienda
           </a>
           <ul class="dropdown-menu custom-dropdown">
-            <li><a class="dropdown-item" href="#remeras">Remeras</a></li>
-            <li><a class="dropdown-item" href="#buzos">Buzos</a></li>
-            <li><a class="dropdown-item" href="#accesorios">Accesorios</a></li>
+            @for ( categoria of categorias; track categoria.id) {
+              <li>
+                <a class="dropdown-item" [routerLink]="['/products', categoria.nombre]">
+                  {{ categoria.nombre | uppercase }}
+                </a>
+              </li>
+            }
           </ul>
         </li>
         <li class="nav-item">

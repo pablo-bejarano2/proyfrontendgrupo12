@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Accordion, AccordionItemDirective } from '../../shared/accordion/accordion';
 import * as bootstrap from 'bootstrap';
 import { ProductoService, Producto } from '../../../services/producto';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-product-list',

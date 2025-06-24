@@ -5,7 +5,6 @@ import { Accordion, AccordionItemDirective } from '../../shared/accordion/accord
 import * as bootstrap from 'bootstrap';
 import { ProductoService, Producto } from '../../../services/producto';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-product-list',
@@ -36,8 +35,7 @@ export class ProductList implements OnInit {
 
   constructor(
     private productoService: ProductoService,
-    private route: ActivatedRoute,
-    private router: Router) {
+    private route: ActivatedRoute) {
   }
 
   ngOnInit(): void {

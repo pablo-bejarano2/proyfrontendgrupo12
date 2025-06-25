@@ -1,0 +1,57 @@
+<div class="container pedidos-admin-container my-4 p-4 rounded shadow-sm bg-white">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+        <h2 class="text-custom fw-bold mb-0">Gestión de Pedidos</h2>
+        <div class="d-flex flex-wrap align-items-center gap-2">
+            <button class="btn btn-outline-info">Todos</button>
+            <button class="btn btn-outline-info">Pendientes</button>
+            <form class="d-flex align-items-center ms-2" onsubmit="return false;">
+                <input type="text" class="form-control me-2" placeholder="Buscar pedido..." style="min-width:160px;">
+                <button class="btn btn-info text-white" type="submit" title="Buscar">
+                    <i class="fas fa-search"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="row g-3">
+        <!-- Card Pedido Pendiente -->
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="card border-warning border-3 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="fw-bold text-info">#PED-00123</span>
+                        <span class="badge bg-warning text-dark">Pendiente</span>
+                    </div>
+                    <p class="mb-1"><strong>Cliente:</strong> Ana Gómez</p>
+                    <p class="mb-1"><strong>Fecha:</strong> 25/06/2025</p>
+                    <p class="mb-2"><strong>Total:</strong> $12.500</p>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-outline-primary btn-sm" title="Listo"><i class="fas fa-check"></i></button>
+                        <button class="btn btn-outline-primary btn-sm" title="Ver"><i class="fas fa-eye"></i></button>
+                        <button class="btn btn-outline-info btn-sm" title="Editar"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-outline-danger btn-sm" title="Eliminar"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Card Pedido Completado -->
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="card border-info border-3 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="fw-bold text-info">#PED-00122</span>
+                        <span class="badge bg-info text-white">Completado</span>
+                    </div>
+                    <p class="mb-1"><strong>Cliente:</strong> Juan Pérez</p>
+                    <p class="mb-1"><strong>Fecha:</strong> 24/06/2025</p>
+                    <p class="mb-2"><strong>Total:</strong> $8.900</p>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-outline-primary btn-sm" title="Ver"><i class="fas fa-eye"></i></button>
+                        <button class="btn btn-outline-info btn-sm" title="Editar"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-outline-danger btn-sm" title="Eliminar"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,94 @@
+<div class="container cupones-admin-container my-4 p-4 rounded shadow-sm bg-white">
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+    <h2 class="text-custom fw-bold mb-0">Gestión de Cupones</h2>
+    <div class="d-flex flex-wrap align-items-center gap-2">
+      <button class="btn btn-info text-white" data-bs-toggle="modal" data-bs-target="#modalNuevoCupon">
+        <i class="fas fa-plus"></i> Nuevo Cupón
+      </button>
+      <form class="d-flex align-items-center ms-2" onsubmit="return false;">
+        <input type="text" class="form-control me-2" placeholder="Buscar cupón..." style="min-width:160px;">
+        <button class="btn btn-outline-info" type="submit" title="Buscar">
+          <i class="fas fa-search"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <div class="row g-3">
+    <!-- Card Cupón Activo -->
+    <div class="col-12 col-md-6 col-lg-4">
+      <div class="card cupon-card border-info border-3 shadow-sm h-100">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="fw-bold text-info">DESCUENTO20</span>
+            <span class="badge bg-info text-white">Activo</span>
+          </div>
+          <p class="mb-1"><strong>Descuento:</strong> 20%</p>
+          <p class="mb-1"><strong>Válido hasta:</strong> 30/07/2025</p>
+          <p class="mb-2"><strong>Usos restantes:</strong> 15</p>
+          <div class="d-flex gap-2">
+            <button class="btn btn-outline-secondary btn-sm" title="Desactivar"><i class="fas fa-ban"></i></button>
+            <button class="btn btn-outline-primary btn-sm" title="Modificar"><i class="fas fa-edit"></i></button>
+            <button class="btn btn-outline-danger btn-sm" title="Eliminar"><i class="fas fa-trash"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Card Cupón Inactivo -->
+    <div class="col-12 col-md-6 col-lg-4">
+      <div class="card cupon-card border-secondary border-3 shadow-sm h-100">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="fw-bold text-secondary">ENVIOGRATIS</span>
+            <span class="badge bg-secondary text-white">Inactivo</span>
+          </div>
+          <p class="mb-1"><strong>Descuento:</strong> Envío gratis</p>
+          <p class="mb-1"><strong>Válido hasta:</strong> 15/08/2025</p>
+          <p class="mb-2"><strong>Usos restantes:</strong> 0</p>
+          <div class="d-flex gap-2">
+            <button class="btn btn-outline-success btn-sm" title="Activar"><i class="fas fa-check"></i></button>
+            <button class="btn btn-outline-primary btn-sm" title="Modificar"><i class="fas fa-edit"></i></button>
+            <button class="btn btn-outline-danger btn-sm" title="Eliminar"><i class="fas fa-trash"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Más cards aquí -->
+  </div>
+</div>
+
+<!-- Modal para crear cupón nuevo (opcional, solo estructura) -->
+<div class="modal fade" id="modalNuevoCupon" tabindex="-1" aria-labelledby="modalNuevoCuponLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form>
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalNuevoCuponLabel">Nuevo Cupón</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="codigoCupon" class="form-label">Código</label>
+            <input type="text" class="form-control" id="codigoCupon" required>
+          </div>
+          <div class="mb-3">
+            <label for="descuentoCupon" class="form-label">Descuento</label>
+            <input type="text" class="form-control" id="descuentoCupon" required>
+          </div>
+          <div class="mb-3">
+            <label for="fechaVencimiento" class="form-label">Válido hasta</label>
+            <input type="date" class="form-control" id="fechaVencimiento" required>
+          </div>
+          <div class="mb-3">
+            <label for="usosCupon" class="form-label">Usos máximos</label>
+            <input type="number" class="form-control" id="usosCupon" min="1" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-info text-white">Crear Cupón</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

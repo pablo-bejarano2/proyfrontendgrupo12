@@ -1,0 +1,43 @@
+<div class="usuarios-admin-container">
+  <div class="usuarios-admin-header">
+    <h2>Centro de Control de Usuarios</h2>
+    <button class="btn-nuevo-usuario">
+      <i class="fas fa-plus"></i> Nuevo Usuario
+    </button>
+  </div>
+
+  <form class="usuarios-busqueda-form" onsubmit="return false;">
+    <input type="text" class="usuarios-busqueda-input" placeholder="Buscar usuario..." aria-label="Buscar usuario">
+    <button class="btn-buscar-usuario" type="submit">
+      <i class="fas fa-search"></i> Buscar
+    </button>
+  </form>
+
+  <div class="table-responsive">
+    <table class="table-usuarios">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Nombre</th>
+          <th>Email</th>
+          <th>Rol</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>Juan Pérez</td>
+          <td>juan.perezemail.com</td>
+          <td>Administrador</td>
+          <td>
+            <button class="btn-accion btn-editar" title="Editar"><i class="fas fa-pencil-alt"></i></button>
+            <button class="btn-accion btn-eliminar" title="Eliminar"><i class="fas fa-trash"></i></button>
+            <button class="btn-accion btn-ver" title="Ver"><i class="fas fa-eye"></i></button>
+          </td>
+        </tr>
+        <!-- Más filas aquí -->
+      </tbody>
+    </table>
+  </div>
+</div>

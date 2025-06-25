@@ -9,6 +9,8 @@ import { Productos } from './admin/productos/productos';
 import { Pedidos } from './admin/pedidos/pedidos';
 import { Cupones } from './admin/cupones/cupones';
 import { PublicLayout } from './components/layout/public-layout/public-layout';
+import { ProductList} from './components/public/product-list/product-list';
+
 
 export const routes: Routes = [
   {
@@ -16,8 +18,10 @@ export const routes: Routes = [
     component: PublicLayout,
     children: [
       { path: '', component: Home },
-      { path: 'product', component: ProductDetailComponent },
+      { path: 'product/:id', component: ProductDetailComponent },
       { path: 'contact', component: ContactComponent },
+      { path: 'product-list', component: ProductList },
+     { path: 'products/:categoryName', component: ProductList }
     ]
   },
   // Admin routes 

@@ -1,16 +1,29 @@
 <aside class="dashboard-sidebar">
-    <div class="sidebar-logo mb-4">
-      <img src="assets/logo-removebg.png" alt="OversizeX" />
-    </div>
-    <nav>
-      <ul class="sidebar-nav">
-         <li><a [routerLink]="['/admin']"><i class="fas fa-chart-line"></i> Dashboard </a></li>
-        <li><a [routerLink]="['']"><i class="fas fa-store"></i>Tienda</a></li>
-        <li><a [routerLink]="['/admin/products']"><i class="fas fa-tshirt"></i> Productos</a></li>
-        <li><a [routerLink]="['/admin/users']"><i class="fas fa-users"></i> Usuarios</a></li>
-        <li><a [routerLink]="['/admin/orders']"><i class="fas fa-shopping-cart"></i> Pedidos</a></li>
-        <li><a [routerLink]="['/admin/coupons']"><i class="fas fa-ticket-alt"></i> Cupones</a></li>
-      </ul>
-    </nav>
-  </aside>
+  <div class="sidebar-logo mb-4">
+    <img src="assets/logo-removebg.png" alt="OversizeX" />
+  </div>
+  <nav>
+    <ul class="sidebar-nav">
+      <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+        <a [routerLink]="['/admin']"><i class="fas fa-chart-line"></i> Dashboard</a>
+      </li>
+      <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+        <a [routerLink]="['/']"><i class="fas fa-store"></i> Tienda</a>
+      </li>
+      <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: false }">
+        <a [routerLink]="['/admin/products']"><i class="fas fa-tshirt"></i> Productos</a>
+      </li>
+      <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: false }">
+        <a [routerLink]="['/admin/users']"><i class="fas fa-users"></i> Usuarios</a>
+      </li>
+      <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: false }">
+        <a [routerLink]="['/admin/orders']"><i class="fas fa-shopping-cart"></i> Pedidos</a>
+      </li>
+      <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: false }">
+        <a [routerLink]="['/admin/coupons']"><i class="fas fa-ticket-alt"></i> Cupones</a>
+      </li>
+    </ul>
 
+
+  </nav>
+</aside>

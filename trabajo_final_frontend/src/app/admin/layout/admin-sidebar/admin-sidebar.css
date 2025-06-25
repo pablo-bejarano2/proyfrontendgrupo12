@@ -41,10 +41,13 @@
   font-size: 1.2rem;
 }
 
-.sidebar-nav a.active,
-.sidebar-nav a:hover {
+.sidebar-nav li.active > a {
   background: #e0f7fa;
-  color: #00bcd4;
+  color: #00bcd4 !important;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(0,188,212,0.08);
+  border-radius: 8px;
+  transition: background 0.2s, color 0.2s;
 }
 
 /* Responsive sidebar */

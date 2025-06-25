@@ -1,0 +1,121 @@
+.pedidos-admin-container {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 2px 12px rgba(0,188,212,0.07);
+  padding: 32px 28px;
+  max-width: 1100px;
+  margin: 40px auto;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.pedidos-admin-container h2 {
+  color: #00bcd4;
+  font-weight: 700;
+  font-size: 1.6rem;
+}
+
+.btn-outline-info.active,
+.btn-outline-info:active {
+  background: #00bcd4 !important;
+  color: #fff !important;
+  border-color: #00bcd4 !important;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(0,188,212,0.08);
+}
+
+.btn-outline-info {
+  border-radius: 20px;
+  font-weight: 600;
+  padding: 8px 22px;
+  transition: background 0.2s, color 0.2s;
+}
+
+.btn-info {
+  border-radius: 20px;
+  font-weight: 600;
+  padding: 8px 22px;
+  transition: background 0.2s, color 0.2s;
+}
+
+.form-control {
+  border-radius: 10px;
+  border: 1.5px solid #e0f7fa;
+  font-size: 1rem;
+  transition: border 0.2s;
+}
+
+.form-control:focus {
+  border-color: #00bcd4;
+  box-shadow: 0 0 0 2px #e0f7fa;
+}
+
+.card {
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0,188,212,0.07);
+  transition: box-shadow 0.2s;
+  background: #fafdff;
+}
+
+.card:hover {
+  box-shadow: 0 6px 24px rgba(0,188,212,0.13);
+}
+
+.card .badge.bg-warning {
+  background: #fff3e0 !important;
+  color: #ff9800 !important;
+  font-weight: 600;
+  font-size: 1rem;
+  border-radius: 12px;
+  padding: 6px 16px;
+}
+
+.card .badge.bg-info {
+  background: #e0f7fa !important;
+  color: #00bcd4 !important;
+  font-weight: 600;
+  font-size: 1rem;
+  border-radius: 12px;
+  padding: 6px 16px;
+}
+
+.card .fw-bold.text-info {
+  color: #0097a7 !important;
+  font-size: 1.1rem;
+}
+
+.card .btn-outline-primary,
+.card .btn-outline-info,
+.card .btn-outline-danger {
+  border-radius: 16px;
+  font-weight: 600;
+  padding: 6px 16px;
+  font-size: 0.98rem;
+  transition: background 0.2s, color 0.2s;
+}
+
+.card .btn-outline-primary:hover {
+  background: #00bcd4;
+  color: #fff;
+  border-color: #00bcd4;
+}
+
+.card .btn-outline-info:hover {
+  background: #0097a7;
+  color: #fff;
+  border-color: #0097a7;
+}
+
+.card .btn-outline-danger:hover {
+  background: #e53935;
+  color: #fff;
+  border-color: #e53935;
+}
+
+@media (max-width: 700px) {
+  .pedidos-admin-container {
+    padding: 18px 6px;
+  }
+  .card {
+    min-width: 100%;
+  }
+}

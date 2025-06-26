@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { LoginService } from '../../../services/login';
 import { Router, ActivatedRoute } from '@angular/router';
-import {CategoriaService} from '../../../services/categoria';
+import { CategoriaService } from '../../../services/categoria';
 
 @Component({
   selector: 'app-header',
@@ -17,30 +17,25 @@ export class Header implements OnInit {
   imagen: string = '';
   username: string = '';
 
-  categorias: any[]=[];
-  constructor(private categoriaService: CategoriaService) { }
-
-    ngOnInit(): void {
-      this.cargarCategorias();
-    }
-
-    cargarCategorias(): void {
-      this.categoriaService.obtenerCategorias().subscribe(
-        (categorias) => {
-          this.categorias = categorias;
-        },
-        (error) => {
-          console.error('Error al cargar categorías:', error);
-        }
-      );
-    }
-
-  constructor(public loginService: LoginService, private router: Router) {}
+  categorias: any[] = [];
+  constructor(private categoriaService: CategoriaService, public loginService: LoginService, private router: Router) { }
 
   ngOnInit(): void {
+    this.cargarCategorias();
     this.email = sessionStorage.getItem('email') || '';
     this.imagen = sessionStorage.getItem('imagen') || 'assets/user.jpg';
     this.username = sessionStorage.getItem('username') || '';
+  }
+
+  cargarCategorias(): void {
+    this.categoriaService.obtenerCategorias().subscribe(
+      (categorias) => {
+        this.categorias = categorias;
+      },
+      (error) => {
+        console.error('Error al cargar categorías:', error);
+      }
+    );
   }
 
   logout() {

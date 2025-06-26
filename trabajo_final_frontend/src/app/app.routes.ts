@@ -5,7 +5,6 @@ import { Formulario } from './components/public/formulario/formulario';
 import { CuentaUsuario } from './components/public/cuenta-usuario/cuenta-usuario';
 import { ProductDetailComponent } from './components/public/product-detail/product-detail';
 import { ContactComponent } from './components/public/contact/contact';
-import { Home } from './components/public/home/home';
 import { Dashboard } from './admin/dashboard/dashboard';
 import { AdminLayout } from './admin/layout/admin-layout/admin-layout';
 import { Usuarios } from './admin/usuarios/usuarios';

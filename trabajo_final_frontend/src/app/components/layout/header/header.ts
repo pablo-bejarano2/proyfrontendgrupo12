@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { LoginService } from '../../../services/login';
 import { Router, ActivatedRoute } from '@angular/router';
+import {CategoriaService} from '../../../services/categoria';
 
 @Component({
   selector: 'app-header',
@@ -15,6 +16,24 @@ export class Header implements OnInit {
   email: string = '';
   imagen: string = '';
   username: string = '';
+
+  categorias: any[]=[];
+  constructor(private categoriaService: CategoriaService) { }
+
+    ngOnInit(): void {
+      this.cargarCategorias();
+    }
+
+    cargarCategorias(): void {
+      this.categoriaService.obtenerCategorias().subscribe(
+        (categorias) => {
+          this.categorias = categorias;
+        },
+        (error) => {
+          console.error('Error al cargar categorías:', error);
+        }
+      );
+    }
 
   constructor(public loginService: LoginService, private router: Router) {}
 

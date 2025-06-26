@@ -1,0 +1,89 @@
+/* Estilos de cabecera */
+.page-header {
+  text-align: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 2rem;
+}
+
+.page-title {
+  font-size: 4.5rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #000;
+  margin: 0;
+}
+
+/* Tarjetas de producto */
+.product-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  background: white;
+  height: 100%;
+}
+
+.product-card:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.product-image-container {
+  position: relative;
+  width: 100%;
+  height: 280px;
+  overflow: hidden;
+  background: #f8f9fa;
+}
+
+.product-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.product-card:hover .product-image {
+  transform: scale(1.05);
+}
+
+.product-name {
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0 0 0.5rem 0;
+  color: #000;
+  line-height: 1.2;
+}
+
+.product-price {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #666;
+  margin: 0;
+}
+
+/* Controles de formulario */
+.form-control:focus,
+.form-select:focus {
+  box-shadow: none !important;
+  border-color: #000000;
+}
+
+.sort-select {
+  width: auto;
+}
+
+/* Ajustes responsivos */
+@media (max-width: 576px) {
+  .product-image-container {
+    height: 220px;
+  }
+
+  .page-title {
+    font-size: 1.5rem;
+    letter-spacing: 1px;
+  }
+}

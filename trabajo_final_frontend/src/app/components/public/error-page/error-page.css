@@ -1,0 +1,39 @@
+.error404-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #e0f7fa 0%, #fff 100%);
+    border-radius: 18px;
+}
+
+.error404-container h1 {
+    font-size: 7rem;
+    letter-spacing: 8px;
+    color: #00bcd4;
+    text-shadow: 0 4px 24px rgba(0, 188, 212, 0.13);
+}
+
+.error404-container h2 {
+    font-size: 2rem;
+    color: #0097a7;
+}
+
+.error404-container .btn-info {
+    background: #00bcd4;
+    border: none;
+    font-weight: 600;
+    transition: background 0.2s, color 0.2s;
+}
+
+.error404-container .btn-info:hover {
+    background: #0097a7;
+    color: #fff;
+}
+
+@media (max-width: 600px) {
+    .error404-container h1 {
+        font-size: 4rem;
+    }
+
+    .error404-container h2 {
+        font-size: 1.2rem;
+    }
+}

@@ -9,7 +9,8 @@ import { Productos } from './admin/productos/productos';
 import { Pedidos } from './admin/pedidos/pedidos';
 import { Cupones } from './admin/cupones/cupones';
 import { PublicLayout } from './components/layout/public-layout/public-layout';
-import { ProductList} from './components/public/product-list/product-list';
+import { ProductList } from './components/public/product-list/product-list';
+import { ErrorPage } from './components/public/error-page/error-page';
 
 
 export const routes: Routes = [
@@ -21,7 +22,7 @@ export const routes: Routes = [
       { path: 'product/:id', component: ProductDetailComponent },
       { path: 'contact', component: ContactComponent },
       { path: 'product-list', component: ProductList },
-     { path: 'products/:categoryName', component: ProductList }
+      { path: 'products/:categoryName', component: ProductList }
     ]
   },
   // Admin routes 
@@ -34,5 +35,8 @@ export const routes: Routes = [
       { path: 'orders', component: Pedidos },
       { path: 'coupons', component: Cupones }
     ]
+  },
+  {
+    path: '**', component: ErrorPage
   }
 ];

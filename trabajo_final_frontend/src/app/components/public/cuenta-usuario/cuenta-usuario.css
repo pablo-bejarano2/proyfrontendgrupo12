@@ -1,0 +1,40 @@
+.contenedor-datos {
+  box-shadow: 4px 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.btn-option {
+  padding: 10px 20px;
+  background-color: #00bcd4;
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border-radius: 5px;
+  border: #00bcd4 1px solid;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.btn-option:hover {
+  background-color: #fff;
+  color: #00bcd4;
+}
+
+.btn-option.activo {
+  background-color: #fff;
+  color: #00bcd4;
+}
+
+.table th,
+.table td {
+  vertical-align: middle;
+}
+
+.table-hover tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+.headers-table {
+  background-color: #00bcd4;
+  color: #fff;
+  border: 1px solid #00bcd4;
+}

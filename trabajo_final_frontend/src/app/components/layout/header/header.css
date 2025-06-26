@@ -56,3 +56,20 @@
 .hover-dropdown .dropdown-toggle::after {
   display: none;
 }
+
+.btn-access {
+  padding: 10px 20px;
+  background-color: #00bcd4;
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border: #00bcd4 1px solid;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.btn-access:hover {
+  background-color: #fff;
+  color: #00bcd4;
+}

@@ -1,4 +1,8 @@
 import { Routes } from '@angular/router';
+
+import { Home } from './components/public/home/home';
+import { Formulario } from './components/public/formulario/formulario';
+import { CuentaUsuario } from './components/public/cuenta-usuario/cuenta-usuario';
 import { ProductDetailComponent } from './components/public/product-detail/product-detail';
 import { ContactComponent } from './components/public/contact/contact';
 import { Home } from './components/public/home/home';
@@ -22,7 +26,10 @@ export const routes: Routes = [
       { path: 'product/:id', component: ProductDetailComponent },
       { path: 'contact', component: ContactComponent },
       { path: 'product-list', component: ProductList },
-      { path: 'products/:categoryName', component: ProductList }
+      { path: 'products/:categoryName', component: ProductList },
+      { path: 'home', component: Home },
+      { path: 'form', component: Formulario },
+      { path: 'cuenta', component: CuentaUsuario },
     ]
   },
   // Admin routes 

@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg custom-navbar">
-  <div class="container-fluid">
+  <div class="container-md">
     <a class="navbar-brand" href="#">
       <img src="assets/logo-removebg.png" alt="oversizex Logo" class="logo-img" />
     </a>
@@ -47,8 +47,72 @@
         <li class="nav-item">
           <a class="nav-link custom-link">Políticas</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link custom-link" href="#cuenta">Cuenta</a>
+        <!-- Botón de Acceder -->
+        <li class="nav-item" *ngIf="!userLogged()">
+          <button class="btn-access me-2" [routerLink]="['/form']">
+            Acceder
+          </button>
+        </li>
+        <!-- Usuario Logueado -->
+        <li class="nav-item dropdown hover-dropdown" *ngIf="userLogged()">
+          <a
+            class="nav-link dropdown-toggle d-flex align-items-center justify-content-center"
+            href="#"
+            id="userDropdown"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            <img
+              [src]="imagen"
+              alt="img_user"
+              width="60"
+              height="60"
+              class="rounded-circle me-2"
+            />
+          </a>
+          <ul
+            class="dropdown-menu dropdown-menu-end text-center"
+            aria-labelledby="userDropdown"
+          >
+            <li class="px-3 py-3">
+              <div class="d-flex flex-column align-items-center">
+                <img
+                  [src]="imagen"
+                  alt="img_user"
+                  width="60"
+                  height="60"
+                  class="rounded-circle mb-2"
+                />
+                <div class="fw-bold" style="font-size: 1.05em">
+                  {{ username }}
+                </div>
+                <div class="text-muted" style="font-size: 0.95em">
+                  {{ email }}
+                </div>
+              </div>
+            </li>
+            <li><hr class="dropdown-divider" /></li>
+            <li>
+              <button
+                class="dropdown-item text-start"
+                type="button"
+                (click)="configurarCuenta()"
+              >
+                <i class="fa-solid fa-gear me-1"></i>Configuración
+              </button>
+            </li>
+            <li><hr class="dropdown-divider" /></li>
+            <li>
+              <button
+                class="dropdown-item text-danger text-start"
+                type="button"
+                (click)="logout()"
+              >
+                <i class="fa-solid fa-right-from-bracket me-1"></i>Cerrar Sesión
+              </button>
+            </li>
+          </ul>
         </li>
       </ul>
     </div>

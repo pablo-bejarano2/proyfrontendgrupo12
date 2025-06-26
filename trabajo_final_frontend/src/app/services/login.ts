@@ -19,16 +19,19 @@ export class LoginService {
     this.hostBase = 'http://localhost:3000/api/usuario/';
   }
 
+  //Login Normal
   public login(username: string, password: string): Observable<any> {
     let body = JSON.stringify({ username: username, password: password });
     console.log(body);
     return this._http.post(this.hostBase + 'login', body, this.httpOption);
   }
 
+  //Login con Google
   public loginGoogle(token: string): Observable<any> {
     return this._http.post<any>(this.hostBase + 'login/google', { token });
   }
 
+  //Crear cuenta de usuario
   public createCount(newUser: Usuario): Observable<any> {
     let body = JSON.stringify({
       username: newUser.username,
@@ -38,33 +41,23 @@ export class LoginService {
       apellido: newUser.apellido,
       rol: newUser.rol,
     });
-    console.log(body);
     return this._http.post(this.hostBase, body, this.httpOption);
   }
 
-  public logout() {
-    //borrar las variables almacenadas mediante el storage
-    sessionStorage.removeItem('usuario');
-    sessionStorage.removeItem('rol');
-    sessionStorage.removeItem('usuarioId');
-  }
-
-  public usuarioLoggedIn() {
-    var resultado = false;
-    var usuario = sessionStorage.getItem('usuario');
-    if (usuario != null) {
-      resultado = true;
-    }
-    return resultado;
-  }
-
-  public usuarioLogged() {
-    var usuario = sessionStorage.getItem('usuario');
-    return usuario;
-  }
-
-  public idLogged() {
-    var id = sessionStorage.getItem('usuarioId');
-    return id;
+  //Actualizar cuenta de usuario
+  public updateCount(updatedUser: Usuario): Observable<any> {
+    let body = JSON.stringify({
+      _id: updatedUser._id,
+      username: updatedUser.username,
+      email: updatedUser.email,
+      nombres: updatedUser.nombres,
+      apellido: updatedUser.apellido,
+    });
+    console.log(body);
+    return this._http.put(
+      this.hostBase + updatedUser._id,
+      body,
+      this.httpOption
+    );
   }
 }

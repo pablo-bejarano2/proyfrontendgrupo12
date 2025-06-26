@@ -44,19 +44,13 @@
           <a class="nav-link custom-link" href="#politicas">Políticas</a>
         </li>
         <!-- Botón de Acceder -->
-        <li
-          class="nav-item"
-          *ngIf="!loginService.usuarioLoggedIn() && !userGoogleLogged()"
-        >
+        <li class="nav-item" *ngIf="!userLogged()">
           <button class="btn-access me-2" [routerLink]="['/form']">
             Acceder
           </button>
         </li>
         <!-- Usuario Logueado -->
-        <li
-          class="nav-item dropdown hover-dropdown"
-          *ngIf="loginService.usuarioLoggedIn() || userGoogleLogged()"
-        >
+        <li class="nav-item dropdown hover-dropdown" *ngIf="userLogged()">
           <a
             class="nav-link dropdown-toggle d-flex align-items-center justify-content-center"
             href="#"
@@ -66,10 +60,10 @@
             aria-expanded="false"
           >
             <img
-              [src]="imagenGoogle"
+              [src]="imagen"
               alt="img_user"
-              width="40"
-              height="40"
+              width="60"
+              height="60"
               class="rounded-circle me-2"
             />
           </a>
@@ -77,26 +71,30 @@
             class="dropdown-menu dropdown-menu-end text-center"
             aria-labelledby="userDropdown"
           >
-            <li class="px-3 py-2">
-              <div class="d-flex align-items-center flex-column">
+            <li class="px-3 py-3">
+              <div class="d-flex flex-column align-items-center">
                 <img
-                  [src]="imagenGoogle"
+                  [src]="imagen"
                   alt="img_user"
                   width="60"
                   height="60"
                   class="rounded-circle mb-2"
                 />
                 <div class="fw-bold" style="font-size: 1.05em">
-                  {{ nombreGoogle || 'Usuario' }}
+                  {{ username }}
                 </div>
                 <div class="text-muted" style="font-size: 0.95em">
-                  {{ emailGoogle }}
+                  {{ email }}
                 </div>
               </div>
             </li>
             <li><hr class="dropdown-divider" /></li>
             <li>
-              <button class="dropdown-item text-start" type="button">
+              <button
+                class="dropdown-item text-start"
+                type="button"
+                (click)="configurarCuenta()"
+              >
                 <i class="fa-solid fa-gear me-1"></i>Configuración
               </button>
             </li>

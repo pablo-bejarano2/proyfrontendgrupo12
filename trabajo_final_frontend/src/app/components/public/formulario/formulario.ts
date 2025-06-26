@@ -1,12 +1,6 @@
 import { Component, OnInit, OnDestroy, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  AbstractControl,
-  FormControl,
-  FormsModule,
-  NgForm,
-  ValidationErrors,
-} from '@angular/forms';
+import { FormControl, FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Usuario } from '../../../models/usuario';
 import { LoginService } from '../../../services/login';
@@ -30,14 +24,12 @@ declare const google: any; //para evitar errores de TypeScript
 export class Formulario implements OnInit {
   formUsuario!: FormGroup; //formulario de usuario
   userform: Usuario = new Usuario(); //usuario para el alta y login
-  returnUrl!: string; //url para usar router
   msglogin!: string; // mensaje que indica si no paso el login
   accion: string = 'login'; //accion para el comportamiento del form
   mostrarPassword: boolean = false; //para mostrar la contraseña
 
   constructor(
     private router: Router,
-    private route: ActivatedRoute,
     private loginService: LoginService,
     private toastr: ToastrService,
     private fb: FormBuilder,
@@ -49,13 +41,12 @@ export class Formulario implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadGoogleScript(); // 1. Carga dinámica del script de Google
+    this.loadGoogleScript(); //Carga dinámica del script de Google
     (window as any).handleCredentialResponse =
-      this.handleCredentialResponse.bind(this); // 2. Declara la función global que Google usará
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/home';
+      this.handleCredentialResponse.bind(this); //Declara la función global que Google usará
   }
 
-  /*Esta función simplemente carga el script oficial de Google Identity Services.*/
+  /*Carga el script oficial de Google Identity Services.*/
   private loadGoogleScript(): void {
     const script = document.createElement('script');
     script.src = 'https://accounts.google.com/gsi/client';
@@ -64,24 +55,23 @@ export class Formulario implements OnInit {
     document.head.appendChild(script);
   }
 
+  //Valida el token en el backend y regresa los datos del usuario de Google
   handleCredentialResponse(response: any): void {
     this.ngZone.run(() => {
       const token = response.credential;
       this.loginService.loginGoogle(token).subscribe(
         (result) => {
-          //Manejar la respuesta del backend (guardar datos, redirigir, etc.)
-          sessionStorage.setItem('userGoogle', result.nombre);
-          sessionStorage.setItem('emailGoogle', result.email);
-          sessionStorage.setItem('imagenGoogle', result.imagen);
+          this.guardarUsuarioEnStorage(result);
           this.router.navigate(['/home']);
         },
         (error) => {
-          alert('Error al iniciar sesión con Google');
+          this.toastr.error(error.error.msg || 'Error procensado la operación');
         }
       );
     });
   }
 
+  //Validaciones para el formulario
   private obtenerControlesFormulario() {
     return {
       nombres: new FormControl('', [
@@ -115,85 +105,85 @@ export class Formulario implements OnInit {
     };
   }
 
+  //Login normal
   login() {
     this.loginService
       .login(this.userform.username, this.userform.password)
       .subscribe(
         (result) => {
-          var usuario = result;
-          if (usuario.status == 1) {
+          if (result.status == 1) {
             //Guardar el usuario en cookies en el cliente
-            sessionStorage.setItem('usuario', usuario.username);
-            sessionStorage.setItem('usuarioId', usuario.userId);
-            sessionStorage.setItem('rol', usuario.rol);
+            this.guardarUsuarioEnStorage(result);
 
-            //redirigimos a home o a pagina que llamo
-            this.router.navigateByUrl(this.returnUrl);
+            //Redirigimos a home o a pagina que llamo
+            this.router.navigate(['/home']);
           } else {
-            //usuario no encontrado
+            //Usuario o contraseña incorrectos
             this.msglogin = result.msg;
           }
         },
         (error) => {
-          alert('Error de conexión');
-          console.log('Error de conexión');
-          console.log(error);
+          this.toastr.error(error.error.msg || 'Error procensado la operación');
         }
       );
-    this.formUsuario.reset();
+    this.formUsuario.reset(); //Limpiar el formulario
   }
 
+  guardarUsuarioEnStorage(usuario: any) {
+    const { username, email, nombres, apellido, userId, imagen } = usuario;
+    sessionStorage.setItem('username', username);
+    sessionStorage.setItem('email', email);
+    sessionStorage.setItem('nombres', nombres);
+    sessionStorage.setItem('apellido', apellido);
+    sessionStorage.setItem('id', userId);
+
+    if (imagen) {
+      sessionStorage.setItem('imagen', imagen);
+    }
+  }
+
+  //Crear cuenta
   createCount() {
     this.loginService.createCount(this.userform).subscribe(
       (result) => {
-        var usuario = result;
-        console.log(usuario);
-        if (usuario.status == 1) {
-          console.log(usuario);
-          this.toastr.success(usuario.msg);
+        if (result.status == 1) {
+          this.toastr.success(result.msg);
         } else {
-          this.msglogin = usuario.msg;
+          this.msglogin = result.msg;
         }
       },
       (error) => {
-        console.log(error);
         this.toastr.error(error.error.msg || 'Error procensado la operación');
+        alert(error.error.causa);
       }
     );
-    this.formUsuario.reset();
+    this.formUsuario.reset(); //Limpiar el formulario
   }
 
+  //Crear cuenta o Inicio de Sesión de acuerdo al valor de 'accion'
   procesarFormulario() {
+    this.msglogin = '';
+    const { username, password } = this.formUsuario.value;
+
     if (this.accion === 'register') {
-      this.asignarValores('cliente');
+      this.asignarValores();
       this.createCount();
     } else {
       //No permitir enviar form vacío en login
-      if (
-        !this.formUsuario.get('username')?.value ||
-        !this.formUsuario.get('password')?.value
-      ) {
+      if (!username || !password) {
         this.msglogin = 'Debe completar usuario y contraseña';
         return;
       }
       this.asignarValores();
       this.login();
     }
-    this.msglogin = '';
+    this.formUsuario.reset();
   }
 
-  asignarValores(rol: string = '') {
-    const valores = this.formUsuario.value;
-    this.userform.nombres = valores.nombres;
-    this.userform.apellido = valores.apellido;
-    this.userform.email = valores.email;
-    this.userform.username = valores.username;
-    this.userform.password = valores.password;
-    if (rol) {
-      this.userform.rol = rol;
-    }
-    console.log('en asignarValores');
-    console.log(this.userform);
+  asignarValores() {
+    //Solo funciona bien si los nombres de los campos del formulario
+    //coinciden exactamente con las propiedades de userform
+    Object.assign(this.userform, this.formUsuario.value);
   }
 
   cambiarAccion(nuevaAccion: string) {
@@ -203,7 +193,6 @@ export class Formulario implements OnInit {
   }
 
   irHome() {
-    console.log('Redirigiendo al inicio...');
     this.router.navigate(['/home']);
   }
 

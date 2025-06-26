@@ -1,0 +1,211 @@
+<div class="container-xxl contenedor-datos py-5 my-3">
+  <div class="row">
+    <!-- Panel lateral -->
+    <div class="col-md-3 mb-3">
+      <div
+        class="mb-3 d-flex flex-row align-items-center justify-content-center p-1"
+      >
+        <img
+          [src]="imagenUsuario"
+          alt="img_user"
+          width="100"
+          height="100"
+          class="rounded-circle me-3"
+        />
+        <h2>Mi cuenta</h2>
+      </div>
+      <!-- OPCIONES -->
+      <div class="d-flex flex-column gap-2">
+        <!-- MIS DATOS -->
+        <button
+          class="btn-option"
+          [ngClass]="{ 'activo': opcionSeleccionada === 'datos' }"
+          (click)="seleccionarOpcion('datos')"
+        >
+          <i class="fas fa-user me-2"></i>MIS DATOS
+        </button>
+        <!-- MIS PEDIDOS -->
+        <button
+          class="btn-option"
+          [ngClass]="{ 'activo': opcionSeleccionada === 'pedidos' }"
+          (click)="seleccionarOpcion('pedidos')"
+        >
+          <i class="fas fa-shopping-cart me-2"></i>MIS PEDIDOS
+        </button>
+        <!-- MIS FAVs -->
+        <button
+          class="btn-option"
+          [ngClass]="{ 'activo': opcionSeleccionada === 'favoritos' }"
+          (click)="seleccionarOpcion('favoritos')"
+        >
+          <i class="fas fa-heart me-2"></i>MIS FAVORITOS
+        </button>
+      </div>
+    </div>
+    <!-- VISTA DE DATOS -->
+    <div class="col-md-9">
+      <!-- DATOS PERSONALES -->
+      <div *ngIf="opcionSeleccionada === 'datos'" class="border rounded p-4">
+        <div class="border-bottom border-3 border-info mb-4">
+          <h4>Datos Personales</h4>
+        </div>
+        <form [formGroup]="formUsuario">
+          <!-- Username y Email -->
+          <div class="row mb-3">
+            <div class="col-md-6 mb-3 mb-md-0">
+              <label for="username" class="form-label">Usuario:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="username"
+                formControlName="username"
+              />
+              <div
+                *ngIf="formUsuario.get('username')?.touched && formUsuario.get('username')?.invalid"
+                class="text-danger mt-1"
+                style="font-size: 0.95em"
+              >
+                <div *ngIf="formUsuario.get('username')?.errors?.['required']">
+                  Este campo es obligatorio.
+                </div>
+                <div *ngIf="formUsuario.get('username')?.errors?.['minlength']">
+                  Debe tener al menos 4 caracteres.
+                </div>
+                <div *ngIf="formUsuario.get('username')?.errors?.['pattern']">
+                  No se permiten caracteres especiales.
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 mb-3 mb-md-0">
+              <label>Email:</label>
+              <input
+                type="email"
+                class="form-control"
+                [value]="emailUsuario"
+                disabled
+              />
+            </div>
+          </div>
+          <!-- Apellido y Nombres -->
+          <div class="row mb-3">
+            <div class="col-md-6 mb-3 mb-md-0">
+              <label for="nombres" class="form-label">Nombres:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="nombres"
+                formControlName="nombres"
+              />
+              <div
+                *ngIf="formUsuario.get('nombres')?.touched && formUsuario.get('nombres')?.invalid"
+                class="text-danger mt-1"
+                style="font-size: 0.95em"
+              >
+                <div *ngIf="formUsuario.get('nombres')?.errors?.['required']">
+                  Este campo es obligatorio.
+                </div>
+                <div *ngIf="formUsuario.get('nombres')?.errors?.['minlength']">
+                  Debe tener al menos 3 caracteres.
+                </div>
+                <div *ngIf="formUsuario.get('nombres')?.errors?.['pattern']">
+                  Solo se permiten letras y espacios.
+                </div>
+                <div
+                  *ngIf="formUsuario.get('nombres')?.errors?.['sinPrimerLetraMayuscula']"
+                >
+                  La primer letra debe ser mayúscula.
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 mb-3 mb-md-0">
+              <label for="apellido" class="form-label">Apellido:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="apellido"
+                formControlName="apellido"
+              />
+              <div
+                *ngIf="formUsuario.get('apellido')?.touched && formUsuario.get('apellido')?.invalid"
+                class="text-danger mt-1"
+                style="font-size: 0.95em"
+              >
+                <div *ngIf="formUsuario.get('apellido')?.errors?.['required']">
+                  Este campo es obligatorio.
+                </div>
+                <div *ngIf="formUsuario.get('apellido')?.errors?.['minlength']">
+                  Debe tener al menos 3 caracteres.
+                </div>
+                <div *ngIf="formUsuario.get('apellido')?.errors?.['pattern']">
+                  Solo se permiten letras y espacios.
+                </div>
+                <div
+                  *ngIf="formUsuario.get('apellido')?.errors?.['sinPrimerLetraMayuscula']"
+                >
+                  La primer letra debe ser mayúscula.
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Botones -->
+          <div
+            class="d-flex flex-column flex-md-row align-items-stretch justify-content-between gap-3"
+          >
+            <!-- MENSAJE DE ERROR -->
+            <div
+              *ngIf="msgUpdate"
+              class="alert alert-danger py-2 my-2 text-start mb-0 flex-grow-1"
+              style="font-size: 0.98em; max-width: 60%"
+            >
+              <i class="fa-solid fa-circle-exclamation"></i> {{ msgUpdate }}
+            </div>
+            <div class="d-flex justify-content-end">
+              <button
+                [disabled]="formUsuario.invalid"
+                class="btn btn-form btn-option"
+                (click)="actualizarUsuario()"
+              >
+                <i class="fa-solid fa-pencil me-2"></i>ACTUALIZAR DATOS
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+      <!-- PEDIDOS -->
+      <div *ngIf="opcionSeleccionada === 'pedidos'" class="border rounded p-4">
+        <div class="border-bottom border-3 border-info mb-4">
+          <h4>Mis Pedidos</h4>
+        </div>
+
+        <div class="table-responsive">
+          <table
+            class="table table-bordered table-hover align-middle text-center"
+          >
+            <thead>
+              <tr>
+                <th class="headers-table">Fecha</th>
+                <th class="headers-table">Estado</th>
+                <th class="headers-table">Dirección</th>
+                <th class="headers-table">Método de Pago</th>
+                <th class="headers-table">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let pedido of pedidos">
+                <td>{{ pedido.fecha }}</td>
+                <td>
+                  <span> {{ pedido.estado }} </span>
+                </td>
+                <td>{{ pedido.direccion }}</td>
+                <td>{{ pedido.metodoPago }}</td>
+                <td>${{ pedido.total }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <!-- FAVORITOS -->
+      <div *ngIf="opcionSeleccionada === 'favoritos'"></div>
+    </div>
+  </div>
+</div>

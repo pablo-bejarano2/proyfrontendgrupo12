@@ -11,30 +11,35 @@ import { Router, ActivatedRoute } from '@angular/router';
   styleUrl: './header.css',
 })
 export class Header implements OnInit {
-  emailGoogle: string = '';
-  imagenGoogle: string = '';
-  nombreGoogle: string = '';
+  //Datos del usuario
+  email: string = '';
+  imagen: string = '';
+  username: string = '';
 
   constructor(public loginService: LoginService, private router: Router) {}
 
   ngOnInit(): void {
-    this.emailGoogle = sessionStorage.getItem('emailGoogle') || '';
-    this.imagenGoogle = sessionStorage.getItem('imagenGoogle') || '';
-    this.nombreGoogle = sessionStorage.getItem('userGoogle') || '';
+    this.email = sessionStorage.getItem('email') || '';
+    this.imagen = sessionStorage.getItem('imagen') || 'assets/user.jpg';
+    this.username = sessionStorage.getItem('username') || '';
   }
 
   logout() {
-    console.log('Antes de logout: ' + sessionStorage.getItem('userGoogle'));
-    if (this.userGoogleLogged()) {
-      sessionStorage.clear();
-    }
-    this.loginService.logout();
+    //Borrar las variables almacenadas mediante el storage
+    sessionStorage.clear();
     this.router.navigate(['/home']);
-    console.log('Después de logout: ' + sessionStorage.getItem('userGoogle'));
   }
 
-  userGoogleLogged(): boolean {
-    console.log('User logged: ' + !!sessionStorage.getItem('emailGoogle'));
-    return !!sessionStorage.getItem('userGoogle');
+  userLogged(): boolean {
+    var resultado = false;
+    var usuarioGoogle = sessionStorage.getItem('username');
+    if (usuarioGoogle != null) {
+      resultado = true;
+    }
+    return resultado;
+  }
+
+  configurarCuenta() {
+    this.router.navigate(['/cuenta']);
   }
 }

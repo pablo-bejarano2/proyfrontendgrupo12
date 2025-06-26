@@ -1,6 +1,5 @@
 <div class="form">
   <button
-    routerLink="/"
     type="button"
     class="btn btn-custom-back position-absolute"
     style="top: 20px; left: 20px; z-index: 10"
@@ -44,14 +43,15 @@
     </ul>
 
     <form [formGroup]="formUsuario" (ngSubmit)="procesarFormulario()">
+      <!-- Inicio con Google -->
       <div
-        class="text-center py-2 mb-2 bg-info bg-opacity-10 border border-info rounded"
+        class="text-center py-2 mb-2 bg-info bg-opacity-10 border-bottom border-info border-3"
       >
         <!-- Contenedor de configuración -->
         <div
           id="g_id_onload"
           data-client_id="494017255948-hr66km4if477k8fcavbm6k3bio5e9s8d.apps.googleusercontent.com"
-          data-context="signin"
+          data-context="signup"
           data-ux_mode="popup"
           data-callback="handleCredentialResponse"
           data-auto_prompt="false"
@@ -61,14 +61,14 @@
         <div
           class="g_id_signin d-flex justify-content-center"
           data-type="standard"
-          data-shape="rectangular"
-          data-theme="outline"
-          data-text="signin_with"
-          data-size="large"
+          data-shape="pill"
+          data-theme="filled_blue"
+          data-text="continue_with"
+          data-size="medium"
           data-logo_alignment="left"
         ></div>
       </div>
-      <!-- MENSAJE DE ERROR LOGIN -->
+      <!-- Mensaje de Error -->
       <div
         *ngIf="msglogin"
         class="alert alert-danger py-2 my-2"
@@ -185,7 +185,7 @@
             Debe tener al menos 4 caracteres.
           </div>
           <div *ngIf="formUsuario.get('username')?.errors?.['pattern']">
-            No se permiten caracteres especiales ni espacios.
+            No se permiten caracteres especiales.
           </div>
         </div>
       </div>

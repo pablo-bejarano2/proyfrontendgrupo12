@@ -18,12 +18,17 @@ export class Header implements OnInit {
   username: string = '';
 
   categorias: any[] = [];
-  constructor(private categoriaService: CategoriaService, public loginService: LoginService, private router: Router) { }
+  constructor(
+    private categoriaService: CategoriaService,
+    public loginService: LoginService,
+    private router: Router
+  ) {}
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.cargarCategorias();
     this.email = sessionStorage.getItem('email') || '';
     this.imagen = sessionStorage.getItem('imagen') || 'assets/user.jpg';
+    //console.log('Img en el header: ' + this.imagen);
     this.username = sessionStorage.getItem('username') || '';
   }
 
@@ -55,5 +60,11 @@ export class Header implements OnInit {
 
   configurarCuenta() {
     this.router.navigate(['/cuenta']);
+  }
+
+  irAFormulario() {
+    this.router.navigate(['/form'], {
+      queryParams: { returnUrl: this.router.url, accion: 'login' },
+    });
   }
 }

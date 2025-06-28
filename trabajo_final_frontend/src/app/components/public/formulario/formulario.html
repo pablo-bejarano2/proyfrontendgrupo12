@@ -3,7 +3,7 @@
     type="button"
     class="btn btn-custom-back position-absolute"
     style="top: 20px; left: 20px; z-index: 10"
-    (click)="irHome()"
+    (click)="volver()"
   >
     <i class="fa-solid fa-arrow-left"></i>
   </button>
@@ -12,11 +12,16 @@
     <img src="assets/logo-removebg.png" alt="Logo" />
   </div>
 
+  <div class="text-danger fs-1">{{ returnUrl }}</div>
+  <div class="text-danger fs-1">{{ accion }}</div>
+  <div class="text-danger fs-1">{{ ingresoDesdeAdmin }}</div>
+  <!--PARA PRUEBAS-->
   <div class="login-card">
     <ul class="nav nav-tabs mb-3" id="loginTabs" role="tablist">
-      <li class="nav-item" role="presentation">
+      <li *ngIf="!ingresoDesdeAdmin" class="nav-item" role="presentation">
         <button
-          class="nav-link active"
+          class="nav-link"
+          [ngClass]="{ 'active': accion === 'login' }"
           id="login-tab"
           data-bs-toggle="tab"
           data-bs-target="#login"
@@ -30,6 +35,7 @@
       <li class="nav-item" role="presentation">
         <button
           class="nav-link"
+          [ngClass]="{ 'active': accion === 'register' }"
           id="register-tab"
           data-bs-toggle="tab"
           data-bs-target="#register"

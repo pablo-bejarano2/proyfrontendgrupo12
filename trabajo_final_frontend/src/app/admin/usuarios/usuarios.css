@@ -1,187 +1,203 @@
 /* Usuarios Admin OversizeX */
 
 .usuarios-admin-container {
-    background: #fff;
-    border-radius: 18px;
-    box-shadow: 0 2px 12px rgba(0, 188, 212, 0.07);
-    padding: 32px 28px;
-    max-width: 1000px;
-    margin: 40px auto;
-    font-family: 'Segoe UI', sans-serif;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 2px 12px rgba(0, 188, 212, 0.07);
+  padding: 32px 28px;
+  max-width: 1000px;
+  margin: 40px auto;
+  font-family: "Segoe UI", sans-serif;
 }
 
 .usuarios-admin-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28px;
 }
 
 .usuarios-admin-header h2 {
-    color: #00bcd4;
-    font-weight: 700;
-    font-size: 1.6rem;
-    margin: 0;
+  color: #00bcd4;
+  font-weight: 700;
+  font-size: 1.6rem;
+  margin: 0;
 }
 
 .btn-nuevo-usuario {
-    background: #00bcd4;
-    color: #fff;
-    border: none;
-    border-radius: 20px;
-    padding: 8px 28px;
-    font-weight: 600;
-    font-size: 1rem;
-    transition: background 0.2s, color 0.2s;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
+  background-color: #00bcd4;
+  border-color: #00bcd4;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 28px;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: background 0.2s, color 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .btn-nuevo-usuario:hover {
-    background: #0097a7;
-    color: #fff;
+  background: #0097a7;
+  color: #fff;
 }
 
 .usuarios-busqueda-form {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 18px;
 }
 
 .usuarios-busqueda-input {
-    width: 220px;
-    max-width: 300px;
-    padding: 8px 14px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 1rem;
-    transition: border 0.2s;
+  width: 220px;
+  max-width: 300px;
+  padding: 8px 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border 0.2s;
 }
 
 .usuarios-busqueda-input:focus {
-    border: 1.5px solid #00bcd4;
-    outline: none;
+  border: 1.5px solid #00bcd4;
+  outline: none;
 }
 
 .btn-buscar-usuario {
-    background: #00bcd4;
-    color: #fff;
-    border-radius: 20px;
-    font-size: 1rem;
-    padding: 8px 18px;
-    border: none;
-    transition: background 0.2s, color 0.2s;
-    display: flex;
-    align-items: center;
-    gap: 6px;
+  background: #00bcd4;
+  color: #fff;
+  border-radius: 20px;
+  font-size: 1rem;
+  padding: 8px 18px;
+  border: none;
+  transition: background 0.2s, color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .btn-buscar-usuario:hover {
-    background: #0097a7;
-    color: #fff;
+  background: #0097a7;
+  color: #fff;
+}
+
+.btn-borrar-filtro {
+  background: #f44336;
+  color: #fff;
+  border-radius: 20px;
+  font-size: 1rem;
+  padding: 8px 18px;
+  border: none;
+  transition: background 0.2s, color 0.2s;
+}
+
+.btn-borrar-filtro:hover {
+  background: #d32f2f;
+  color: #fff;
 }
 
 .table-usuarios {
-    border-radius: 5px;
-    overflow: hidden;
-    background: #fafbfc;
-    margin-bottom: 0;
-    width: 100%;
+  border-radius: 5px;
+  overflow: hidden;
+  background: #fafbfc;
+  margin-bottom: 0;
+  width: 100%;
 }
 
 .table-usuarios thead th {
-    background: #00bcd4;
-    color: #fff;
-    border: none;
-    font-weight: 600;
-    font-size: 1.08rem;
-    padding: 10px 16px;
+  background: #00bcd4;
+  color: #fff;
+  border: none;
+  font-weight: 600;
+  font-size: 1.08rem;
+  padding: 10px 16px;
 }
 
-.table-usuarios tbody td{
-    padding: 10px 16px;
+.table-usuarios tbody td {
+  padding: 10px 16px;
 }
 
 .table-usuarios tbody tr:nth-of-type(odd) {
-    background-color: #f5fafd;
+  background-color: #f5fafd;
 }
 
 .table-usuarios tbody tr:hover {
-    background-color: #e0f7fa;
+  background-color: #e0f7fa;
 }
 
 .btn-accion {
-    border-radius: 16px;
-    font-weight: 600;
-    padding: 6px 16px;
-    font-size: 0.98rem;
-    border: none;
-    margin-right: 6px;
-    transition: background 0.2s, color 0.2s;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
+  border-radius: 16px;
+  font-weight: 600;
+  padding: 6px 16px;
+  font-size: 0.98rem;
+  border: none;
+  margin-right: 6px;
+  transition: background 0.2s, color 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .btn-accion:last-child {
-    margin-right: 0;
+  margin-right: 0;
 }
 
 .btn-editar {
-    background: #e0f7fa;
-    color: #0097a7;
+  background: #e0f7fa;
+  color: #0097a7;
 }
 
 .btn-editar:hover {
-    background: #00bcd4;
-    color: #fff;
+  background: #00bcd4;
+  color: #fff;
 }
 
 .btn-eliminar {
-    background: #ffeaea;
-    color: #e53935;
+  background: #ffeaea;
+  color: #e53935;
 }
 
 .btn-eliminar:hover {
-    background: #e53935;
-    color: #fff;
+  background: #e53935;
+  color: #fff;
 }
 
 .btn-ver {
-    background: #e3f2fd;
-    color: #1976d2;
+  background: #e3f2fd;
+  color: #1976d2;
 }
 
 .btn-ver:hover {
-    background: #1976d2;
-    color: #fff;
+  background: #1976d2;
+  color: #fff;
 }
 
 @media (max-width: 700px) {
-    .usuarios-admin-container {
-        padding: 18px 6px;
-    }
+  .usuarios-admin-container {
+    padding: 18px 6px;
+  }
 
-    .usuarios-admin-header {
-        flex-direction: column;
-        gap: 12px;
-        align-items: flex-start;
-    }
+  .usuarios-admin-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
 
-    .usuarios-busqueda-form {
-        flex-direction: column;
-        gap: 8px;
-        width: 100%;
-    }
+  .usuarios-busqueda-form {
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+  }
 
-    .usuarios-busqueda-input {
-        width: 100%;
-        max-width: unset;
-    }
+  .usuarios-busqueda-input {
+    width: 100%;
+    max-width: unset;
+  }
 
-    .table-responsive {
-        overflow-x: auto;
-    }
+  .table-responsive {
+    overflow-x: auto;
+  }
 }

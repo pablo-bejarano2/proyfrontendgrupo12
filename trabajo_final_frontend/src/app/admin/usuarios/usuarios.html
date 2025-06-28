@@ -1,43 +1,190 @@
 <div class="usuarios-admin-container">
   <div class="usuarios-admin-header">
     <h2>Centro de Control de Usuarios</h2>
-    <button class="btn-nuevo-usuario">
+    <button class="btn-nuevo-usuario" (click)="crearUsuario()">
       <i class="fas fa-plus"></i> Nuevo Usuario
     </button>
   </div>
 
-  <form class="usuarios-busqueda-form" onsubmit="return false;">
-    <input type="text" class="usuarios-busqueda-input" placeholder="Buscar usuario..." aria-label="Buscar usuario">
+  <form class="usuarios-busqueda-form" (ngSubmit)="filtrarUsuarios()">
+    <input
+      type="text"
+      class="usuarios-busqueda-input"
+      placeholder="Buscar usuario..."
+      aria-label="Buscar usuario"
+      [(ngModel)]="username"
+      name="username"
+    />
     <button class="btn-buscar-usuario" type="submit">
       <i class="fas fa-search"></i> Buscar
     </button>
+    <button
+      *ngIf="filtrado"
+      class="btn-borrar-filtro"
+      type="button"
+      (click)="borrarFiltro()"
+    >
+      <i class="fa-solid fa-reply-all"></i> Borrar Filtro
+    </button>
+    <!-- Alerta por buscar vacío -->
+    <div
+      *ngIf="msgError"
+      class="alert alert-danger py-2 my-2"
+      style="font-size: 0.98em"
+    >
+      <i class="fa-solid fa-circle-exclamation me-1"></i> {{ msgError }}
+    </div>
   </form>
 
   <div class="table-responsive">
     <table class="table-usuarios">
       <thead>
-        <tr>
+        <tr class="text-center">
           <th>#</th>
-          <th>Nombre</th>
+          <th>Usuario</th>
           <th>Email</th>
+          <th>Nombres</th>
+          <th>Apellido</th>
           <th>Rol</th>
           <th>Acciones</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>1</td>
-          <td>Juan Pérez</td>
-          <td>juan.perezemail.com</td>
-          <td>Administrador</td>
+        <tr *ngFor="let usuario of usuarios; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ usuario.username }}</td>
+          <td>{{ usuario.email }}</td>
+          <td>{{ usuario.nombres }}</td>
+          <td>{{ usuario.apellido }}</td>
+          <td>{{ usuario.rol }}</td>
           <td>
-            <button class="btn-accion btn-editar" title="Editar"><i class="fas fa-pencil-alt"></i></button>
-            <button class="btn-accion btn-eliminar" title="Eliminar"><i class="fas fa-trash"></i></button>
-            <button class="btn-accion btn-ver" title="Ver"><i class="fas fa-eye"></i></button>
+            <div
+              class="d-flex flex-column flex-md-row justify-content-center align-items-stretch"
+            >
+              <button class="btn-accion btn-editar" title="Editar">
+                <i class="fas fa-pencil-alt"></i>
+              </button>
+              <button
+                class="btn-accion btn-eliminar"
+                (click)="eliminarUsuario(usuario._id)"
+                title="Eliminar"
+              >
+                <i class="fas fa-trash"></i>
+              </button>
+              <button
+                class="btn-accion btn-ver"
+                (click)="mostrarDetallesUsuario(usuario._id)"
+                title="Ver"
+              >
+                <i class="fas fa-eye"></i>
+              </button>
+            </div>
           </td>
         </tr>
-        <!-- Más filas aquí -->
       </tbody>
     </table>
+  </div>
+</div>
+<!-- Modal para ver datos del Usuario-->
+<div
+  class="modal fade show d-block"
+  tabindex="-1"
+  role="dialog"
+  *ngIf="usuario"
+  style="background-color: rgba(0, 0, 0, 0.5)"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content shadow-lg rounded-4 border-0">
+      <div
+        class="modal-header bg-gradient-primary text-white align-items-center"
+        style="background: linear-gradient(90deg, #00bcd4 0%, #2196f3 100%)"
+      >
+        <div class="d-flex align-items-center">
+          <div
+            class="rounded-circle bg-white d-flex align-items-center justify-content-center me-3"
+            style="width: 48px; height: 48px"
+          >
+            <i class="fas fa-user text-primary fs-3"></i>
+          </div>
+          <div>
+            <h5 class="modal-title mb-0 fw-bold">Detalles del Usuario</h5>
+            <small class="text-white">ID: {{ usuario._id }}</small>
+          </div>
+        </div>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          aria-label="Close"
+          (click)="cerrarModal()"
+        ></button>
+      </div>
+      <div class="modal-body py-4 px-5" style="background-color: #f5fafd">
+        <div class="row g-4">
+          <div class="col-md-4 text-center">
+            <img
+              [src]="usuario.imagen || 'assets/user.jpg'"
+              alt="user"
+              class="img-thumbnail rounded-circle border-3 border-info shadow"
+              style="width: 120px; height: 120px; object-fit: cover"
+            />
+            <div class="mt-3">
+              <span
+                class="badge bg-info text-white text-uppercase px-3 py-2 fs-6"
+              >
+                {{ usuario.rol }}
+              </span>
+            </div>
+          </div>
+          <div class="col-md-8">
+            <div class="row g-3">
+              <div class="col-sm-6">
+                <label class="form-label fw-bold mb-0"
+                  ><i class="fa-solid fa-user me-1"></i>Usuario:</label
+                >
+                <div class="form-control-plaintext ps-0">
+                  {{ usuario.username }}
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <label class="form-label fw-bold mb-0"
+                  ><i class="fa-solid fa-envelope me-1"></i>Correo:</label
+                >
+                <div class="form-control-plaintext ps-0">
+                  {{ usuario.email }}
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <label class="form-label fw-bold mb-0"
+                  ><i class="fa-solid fa-id-card me-1"></i>Nombre:</label
+                >
+                <div class="form-control-plaintext ps-0">
+                  {{ usuario.nombres }}
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <label class="form-label fw-bold mb-0"
+                  ><i class="fa-solid fa-id-card me-1"></i>Apellido:</label
+                >
+                <div class="form-control-plaintext ps-0">
+                  {{ usuario.apellido }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="modal-footer border-0 d-flex justify-content-end"
+        style="background: linear-gradient(90deg, #00bcd4 0%, #2196f3 100%)"
+      >
+        <button
+          type="button"
+          class="btn btn-danger px-4"
+          (click)="cerrarModal()"
+        >
+          <i class="fas fa-times me-2"></i>Cerrar
+        </button>
+      </div>
+    </div>
   </div>
 </div>

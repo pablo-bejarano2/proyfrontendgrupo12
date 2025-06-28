@@ -60,4 +60,20 @@ export class LoginService {
       this.httpOption
     );
   }
+
+  public getUsers(): Observable<any> {
+    return this._http.get<any>(this.hostBase);
+  }
+
+  public getUserById(id: string): Observable<any> {
+    return this._http.get<any>(this.hostBase + id);
+  }
+
+  public getUsersByUsername(username: string): Observable<any> {
+    return this._http.get<any>(this.hostBase + 'filtrado/' + username);
+  }
+
+  public deleteUser(id: string): Observable<any> {
+    return this._http.delete<any>(this.hostBase + id);
+  }
 }

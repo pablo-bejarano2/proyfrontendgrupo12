@@ -25,11 +25,14 @@ export class Formulario implements OnInit {
   formUsuario!: FormGroup; //formulario de usuario
   userform: Usuario = new Usuario(); //usuario para el alta y login
   msglogin!: string; // mensaje que indica si no paso el login
-  accion: string = 'login'; //accion para el comportamiento del form
+  accion!: string; //accion para el comportamiento del form
   mostrarPassword: boolean = false; //para mostrar la contraseña
+  ingresoDesdeAdmin: boolean = false; //Indica si el formulario se abre desde el admin
+  returnUrl!: string;
 
   constructor(
     private router: Router,
+    private route: ActivatedRoute,
     private loginService: LoginService,
     private toastr: ToastrService,
     private fb: FormBuilder,
@@ -44,6 +47,16 @@ export class Formulario implements OnInit {
     this.loadGoogleScript(); //Carga dinámica del script de Google
     (window as any).handleCredentialResponse =
       this.handleCredentialResponse.bind(this); //Declara la función global que Google usará
+    //Obtener params del componente que llamó al formulario
+    this.route.queryParams.subscribe((params) => {
+      if (params['accion'] === 'register') {
+        this.accion = 'register';
+        this.ingresoDesdeAdmin = true; //Indica que se abrió desde el admin
+      } else {
+        this.accion = 'login';
+      }
+      this.returnUrl = params['returnUrl']; //Guarda la URL de retorno para redirigir después del login o register
+    });
   }
 
   /*Carga el script oficial de Google Identity Services.*/
@@ -62,7 +75,8 @@ export class Formulario implements OnInit {
       this.loginService.loginGoogle(token).subscribe(
         (result) => {
           this.guardarUsuarioEnStorage(result);
-          this.router.navigate(['/home']);
+          sessionStorage.setItem('imagen', result.imagen);
+          this.router.navigate([this.returnUrl]);
         },
         (error) => {
           this.toastr.error(error.error.msg || 'Error procensado la operación');
@@ -74,34 +88,52 @@ export class Formulario implements OnInit {
   //Validaciones para el formulario
   private obtenerControlesFormulario() {
     return {
-      nombres: new FormControl('', [
-        Validators.required,
-        Validators.minLength(3),
-        Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$'),
-        MisValidadores.validarPrimerLetra,
-      ]),
-      apellido: new FormControl('', [
-        Validators.required,
-        Validators.minLength(3),
-        Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$'),
-        MisValidadores.validarPrimerLetra,
-      ]),
-      email: new FormControl('', [
-        Validators.required,
-        Validators.email,
-        MisValidadores.validarEmail,
-      ]),
-      username: new FormControl('', [
-        Validators.required,
-        Validators.minLength(4),
-        Validators.pattern('^[a-zA-Z0-9_ ]+$'),
-      ]),
-      password: new FormControl('', [
-        Validators.required,
-        Validators.minLength(8),
-        MisValidadores.validarPassword,
-      ]),
-      confirmPassword: new FormControl('', [Validators.required]),
+      nombres: new FormControl<string>('', {
+        nonNullable: true,
+        validators: [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$'),
+          MisValidadores.validarPrimerLetra,
+        ],
+      }),
+      apellido: new FormControl<string>('', {
+        nonNullable: true,
+        validators: [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$'),
+          MisValidadores.validarPrimerLetra,
+        ],
+      }),
+      email: new FormControl<string>('', {
+        nonNullable: true,
+        validators: [
+          Validators.required,
+          Validators.email,
+          MisValidadores.validarEmail,
+        ],
+      }),
+      username: new FormControl<string>('', {
+        nonNullable: true,
+        validators: [
+          Validators.required,
+          Validators.minLength(4),
+          Validators.pattern('^[a-zA-Z0-9_ ]+$'),
+        ],
+      }),
+      password: new FormControl<string>('', {
+        nonNullable: true,
+        validators: [
+          Validators.required,
+          Validators.minLength(8),
+          MisValidadores.validarPassword,
+        ],
+      }),
+      confirmPassword: new FormControl<string>('', {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
     };
   }
 
@@ -116,7 +148,7 @@ export class Formulario implements OnInit {
             this.guardarUsuarioEnStorage(result);
 
             //Redirigimos a home o a pagina que llamo
-            this.router.navigate(['/home']);
+            this.router.navigate([this.returnUrl]);
           } else {
             //Usuario o contraseña incorrectos
             this.msglogin = result.msg;
@@ -130,16 +162,12 @@ export class Formulario implements OnInit {
   }
 
   guardarUsuarioEnStorage(usuario: any) {
-    const { username, email, nombres, apellido, userId, imagen } = usuario;
+    const { username, email, nombres, apellido, userId } = usuario;
     sessionStorage.setItem('username', username);
     sessionStorage.setItem('email', email);
     sessionStorage.setItem('nombres', nombres);
     sessionStorage.setItem('apellido', apellido);
     sessionStorage.setItem('id', userId);
-
-    if (imagen) {
-      sessionStorage.setItem('imagen', imagen);
-    }
   }
 
   //Crear cuenta
@@ -154,7 +182,6 @@ export class Formulario implements OnInit {
       },
       (error) => {
         this.toastr.error(error.error.msg || 'Error procensado la operación');
-        alert(error.error.causa);
       }
     );
     this.formUsuario.reset(); //Limpiar el formulario
@@ -192,8 +219,8 @@ export class Formulario implements OnInit {
     this.formUsuario.reset();
   }
 
-  irHome() {
-    this.router.navigate(['/home']);
+  volver() {
+    this.router.navigate([this.returnUrl]);
   }
 
   cambioPassword() {

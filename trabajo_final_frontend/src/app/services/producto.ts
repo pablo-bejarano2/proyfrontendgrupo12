@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, map, catchError, of } from 'rxjs';
+import { Observable, map, catchError, of, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 export interface Producto {
@@ -8,10 +8,15 @@ export interface Producto {
   nombre: string;
   descripcion: string;
   precio: number;
-  stock: number;
+  tallas: Talla[];
   color: string;
-  imagenUrl?: string;
+  imagenes: string[];
   categoria: any;
+}
+export interface Talla{
+  _id: string;
+  talla: string;
+  stock: number;
 }
 
 export interface ProductoResponse {
@@ -54,14 +59,14 @@ export class ProductoService {
       );
   }
 
-  crearProducto(producto: Partial<Producto>): Observable<Producto> {
+  crearProducto(producto: FormData): Observable<any>{
     return this.http.post<any>(`${this.API_URL}/producto`, producto)
       .pipe(
         map(response => response.producto)
       );
   }
 
-  actualizarProducto(id: string, producto: Partial<Producto>): Observable<Producto> {
+  actualizarProducto(id: string, producto:FormData): Observable<any>{
     return this.http.put<Producto>(`${this.API_URL}/producto/${id}`, producto);
   }
 

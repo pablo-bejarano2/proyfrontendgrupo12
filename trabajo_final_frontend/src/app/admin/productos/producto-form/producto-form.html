@@ -1,0 +1,106 @@
+<form [formGroup]="productoForm" (ngSubmit)="guardar()" enctype="multipart/form-data">
+  <div class="mb-3">
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label for="nombre" class="form-label">Nombre</label>
+        <input id="nombre" type="text" formControlName="nombre" class="form-control"
+          placeholder="Nombre del producto" />
+        <div class="text-danger" *ngIf="productoForm.get('nombre')?.touched && productoForm.get('nombre')?.invalid">
+          El nombre es obligatorio
+        </div>
+      </div>
+      <div class="col-md-6">
+        <label for="descripcion" class="form-label">Descripción</label>
+        <input id="descripcion" type="text" formControlName="descripcion" class="form-control"
+          placeholder="Descripción" />
+        <div class="text-danger"
+          *ngIf="productoForm.get('descripcion')?.touched && productoForm.get('descripcion')?.invalid">
+          La descripcion es obligatoria
+        </div>
+      </div>
+      <div class="col-md-4">
+        <label for="precio" class="form-label">Precio</label>
+        <input id="precio" type="number" formControlName="precio" class="form-control" placeholder="Precio" />
+        <div class="text-danger" *ngIf="productoForm.get('precio')?.touched && productoForm.get('precio')?.invalid">
+          El precio es obligatorio
+        </div>
+      </div>
+      <div class="col-md-4">
+        <label for="color" class="form-label">Color</label>
+        <input id="color" type="text" formControlName="color" class="form-control" placeholder="Color" />
+        <div class="text-danger" *ngIf="productoForm.get('color')?.touched && productoForm.get('color')?.invalid">
+          El color es obligatorio
+        </div>
+      </div>
+      <div class="col-md-4">
+        <label for="categoria" class="form-label">Categoría</label>
+        <select id="categoria" formControlName="categoria" class="form-select">
+          <option *ngFor="let cat of categorias" [value]="cat._id">{{ cat.nombre }}</option>
+        </select>
+        <div class="text-danger"
+          *ngIf="productoForm.get('categoria')?.touched && productoForm.get('catgegoria')?.invalid">
+          La categoria es obligatoria
+        </div>
+      </div>
+
+      <div class="mb-2" *ngIf="producto?.imagenes?.length">
+        <label>Imágenes existentes:</label>
+        <div class="d-flex flex-wrap gap-2">
+          <img *ngFor="let img of producto?.imagenes" [src]="img" alt="Imagen existente" class="img-thumbnail"
+            style="width: 100px;">
+        </div>
+      </div>
+
+      <div class="col-md-12">
+        <label class="form-label">Imágenes</label>
+        <input type="file" class="form-control" (change)="onFileSelected($event)" multiple />
+      </div>
+    </div>
+
+    <!-- Tallas -->
+    <div class="mt-4">
+      <label class="form-label">Tallas y Stock</label>
+      <div formArrayName="tallas">
+        <div *ngFor="let talla of tallas.controls; let i = index" [formGroupName]="i"
+          class="row align-items-end mb-2 g-2">
+          <div class="col-md-5">
+            <input formControlName="talla" class="form-control" placeholder="Talla (ej. M, 38)" />
+          </div>
+          <div class="text-danger" *ngIf="talla.get('talla')?.touched && talla.get('talla')?.invalid">
+            La talla es obligatoria
+          </div>
+          <div class="col-md-5">
+            <input formControlName="stock" type="number" class="form-control" placeholder="Stock" />
+          </div>
+          <div class="text-danger" *ngIf="talla.get('stock')?.touched && talla.get('stock')?.invalid">
+            <ng-container *ngIf="talla.get('stock')?.errors?.['required']">
+              El stock es obligatorio
+            </ng-container>
+            <ng-container *ngIf="talla.get('stock')?.errors?.['min']">
+              El stock no puede ser negativo
+            </ng-container>
+          </div>
+          <div class="col-md-2">
+            <button type="button" class="btn btn-danger w-100" (click)="eliminarTalla(i)">
+              <i class="fa fa-trash"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <button type="button" class="btn btn-outline-primary mt-2" (click)="agregarTalla()">Agregar Talla</button>
+    </div>
+
+    <!-- Botones -->
+    <div class="d-flex justify-content-end gap-2 mt-4">
+      <button (click)="this.productoForm.reset()" type="button" class="btn btn-secondary">
+        <i class="fa fa-trash"></i>
+        Limpiar
+      </button>
+      <button (click)="cancelar()" type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Cerrar"> <i
+          class="fa fa-cancel" ></i>
+        Cancelar</button>
+      <button [disabled]="productoForm.invalid" type="submit" class="btn btn-info text-white"> <i
+          class="fa fa-save"></i> Guardar</button>
+    </div>
+  </div>
+</form>

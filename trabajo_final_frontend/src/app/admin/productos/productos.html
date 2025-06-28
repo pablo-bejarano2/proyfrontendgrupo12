@@ -1,38 +1,69 @@
 <div class="productos-admin-container">
-    <div class="productos-admin-header">
-        <h2>Gestión de Productos</h2>
-    </div>
-    <div class="productos-admin-menu">
-        <button class="btn-producto agregar" title="Agregar producto">
-            <i class="fas fa-plus"></i> Nuevo Producto
-        </button>
-        <button class="btn-producto agregarCategoria" title="Agregar categoría">
-            <i class="fas fa-plus"></i> Nueva Categoría
-        </button>
-        <button class="btn-producto"><i class="fas fa-list"></i> Listar</button>
+  <div class="productos-admin-header">
+    <h2>Gestión de Productos</h2>
+  </div>
+  <div class="productos-admin-menu">
+    <button (click)="abrirModal()" class="btn-producto agregar" title="Agregar producto" data-bs-toggle="modal"
+      data-bs-target="#modalProducto">
+      <i class="fas fa-plus"></i> Nuevo Producto
+    </button>
+    <button class="btn-producto agregarCategoria" title="Agregar categoría" data-bs-target="#modalCategoria" data-bs-toggle="modal">
+      <i class="fas fa-plus"></i> Nueva Categoría
+    </button>
+    <button class="btn-producto"><i class="fas fa-list" (click)="cargarProductos()"></i> Listar</button>
 
-        <input type="text" class="input-busqueda" placeholder="Buscar producto..." autofocus />
-        <button class="btn-producto">
-            <i class="fas fa-search"></i>
-        </button>
-    </div>
-    <div class="productos-admin-content">
-        <div class="productos-lista">
-            <!-- Ejemplo de card de producto -->
-            <div class="producto-card">
-                <img src="assets/home/imagen-remera-categorias.jpg" alt="Remera Oversize" class="producto-img">
-                <div class="producto-info">
-                    <h4 class="producto-nombre">Remera Oversize Blanca</h4>
-                    <p class="producto-desc">Remera de algodón premium, corte oversize, unisex.</p>
-                    <span class="producto-precio">$7.500</span>
-                </div>
-                <div class="producto-acciones">
-                    <button class="btn-producto editar" title="Editar"><i class="fas fa-edit"></i></button>
-                    <button class="btn-producto eliminar" title="Eliminar"><i class="fas fa-trash"></i></button>
-                </div>
-            </div>
+    <input type="text" class="input-busqueda" placeholder="Buscar producto..." autofocus />
+    <button class="btn-producto">
+      <i class="fas fa-search"></i>
+    </button>
+  </div>
+  <div class="productos-admin-content">
+    <div class="productos-lista" *ngFor="let producto of productos">
+      <!-- Ejemplo de card de producto -->
+      <div class="producto-card">
+        <img *ngIf="producto.imagenes?.length" [src]="producto.imagenes[0]" alt="{{ producto.nombre }}" class="producto-img">
+        <div class="producto-info">
+          <h4 class="producto-nombre">{{ producto.nombre }}</h4>
+          <p class="producto-desc">{{ producto.descripcion }}</p>
+          <span class="producto-precio">${{ producto.precio }}</span>
         </div>
+        <div class="producto-acciones">
+          <button (click)="abrirModal(producto)" class="btn-producto editar" title="Editar" data-bs-toggle="modal"
+            data-bs-target="#modalProducto"><i class="fas fa-edit"></i></button>
+          <button (click)="eliminarProducto(producto._id)" class="btn-producto eliminar" title="Eliminar"><i
+              class="fas fa-trash"></i></button>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
 
 <!-- Modal para agregar/editar producto -->
+<div class="modal fade" id="modalProducto" tabindex="-1" aria-labelledby="modalProductoLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalProductoLabel">Agregar/Editar Producto</h5>
+        <button (click)="cerrarModal()" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <app-producto-form [producto]="productoSeleccionado" (cerrar)="cerrarModal()"
+          (guardarForm)="guardarProducto($event)"></app-producto-form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal para agregar categoría -->
+<div class="modal fade" id="modalCategoria" tabindex="-1" aria-labelledby="modalCategoriaLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalProductoLabel">Agregar/Editar categoría </h5>
+        <button  type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <app-categoria-form></app-categoria-form>
+      </div>
+    </div>
+  </div>
+</div>

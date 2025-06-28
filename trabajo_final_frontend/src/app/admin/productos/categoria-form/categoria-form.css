@@ -1,0 +1,89 @@
+/* Estilo OversizeX para el formulario y tabla de categorías */
+
+form.mb-4 {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0,188,212,0.07);
+  padding: 18px 14px 10px 14px;
+  margin-bottom: 28px !important;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+form.mb-4 .form-control {
+  border: 1.5px solid #e0f7fa;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 1rem;
+  transition: border 0.2s;
+  background: #fafdff;
+}
+
+form.mb-4 .form-control:focus {
+  border-color: #00bcd4;
+  outline: none;
+  box-shadow: 0 0 0 2px #e0f7fa;
+}
+
+form.mb-4 .btn-info {
+  border-radius: 20px;
+  font-weight: 600;
+  padding: 8px 0;
+  background: #00bcd4;
+  border: none;
+  color: #fff;
+  transition: background 0.2s, color 0.2s;
+}
+
+form.mb-4 .btn-info:hover {
+  background: #0097a7;
+  color: #fff;
+}
+
+.table-responsive {
+  border-radius: 14px;
+  overflow: hidden;
+  background: #fafbfc;
+  box-shadow: 0 2px 8px rgba(0,188,212,0.07);
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) {
+  background-color: #f5fafd;
+}
+
+.table thead tr th {
+  background: #00bcd4;
+  color: #fff;
+  border: none;
+  font-weight: 600;
+  font-size: 1.08rem;
+}
+
+.table td, .table th {
+  vertical-align: middle;
+}
+
+.btn-outline-danger.btn-sm {
+  border-radius: 12px;
+  font-weight: 600;
+  padding: 6px 14px;
+  font-size: 0.98rem;
+  border: 1.5px solid #e53935;
+  color: #e53935;
+  background: #ffeaea;
+  transition: background 0.2s, color 0.2s;
+}
+
+.btn-outline-danger.btn-sm:hover {
+  background: #e53935;
+  color: #fff;
+  border-color: #e53935;
+}
+
+@media (max-width: 700px) {
+  form.mb-4 {
+    padding: 10px 4px 6px 4px;
+  }
+  .table-responsive {
+    font-size: 0.97rem;
+  }
+}

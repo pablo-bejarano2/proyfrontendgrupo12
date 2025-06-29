@@ -12,12 +12,8 @@
     <img src="assets/logo-removebg.png" alt="Logo" />
   </div>
 
-  <div class="text-danger fs-1">{{ returnUrl }}</div>
-  <div class="text-danger fs-1">{{ accion }}</div>
-  <div class="text-danger fs-1">{{ ingresoDesdeAdmin }}</div>
-  <!--PARA PRUEBAS-->
   <div class="login-card">
-    <ul class="nav nav-tabs mb-3" id="loginTabs" role="tablist">
+    <ul class="nav nav-tabs" id="loginTabs" role="tablist">
       <li *ngIf="!ingresoDesdeAdmin" class="nav-item" role="presentation">
         <button
           class="nav-link"

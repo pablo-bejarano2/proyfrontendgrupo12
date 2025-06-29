@@ -61,7 +61,18 @@
             <div
               class="d-flex flex-column flex-md-row justify-content-center align-items-stretch"
             >
-              <button class="btn-accion btn-editar" title="Editar">
+              <button
+                class="btn-accion btn-ver"
+                (click)="mostrarDetallesUsuario(usuario._id)"
+                title="Ver"
+              >
+                <i class="fas fa-eye"></i>
+              </button>
+              <button
+                class="btn-accion btn-editar"
+                title="Editar"
+                (click)="editarUsuario(usuario._id)"
+              >
                 <i class="fas fa-pencil-alt"></i>
               </button>
               <button
@@ -71,13 +82,6 @@
               >
                 <i class="fas fa-trash"></i>
               </button>
-              <button
-                class="btn-accion btn-ver"
-                (click)="mostrarDetallesUsuario(usuario._id)"
-                title="Ver"
-              >
-                <i class="fas fa-eye"></i>
-              </button>
             </div>
           </td>
         </tr>
@@ -85,12 +89,15 @@
     </table>
   </div>
 </div>
-<!-- Modal para ver datos del Usuario-->
+<!-- Modal para las operaciones sobre el Usuario-->
 <div
-  class="modal fade show d-block"
+  class="modal fade"
   tabindex="-1"
   role="dialog"
+  aria-labelledby="tituloUsuario"
+  aria-modal="true"
   *ngIf="usuario"
+  [ngClass]="{ show: true, 'd-block': true }"
   style="background-color: rgba(0, 0, 0, 0.5)"
 >
   <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
@@ -107,7 +114,9 @@
             <i class="fas fa-user text-primary fs-3"></i>
           </div>
           <div>
-            <h5 class="modal-title mb-0 fw-bold">Detalles del Usuario</h5>
+            <h5 id="tituloUsuario" class="modal-title mb-0 fw-bold">
+              Detalles del Usuario
+            </h5>
             <small class="text-white">ID: {{ usuario._id }}</small>
           </div>
         </div>
@@ -136,40 +145,156 @@
             </div>
           </div>
           <div class="col-md-8">
-            <div class="row g-3">
-              <div class="col-sm-6">
-                <label class="form-label fw-bold mb-0"
-                  ><i class="fa-solid fa-user me-1"></i>Usuario:</label
-                >
-                <div class="form-control-plaintext ps-0">
-                  {{ usuario.username }}
+            <form [formGroup]="formUsuario">
+              <div class="row g-3">
+                <!-- USERNAME -->
+                <div class="col-sm-6">
+                  <label class="form-label fw-bold mb-0"
+                    ><i class="fa-solid fa-user me-1"></i>Usuario:</label
+                  >
+                  <div
+                    *ngIf="!editandoUsuario"
+                    class="form-control-plaintext ps-0"
+                  >
+                    {{ usuario.username }}
+                  </div>
+                  <input
+                    *ngIf="editandoUsuario"
+                    type="text"
+                    class="form-control"
+                    formControlName="username"
+                  />
+                  <div
+                    *ngIf="editandoUsuario && formUsuario.get('username')?.invalid && formUsuario.get('username')?.touched"
+                    class="text-danger mt-1"
+                    style="font-size: 0.95em"
+                  >
+                    <div
+                      *ngIf="formUsuario.get('username')?.errors?.['required']"
+                    >
+                      Este campo es obligatorio.
+                    </div>
+                    <div
+                      *ngIf="formUsuario.get('username')?.errors?.['minlength']"
+                    >
+                      Debe tener al menos 4 caracteres.
+                    </div>
+                    <div
+                      *ngIf="formUsuario.get('username')?.errors?.['pattern']"
+                    >
+                      No se permiten caracteres especiales.
+                    </div>
+                  </div>
+                </div>
+                <!-- EMAIL -->
+                <div class="col-sm-6">
+                  <label class="form-label fw-bold mb-0"
+                    ><i class="fa-solid fa-envelope me-1"></i>Correo:</label
+                  >
+                  <div
+                    *ngIf="!editandoUsuario"
+                    class="form-control-plaintext ps-0"
+                  >
+                    {{ usuario.email }}
+                  </div>
+                  <input
+                    *ngIf="editandoUsuario"
+                    type="email"
+                    class="form-control"
+                    formControlName="email"
+                    readonly
+                  />
+                </div>
+                <!-- NOMBRES -->
+                <div class="col-sm-6">
+                  <label class="form-label fw-bold mb-0"
+                    ><i class="fa-solid fa-id-card me-1"></i>Nombres:</label
+                  >
+                  <div
+                    *ngIf="!editandoUsuario"
+                    class="form-control-plaintext ps-0"
+                  >
+                    {{ usuario.nombres }}
+                  </div>
+                  <input
+                    *ngIf="editandoUsuario"
+                    type="text"
+                    class="form-control"
+                    formControlName="nombres"
+                  />
+                  <div
+                    *ngIf="editandoUsuario && formUsuario.get('nombres')?.touched && formUsuario.get('nombres')?.invalid"
+                    class="text-danger mt-1"
+                    style="font-size: 0.95em"
+                  >
+                    <div
+                      *ngIf="formUsuario.get('nombres')?.errors?.['required']"
+                    >
+                      Este campo es obligatorio.
+                    </div>
+                    <div
+                      *ngIf="formUsuario.get('nombres')?.errors?.['minlength']"
+                    >
+                      Debe tener al menos 3 caracteres.
+                    </div>
+                    <div
+                      *ngIf="formUsuario.get('nombres')?.errors?.['pattern']"
+                    >
+                      Solo se permiten letras y espacios.
+                    </div>
+                    <div
+                      *ngIf="formUsuario.get('nombres')?.errors?.['sinPrimerLetraMayuscula']"
+                    >
+                      La primer letra debe ser mayúscula.
+                    </div>
+                  </div>
+                </div>
+                <!-- APELLIDO -->
+                <div class="col-sm-6">
+                  <label class="form-label fw-bold mb-0"
+                    ><i class="fa-solid fa-id-card me-1"></i>Apellido:</label
+                  >
+                  <div
+                    *ngIf="!editandoUsuario"
+                    class="form-control-plaintext ps-0"
+                  >
+                    {{ usuario.apellido }}
+                  </div>
+                  <input
+                    *ngIf="editandoUsuario"
+                    type="text"
+                    class="form-control"
+                    formControlName="apellido"
+                  />
+                  <div
+                    *ngIf="editandoUsuario && formUsuario.get('apellido')?.touched && formUsuario.get('apellido')?.invalid"
+                    class="text-danger mt-1"
+                    style="font-size: 0.95em"
+                  >
+                    <div
+                      *ngIf="formUsuario.get('apellido')?.errors?.['required']"
+                    >
+                      Este campo es obligatorio.
+                    </div>
+                    <div
+                      *ngIf="formUsuario.get('apellido')?.errors?.['minlength']"
+                    >
+                      Debe tener al menos 3 caracteres.
+                    </div>
+                    <div
+                      *ngIf="formUsuario.get('apellido')?.errors?.['pattern']"
+                    >
+                      Solo se permiten letras y espacios.
+                    </div>
+                    <div
+                      *ngIf="formUsuario.get('apellido')?.errors?.['sinPrimerLetraMayuscula']"
+                    >
+                      La primer letra debe ser mayúscula.
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div class="col-sm-6">
-                <label class="form-label fw-bold mb-0"
-                  ><i class="fa-solid fa-envelope me-1"></i>Correo:</label
-                >
-                <div class="form-control-plaintext ps-0">
-                  {{ usuario.email }}
-                </div>
-              </div>
-              <div class="col-sm-6">
-                <label class="form-label fw-bold mb-0"
-                  ><i class="fa-solid fa-id-card me-1"></i>Nombre:</label
-                >
-                <div class="form-control-plaintext ps-0">
-                  {{ usuario.nombres }}
-                </div>
-              </div>
-              <div class="col-sm-6">
-                <label class="form-label fw-bold mb-0"
-                  ><i class="fa-solid fa-id-card me-1"></i>Apellido:</label
-                >
-                <div class="form-control-plaintext ps-0">
-                  {{ usuario.apellido }}
-                </div>
-              </div>
-            </div>
+            </form>
           </div>
         </div>
       </div>
@@ -177,6 +302,15 @@
         class="modal-footer border-0 d-flex justify-content-end"
         style="background: linear-gradient(90deg, #00bcd4 0%, #2196f3 100%)"
       >
+        <button
+          *ngIf="editandoUsuario"
+          type="button"
+          class="btn btn-success px-4 me-2"
+          (click)="guardarEdicionUsuario()"
+          [disabled]="formUsuario.invalid"
+        >
+          <i class="fas fa-save me-2"></i>Guardar
+        </button>
         <button
           type="button"
           class="btn btn-danger px-4"

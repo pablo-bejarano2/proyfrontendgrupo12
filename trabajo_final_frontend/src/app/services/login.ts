@@ -53,7 +53,6 @@ export class LoginService {
       nombres: updatedUser.nombres,
       apellido: updatedUser.apellido,
     });
-    console.log(body);
     return this._http.put(
       this.hostBase + updatedUser._id,
       body,

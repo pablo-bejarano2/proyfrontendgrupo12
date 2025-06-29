@@ -132,3 +132,15 @@
         min-width: 100%;
     }
 }
+
+/* Centra la alerta en el medio de la pantalla */
+.alerta-centro {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2000;
+  min-width: 320px;
+  max-width: 90vw;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+}

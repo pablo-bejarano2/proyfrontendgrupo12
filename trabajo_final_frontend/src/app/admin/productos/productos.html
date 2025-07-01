@@ -7,26 +7,31 @@
       data-bs-target="#modalProducto">
       <i class="fas fa-plus"></i> Nuevo Producto
     </button>
-    <button class="btn-producto agregarCategoria" title="Agregar categoría" data-bs-target="#modalCategoria" data-bs-toggle="modal">
+    <button class="btn-producto agregarCategoria" title="Agregar categoría" data-bs-target="#modalCategoria"
+      data-bs-toggle="modal">
       <i class="fas fa-plus"></i> Nueva Categoría
     </button>
-    <button class="btn-producto"><i class="fas fa-list" (click)="cargarProductos()"></i> Listar</button>
+    <input type="text" class="input-busqueda" placeholder="Buscar producto..." autofocus
+      [formControl]="busquedaControl" />
 
-    <input type="text" class="input-busqueda" placeholder="Buscar producto..." autofocus />
-    <button class="btn-producto">
-      <i class="fas fa-search"></i>
-    </button>
   </div>
-  <div class="productos-admin-content">
+  <div class="productos-admin-content" *ngIf="productos.length > 0">
     <div class="productos-lista" *ngFor="let producto of productos">
       <!-- Ejemplo de card de producto -->
       <div class="producto-card">
-        <img *ngIf="producto.imagenes?.length" [src]="producto.imagenes[0]" alt="{{ producto.nombre }}" class="producto-img">
+        <img *ngIf="producto.imagenes?.length" [src]="producto.imagenes[0]" alt="{{ producto.nombre }}"
+          class="producto-img">
         <div class="producto-info">
           <h4 class="producto-nombre">{{ producto.nombre }}</h4>
           <p class="producto-desc">{{ producto.descripcion }}</p>
-          <span class="producto-precio">${{ producto.precio }}</span>
+          <div class="producto-tallas" *ngIf="producto.tallas.length > 0">
+            <div class="m-0 talla-item" *ngFor="let talla of producto.tallas">
+              <p>{{talla.talla}} / {{talla.stock}}</p>
+            </div>
+          </div>
         </div>
+        <span class="producto-precio">${{ producto.precio }}</span>
+
         <div class="producto-acciones">
           <button (click)="abrirModal(producto)" class="btn-producto editar" title="Editar" data-bs-toggle="modal"
             data-bs-target="#modalProducto"><i class="fas fa-edit"></i></button>
@@ -44,7 +49,8 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="modalProductoLabel">Agregar/Editar Producto</h5>
-        <button (click)="cerrarModal()" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        <button (click)="cerrarModal()" type="button" class="btn-close" data-bs-dismiss="modal"
+          aria-label="Cerrar"></button>
       </div>
       <div class="modal-body">
         <app-producto-form [producto]="productoSeleccionado" (cerrar)="cerrarModal()"
@@ -59,7 +65,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="modalProductoLabel">Agregar/Editar categoría </h5>
-        <button  type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
       </div>
       <div class="modal-body">
         <app-categoria-form></app-categoria-form>

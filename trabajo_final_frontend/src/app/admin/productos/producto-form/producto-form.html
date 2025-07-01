@@ -38,7 +38,7 @@
           <option *ngFor="let cat of categorias" [value]="cat._id">{{ cat.nombre }}</option>
         </select>
         <div class="text-danger"
-          *ngIf="productoForm.get('categoria')?.touched && productoForm.get('catgegoria')?.invalid">
+          *ngIf="productoForm.get('categoria')?.touched && productoForm.get('categoria')?.invalid">
           La categoria es obligatoria
         </div>
       </div>

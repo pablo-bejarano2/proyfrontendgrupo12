@@ -30,6 +30,7 @@ export interface ProductoResponse {
 })
 export class ProductoService {
   private API_URL = environment.apiUrl;
+  valorBusqueda = '';
 
   constructor(private http: HttpClient) { }
 
@@ -72,5 +73,16 @@ export class ProductoService {
 
   eliminarProducto(id: string): Observable<any> {
     return this.http.delete(`${this.API_URL}/producto/${id}`);
+  }
+
+  buscarPorNombre(nombre: string){
+    return this.http.get<ProductoResponse>(`${this.API_URL}/producto/nombre?nombre=${nombre}`)
+     .pipe(
+        map(response => response.productos || []),
+        catchError(error => {
+          console.error('Error al obtener productos por nombre:', error);
+          return of([]);
+        })
+      );
   }
 }

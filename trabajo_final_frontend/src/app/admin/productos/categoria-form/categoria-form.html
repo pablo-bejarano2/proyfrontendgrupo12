@@ -24,12 +24,12 @@
                 <th class="text-end">Acción</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody *ngIf="categorias.length > 0">
               <tr *ngFor="let cat of categorias">
                 <td>{{ cat.nombre }}</td>
                 <td>{{ cat.descripcion }}</td>
                 <td class="text-end">
-                  <button class="btn btn-outline-danger btn-sm" title="Eliminar">
+                  <button class="btn btn-outline-danger btn-sm" title="Eliminar" (click)="cat._id && eliminarCategoria(cat._id)">
                     <i class="fas fa-trash"></i>
                   </button>
                 </td>

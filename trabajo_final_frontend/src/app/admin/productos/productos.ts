@@ -4,9 +4,12 @@ import { Producto, ProductoService } from '../../services/producto';
 import { ProductoForm } from './producto-form/producto-form';
 import { ToastrService } from 'ngx-toastr';
 import { CategoriaForm } from './categoria-form/categoria-form';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-productos',
-  imports: [CommonModule, ProductoForm, CategoriaForm],
+  imports: [CommonModule, CategoriaForm, ReactiveFormsModule, ProductoForm],
   templateUrl: './productos.html',
   styleUrl: './productos.css'
 })
@@ -14,12 +17,14 @@ export class Productos implements OnInit {
   productos: Producto[] = [];
   mostrarModal = false; // Controla la visibilidad del modal
   productoSeleccionado: Producto | null = null;
+  busquedaControl = new FormControl('');
 
   constructor(private productoService: ProductoService, private toastr: ToastrService) { }
 
 
   ngOnInit(): void {
     this.cargarProductos();
+    this.buscarProductoPorNombre();
   }
 
   abrirModal(producto?: Producto): void {
@@ -34,6 +39,18 @@ export class Productos implements OnInit {
     this.productoSeleccionado = null; // Reinicia la selección del producto
   }
 
+  buscarProductoPorNombre(){
+    this.busquedaControl.setValue(this.productoService.valorBusqueda);
+ this.busquedaControl.valueChanges
+    .pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap((valor) => this.productoService.buscarPorNombre(valor ?? ''))
+    )
+    .subscribe((respuesta) =>{
+      this.productos = respuesta;
+    })
+  }
   guardarProducto(productoForm: FormData) {
     if (this.productoSeleccionado) {
       // Modo editar
@@ -91,13 +108,26 @@ export class Productos implements OnInit {
   }
   // Método para eliminar un producto por ID
   eliminarProducto(id: string): void {
-    this.productoService.eliminarProducto(id).subscribe({
-      next: () =>{
-      this.productos = this.productos.filter(prod => prod._id !== id);
-      this.toastr.success('Producto eliminado con éxito !');
-      },
-      error: () => this.toastr.error('Error al eliminar Producto')
-    })
+ Swal.fire({
+    title: '¿Eliminar producto?',
+    text: 'Esta acción no se puede deshacer.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#00bcd4',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Sí, eliminar',
+    cancelButtonText: 'Cancelar'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.productoService.eliminarProducto(id).subscribe({
+        next: () => {
+          this.productos = this.productos.filter(prod => prod._id !== id);
+          this.toastr.success('Producto eliminado con éxito !');
+        },
+        error: () => this.toastr.error('Error al eliminar Producto')
+      });
+    }
+  });
   }
   // Método para actualizar un producto
   actualizarProducto(id: string, productoActualizado: FormData): void {

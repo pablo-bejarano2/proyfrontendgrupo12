@@ -5,9 +5,14 @@ import {
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
-import { provideHttpClient } from '@angular/common/http';
+import {
+  HTTP_INTERCEPTORS,
+  provideHttpClient,
+  withInterceptorsFromDi,
+} from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideToastr } from 'ngx-toastr';
+import { TokenInterceptorService } from './services/token-interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -22,6 +27,11 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    provideHttpClient(),
-  ]
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptorService, // Interceptor para agregar el token a las pet
+      multi: true,
+    },
+    provideHttpClient(withInterceptorsFromDi()),
+  ],
 };

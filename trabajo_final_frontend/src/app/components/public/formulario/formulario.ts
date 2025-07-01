@@ -43,48 +43,6 @@ export class Formulario implements OnInit {
     }); //inicializa el formulario con los controles y validadores
   }
 
-  ngOnInit(): void {
-    this.loadGoogleScript(); //Carga dinámica del script de Google
-    (window as any).handleCredentialResponse =
-      this.handleCredentialResponse.bind(this); //Declara la función global que Google usará
-    //Obtener params del componente que llamó al formulario
-    this.route.queryParams.subscribe((params) => {
-      if (params['accion'] === 'register') {
-        this.accion = 'register';
-        this.ingresoDesdeAdmin = true; //Indica que se abrió desde el admin
-      } else {
-        this.accion = 'login';
-      }
-      this.returnUrl = params['returnUrl']; //Guarda la URL de retorno para redirigir después del login o register
-    });
-  }
-
-  /*Carga el script oficial de Google Identity Services.*/
-  private loadGoogleScript(): void {
-    const script = document.createElement('script');
-    script.src = 'https://accounts.google.com/gsi/client';
-    script.async = true;
-    script.defer = true;
-    document.head.appendChild(script);
-  }
-
-  //Valida el token en el backend y regresa los datos del usuario de Google
-  handleCredentialResponse(response: any): void {
-    this.ngZone.run(() => {
-      const token = response.credential;
-      this.loginService.loginGoogle(token).subscribe(
-        (result) => {
-          this.guardarUsuarioEnStorage(result);
-          sessionStorage.setItem('imagen', result.imagen);
-          this.router.navigate([this.returnUrl]);
-        },
-        (error) => {
-          this.toastr.error(error.error.msg || 'Error procensado la operación');
-        }
-      );
-    });
-  }
-
   //Validaciones para el formulario
   private obtenerControlesFormulario() {
     return {
@@ -137,6 +95,48 @@ export class Formulario implements OnInit {
     };
   }
 
+  ngOnInit(): void {
+    this.loadGoogleScript(); //Carga dinámica del script de Google
+    (window as any).handleCredentialResponse =
+      this.handleCredentialResponse.bind(this); //Declara la función global que Google usará
+    //Obtener params del componente que llamó al formulario
+    this.route.queryParams.subscribe((params) => {
+      if (params['accion'] === 'register') {
+        this.accion = 'register';
+        this.ingresoDesdeAdmin = true; //Indica que se abrió desde el admin
+      } else {
+        this.accion = 'login';
+      }
+      this.returnUrl = params['returnUrl']; //Guarda la URL de retorno para redirigir después del login o register
+    });
+  }
+
+  //Carga el script oficial de Google Identity Services
+  private loadGoogleScript(): void {
+    const script = document.createElement('script');
+    script.src = 'https://accounts.google.com/gsi/client';
+    script.async = true;
+    script.defer = true;
+    document.head.appendChild(script);
+  }
+
+  //Valida el token en el backend y regresa los datos del usuario de Google
+  handleCredentialResponse(response: any): void {
+    this.ngZone.run(() => {
+      const token = response.credential;
+      this.loginService.loginGoogle(token).subscribe(
+        (result) => {
+          this.guardarUsuarioEnStorage(result);
+          sessionStorage.setItem('imagen', result.imagen);
+          this.router.navigate([this.returnUrl]);
+        },
+        (error) => {
+          this.toastr.error(error.error.msg || 'Error procensado la operación');
+        }
+      );
+    });
+  }
+
   //Login normal
   login() {
     this.loginService
@@ -146,7 +146,6 @@ export class Formulario implements OnInit {
           if (result.status == 1) {
             //Guardar el usuario en cookies en el cliente
             this.guardarUsuarioEnStorage(result);
-
             //Redirigimos a home o a pagina que llamo
             this.router.navigate([this.returnUrl]);
           } else {
@@ -161,13 +160,15 @@ export class Formulario implements OnInit {
     this.formUsuario.reset(); //Limpiar el formulario
   }
 
+  //Guarda los datos del usuario en sessionStorage
   guardarUsuarioEnStorage(usuario: any) {
-    const { username, email, nombres, apellido, userId } = usuario;
+    const { username, email, nombres, apellido, userId, token } = usuario;
     sessionStorage.setItem('username', username);
     sessionStorage.setItem('email', email);
     sessionStorage.setItem('nombres', nombres);
     sessionStorage.setItem('apellido', apellido);
     sessionStorage.setItem('id', userId);
+    sessionStorage.setItem('token', token);
   }
 
   //Crear cuenta

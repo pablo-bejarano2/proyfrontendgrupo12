@@ -2,17 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map, catchError, of } from 'rxjs';
 import { environment } from '../../environments/environment';
-
-export interface Producto {
-  _id: string;
-  nombre: string;
-  descripcion: string;
-  precio: number;
-  stock: number;
-  color: string;
-  imagenUrl?: string;
-  categoria: any;
-}
+import { Producto } from '../models/producto';
 
 export interface ProductoResponse {
   status: string;

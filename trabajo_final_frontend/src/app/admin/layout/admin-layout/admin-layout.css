@@ -6,7 +6,15 @@
 }
 
 .admin-content {
-  flex-grow: 1;
-  padding: 2rem;
+  flex-grow: 1 1 0%;
+  padding: 0 16px;
+  min-width: 0;
   background-color: #f5faff;
+}
+
+app-admin-sidebar {
+  width: 220px;
+  min-width: 180px;
+  max-width: 260px;
+  /* position: relative; */
 }

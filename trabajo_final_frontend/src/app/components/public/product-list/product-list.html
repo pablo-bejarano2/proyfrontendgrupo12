@@ -166,7 +166,7 @@
                  (mouseleave)="setHover(i, false)">
               <div class="product-image-container">
                 <!-- Usar la imagen del producto o una imagen por defecto -->
-                <img [src]="product.imagenUrl || 'assets/images/no-image.jpg'"
+                <img [src]="'assets/images/no-image.jpg'"
                      class="card-img-top product-image"
                      [alt]="product.nombre">
               </div>
@@ -184,7 +184,6 @@
                      [class.opacity-0]="hoveredIndex !== i">
                   <h6 class="text-muted mb-2">Detalles</h6>
                   <p class="mb-1">Color: {{ product.color }}</p>
-                  <p class="mb-1">Stock: {{ product.stock }}</p>
                   <p class="mb-0">{{ product.descripcion }}</p>
                 </div>
               </div>

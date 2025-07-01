@@ -1,0 +1,132 @@
+form[formGroup] {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0,188,212,0.07);
+  padding: 28px 18px;
+  max-width: 600px;
+  margin: 0 auto;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+form[formGroup] .form-label {
+  color: #00bcd4;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+form[formGroup] .form-control,
+form[formGroup] .form-select {
+  border: 1.5px solid #e0f7fa;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 1rem;
+  transition: border 0.2s;
+  margin-bottom: 0;
+  background: #fafdff;
+}
+
+form[formGroup] .form-control:focus,
+form[formGroup] .form-select:focus {
+  border-color: #00bcd4;
+  outline: none;
+  box-shadow: 0 0 0 2px #e0f7fa;
+}
+
+form[formGroup] input[type="file"].form-control {
+  background: #f5fafd;
+  padding: 8px 0;
+  font-size: 0.98rem;
+  border: none;
+}
+
+form[formGroup] .mt-4 .form-label {
+  color: #0097a7;
+  font-weight: 700;
+}
+
+form[formGroup] [formArrayName="tallas"] .row {
+  margin-bottom: 0.5rem;
+}
+
+form[formGroup] [formArrayName="tallas"] input.form-control {
+  background: #fafdff;
+}
+
+form[formGroup] .btn-danger {
+  border-radius: 10px;
+  font-weight: 600;
+  padding: 6px 0;
+  font-size: 0.98rem;
+  background: #ffeaea;
+  color: #e53935;
+  border: none;
+  transition: background 0.2s, color 0.2s;
+}
+
+form[formGroup] .btn-danger:hover {
+  background: #e53935;
+  color: #fff;
+}
+
+form[formGroup] .btn-outline-primary {
+  border-radius: 10px;
+  font-weight: 600;
+  padding: 6px 18px;
+  font-size: 0.98rem;
+  border: 1.5px solid #00bcd4;
+  color: #00bcd4;
+  background: #e0f7fa;
+  transition: background 0.2s, color 0.2s;
+}
+
+form[formGroup] .btn-outline-primary:hover {
+  background: #00bcd4;
+  color: #fff;
+}
+
+form[formGroup] .btn-secondary {
+  border-radius: 20px;
+  font-weight: 600;
+  padding: 8px 24px;
+  background: #e0f7fa;
+  color: #0097a7;
+  border: none;
+  transition: background 0.2s, color 0.2s;
+}
+
+form[formGroup] .btn-secondary:hover {
+  background: #00bcd4;
+  color: #fff;
+}
+
+form[formGroup] .btn-info {
+  border-radius: 20px;
+  font-weight: 600;
+  padding: 8px 24px;
+  background: #00bcd4;
+  border: none;
+  color: #fff;
+  transition: background 0.2s, color 0.2s;
+}
+
+form[formGroup] .btn-info:hover {
+  background: #0097a7;
+  color: #fff;
+}
+
+form[formGroup] .d-flex.gap-2 {
+  gap: 12px;
+}
+
+@media (max-width: 700px) {
+  form[formGroup] {
+    padding: 14px 4px;
+    max-width: 100%;
+  }
+  .row.g-3 > .col-md-6,
+  .row.g-3 > .col-md-4,
+  .row.g-3 > .col-md-12 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}

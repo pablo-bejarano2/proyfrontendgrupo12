@@ -5,14 +5,15 @@ import { Accordion, AccordionItemDirective } from '../../shared/accordion/accord
 import * as bootstrap from 'bootstrap';
 import { ProductoService, Producto } from '../../../services/producto';
 import { ActivatedRoute } from '@angular/router';
-
+import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-product-list',
   imports: [
     FormsModule,
     TitleCasePipe,
     Accordion,
-    AccordionItemDirective
+    AccordionItemDirective,
+    CommonModule,
   ],
   templateUrl: './product-list.html',
   styleUrl: './product-list.css'

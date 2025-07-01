@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, map, catchError, of } from 'rxjs';
+import { Observable, map, catchError, of, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 export interface Producto {
@@ -8,10 +8,15 @@ export interface Producto {
   nombre: string;
   descripcion: string;
   precio: number;
-  stock: number;
+  tallas: Talla[];
   color: string;
-  imagenUrl?: string;
+  imagenes: string[];
   categoria: any;
+}
+export interface Talla{
+  _id: string;
+  talla: string;
+  stock: number;
 }
 
 export interface ProductoResponse {
@@ -25,6 +30,7 @@ export interface ProductoResponse {
 })
 export class ProductoService {
   private API_URL = environment.apiUrl;
+  valorBusqueda = '';
 
   constructor(private http: HttpClient) { }
 
@@ -54,18 +60,29 @@ export class ProductoService {
       );
   }
 
-  crearProducto(producto: Partial<Producto>): Observable<Producto> {
+  crearProducto(producto: FormData): Observable<any>{
     return this.http.post<any>(`${this.API_URL}/producto`, producto)
       .pipe(
         map(response => response.producto)
       );
   }
 
-  actualizarProducto(id: string, producto: Partial<Producto>): Observable<Producto> {
+  actualizarProducto(id: string, producto:FormData): Observable<any>{
     return this.http.put<Producto>(`${this.API_URL}/producto/${id}`, producto);
   }
 
   eliminarProducto(id: string): Observable<any> {
     return this.http.delete(`${this.API_URL}/producto/${id}`);
+  }
+
+  buscarPorNombre(nombre: string){
+    return this.http.get<ProductoResponse>(`${this.API_URL}/producto/nombre?nombre=${nombre}`)
+     .pipe(
+        map(response => response.productos || []),
+        catchError(error => {
+          console.error('Error al obtener productos por nombre:', error);
+          return of([]);
+        })
+      );
   }
 }

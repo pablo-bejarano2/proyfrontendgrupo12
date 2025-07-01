@@ -1,0 +1,180 @@
+<!-- Modal backdrop -->
+@if (isVisible) {
+  <div
+    class="modal-backdrop fade show"
+    style="display: block; z-index: 1050;"
+    (click)="cerrarModal()">
+  </div>
+}
+
+<!-- Offcanvas Cart -->
+@if (isVisible) {
+  <div
+    class="offcanvas offcanvas-end show cart-sidebar"
+    style="display: block; z-index: 1055; width: 400px; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;"
+    tabindex="-1"
+    (click)="$event.stopPropagation()">
+
+    <!-- Header -->
+    <div class="offcanvas-header border-bottom" style="background-color: #ffffff; border-bottom-color: #f0f4f4 !important;">
+      <div class="d-flex align-items-center gap-3">
+        <div class="text-primary">
+          <i class="fas fa-shopping-cart fs-5"></i>
+        </div>
+        <h5 class="offcanvas-title fw-bold" style="color: #111718; font-size: 1.125rem;">
+          Mi Carrito
+          @if (cartItems().length > 0) {
+            <span class="badge rounded-pill ms-2" style="background-color: #15a4c0; font-size: 0.75rem;">
+              {{ cartItems().length }}
+            </span>
+          }
+        </h5>
+      </div>
+      <button
+        type="button"
+        class="btn-close"
+        (click)="cerrarModal()"
+        style="filter: opacity(0.6);">
+      </button>
+    </div>
+
+    <!-- Body -->
+    <div class="offcanvas-body p-0 d-flex flex-column h-100">
+
+      <!-- Content Area -->
+      <div class="flex-grow-1 overflow-auto px-3 py-3">
+
+        <!-- Empty Cart -->
+        @if (cartItems().length === 0) {
+          <div class="d-flex flex-column align-items-center justify-content-center h-100 text-center py-5">
+            <div class="mb-4" style="color: #638288;">
+              <i class="fas fa-shopping-cart" style="font-size: 4rem;"></i>
+            </div>
+            <h5 class="fw-bold mb-2" style="color: #111718;">Tu carrito está vacío</h5>
+            <p class="text-muted mb-0">¡Agrega algunos productos increíbles!</p>
+          </div>
+        }
+
+        <!-- Cart Items -->
+        @if (cartItems().length > 0) {
+          <div class="cart-items-container">
+            @for (item of cartItems(); track trackByItem($index, item)) {
+              <div class="card mb-3 border-0 shadow-sm cart-item" style="border: 1px solid #f0f4f4 !important;">
+                <div class="card-body p-3">
+                  <div class="row align-items-center">
+
+                    <!-- Product Image -->
+                    <div class="col-3">
+                      <div
+                        class="rounded bg-light d-flex align-items-center justify-content-center"
+                        style="width: 56px; height: 56px; background-color: #f0f4f4 !important;">
+                        @if (item.producto.imagenes && item.producto.imagenes.length > 0) {
+                          <img
+                            [src]="item.producto.imagenes[0]"
+                            [alt]="item.producto.nombre"
+                            class="img-fluid rounded"
+                            style="width: 56px; height: 56px; object-fit: cover;">
+                        } @else {
+                          <i class="fas fa-image text-muted"></i>
+                        }
+                      </div>
+                    </div>
+
+                    <!-- Product Info -->
+                    <div class="col-6">
+                      <h6 class="card-title mb-1 fw-medium" style="color: #111718; font-size: 0.9rem;">
+                        {{ item.producto.nombre }}
+                      </h6>
+                      @if (getProductInfo(item)) {
+                        <p class="card-text mb-1" style="color: #638288; font-size: 0.8rem;">
+                          {{ getProductInfo(item) }}
+                        </p>
+                      }
+                      <span class="fw-medium" style="color: #111718; font-size: 0.9rem;">
+                        {{ formatearMoneda(item.producto.precio) }}
+                      </span>
+                    </div>
+
+                    <!-- Botón eliminar y cantidad -->
+                     <div class="col-3 text-end d-flex flex-column align-items-end justify-content-between" style="height: 100%;">
+                       <button
+                         type="button"
+                         class="btn btn-link text-decoration-none p-1 mb-2"
+                         (click)="removeItem(item)"
+                         title="Eliminar"
+                         style="color: #638288;">
+                         <i class="fas fa-trash" style="font-size: 0.8rem;"></i>
+                       </button>
+                       <div class="btn-group btn-group-sm" role="group">
+                         <button
+                           type="button"
+                           class="btn btn-outline-secondary quantity-btn"
+                           (click)="decreaseQuantity(item)"
+                           [disabled]="item.cantidad <= 1"
+                           style="width: 32px; height: 32px; border-radius: 50%; background-color: #f0f4f4; border-color: #f0f4f4; color: #111718;">
+                           <i class="fas fa-minus" style="font-size: 0.7rem;"></i>
+                         </button>
+                         <span class="d-flex align-items-center justify-content-center mx-2"
+                               style="min-width: 2rem; font-size: 0.9rem; color: #111718;">
+                           {{ item.cantidad }}
+                         </span>
+                         <button
+                           type="button"
+                           class="btn btn-outline-secondary quantity-btn"
+                           (click)="increaseQuantity(item)"
+                           style="width: 32px; height: 32px; border-radius: 50%; background-color: #f0f4f4; border-color: #f0f4f4; color: #111718;">
+                           <i class="fas fa-plus" style="font-size: 0.7rem;"></i>
+                         </button>
+                       </div>
+                  </div>
+                    </div>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- Footer with Summary -->
+      @if (cartItems().length > 0) {
+        <div class="border-top p-3" style="background-color: #ffffff; border-top-color: #f0f4f4 !important;">
+
+          <!-- Order Summary -->
+          <div class="mb-3">
+            <div class="d-flex justify-content-between mb-2">
+              <span style="color: #111718;">Subtotal</span>
+              <span style="color: #111718;">{{ formatearMoneda(itemProductService.cartSummary().subtotal) }}</span>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span style="color: #111718;">Envío</span>
+              <span style="color: #111718;">Gratis</span>
+            </div>
+            <hr style="border-color: #f0f4f4;">
+            <div class="d-flex justify-content-between">
+              <span class="fw-bold" style="color: #111718;">Total Estimado</span>
+              <span class="fw-bold" style="color: #111718;">{{ formatearMoneda(itemProductService.cartSummary().total) }}</span>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="d-grid gap-2">
+            <button
+              type="button"
+              class="btn fw-bold rounded-pill"
+              (click)="proceedToCheckout()"
+              style="background-color: #15a4c0; border-color: #15a4c0; color: white; font-size: 0.9rem;">
+              Checkout
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline-secondary rounded-pill"
+              (click)="cerrarModal()"
+              style="border-color: #f0f4f4; color: #111718; font-size: 0.9rem;">
+              Continuar comprando
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+}

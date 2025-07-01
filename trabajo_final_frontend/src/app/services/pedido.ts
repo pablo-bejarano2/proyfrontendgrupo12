@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
+import { Pedido } from '../models/pedido';
+import {
+  environment
+} from '@/environments/environment';
 import { map, Observable } from 'rxjs';
 
 export interface Pedido {
@@ -16,16 +19,26 @@ export interface Pedido {
   cupon?: { codigo: string; descuento: number }; // ID del cupón aplicado, si hay
 }
 
+
 @Injectable({
   providedIn: 'root'
 })
 export class PedidoService {
-  private apiUrl = `${environment.apiUrl}/pedido`;
-  // Aquí puedes definir los métodos para interactuar con la API de pedidos
-  // Por ejemplo, obtener pedidos, crear un nuevo pedido, actualizar el estado de un pedido
 
+  private API_URL = environment.apiUrl;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
+
+  crearPedido(pedido: Pedido): Observable<Pedido> {
+    return this.http.post<Pedido>(this.API_URL, pedido);
+  }
+
+  obtenerPedidos(): Observable<Pedido[]> {
+    return this.http.get<Pedido[]>(this.API_URL);
+  }
+
+  obtenerPedidoPorId(id: string): Observable<Pedido> {
+    return this.http.get<Pedido>(`${this.API_URL}/${id}`);
 
 
   getPedidos(): Observable<Pedido[]> {
@@ -45,5 +58,6 @@ export class PedidoService {
 
   deletePedido(id: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`);
+
   }
 }

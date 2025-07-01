@@ -1,332 +1,244 @@
 <div class="container-fluid p-4">
-  <!-- Breadcrumb con clases estándar de Bootstrap -->
-  <nav aria-label="breadcrumb" class="mb-4">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item">
-        <a href="#" class="text-decoration-none">Home</a>
-      </li>
-      <li class="breadcrumb-item">
-        <a href="#" class="text-decoration-none">Apparel</a>
-      </li>
-      <li class="breadcrumb-item">
-        <a href="#" class="text-decoration-none">Sweatshirts</a>
-      </li>
-      <li class="breadcrumb-item active" aria-current="page">
-        Forever
-        Lover
-        Sweat
-      </li>
-    </ol>
-  </nav>
+  <!-- Solo mostrar contenido si el producto está cargado -->
+  @if (isProductLoaded) {
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="#" class="text-decoration-none">Home</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a href="#" class="text-decoration-none">{{ getCategoryName() }}</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">
+          {{ productName }}
+        </li>
+      </ol>
+    </nav>
 
-  <div class="row g-4">
-    <!-- Sección de imágenes -->
-    <div class="col-lg-7">
-      <div class="row">
-        <!-- Miniaturas con clases de Bootstrap -->
-        <div class="col-2">
-          <div class="d-flex flex-column gap-2" [class.opacity-100]="imagesInView">
-            @for (
-              thumbnail of thumbnails; track $index) {
-              <img [src]="thumbnail.src"
-                   [alt]="thumbnail.alt"
-                   class="img-thumbnail rounded cursor-pointer"
-                   [class.border-dark]="$index === activeThumbnailIndex"
-                   (click)="selectThumbnail($index)">
-            }
-          </div>
-        </div>
-
-        <!-- Imagen principal -->
-        <div class="col-10">
-          <div class="position-relative overflow-hidden rounded" #mainImageContainer>
-            @for (
-              image of mainImages; track $index) {
-              <img [src]="image"
-                   alt="Forever Lover Sweat"
-                   class="img-fluid rounded shadow-sm"
-                   [class.d-block]="$index === activeThumbnailIndex"
-                   [class.d-none]="$index !== activeThumbnailIndex"
-                   #mainProductImage>
-            }
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Detalles del producto con clases de Bootstrap -->
-    <div class="col-lg-5" #productDetailsSection>
-      <div class="ps-lg-4">
-        <!-- Título del producto -->
-        <h1 class="display-4 fw-bold mb-3">
-          product.name</h1>
-
-        <!-- Precio y guía de tallas -->
-        <div class="d-flex justify-content-between align-items-center mb-4">
-          <div class="fs-3 fw-bold">
-            $product.price</div>
-          <a href="#" class="text-decoration-underline fw-bold">SIZE
-            GUIDE</a>
-        </div>
-
-        <!-- Selección de tallas con botones de Bootstrap -->
-        <div class="mb-4">
-          <div class="btn-group" role="group" aria-label="Size selection">
-            @for (
-              size of sizes; track size) {
-              <button type="button"
-                      class="btn"
-                      [class.btn-dark]="size === selectedSize"
-                      [class.btn-outline-dark]="size !== selectedSize"
-                      (click)="selectSize(size)">
-                {{ size }}
-              </button>
-            }
-          </div>
-        </div>
-
-        <!-- Botones de compra -->
-        <div class="d-flex gap-2 mb-4">
-          <button class="btn btn-primary flex-grow-1 text-white fw-bold py-2" (click)="addToBag()">
-            ADD
-            TO
-            BAG
-          </button>
-          <button class="btn btn-outline-dark"
-                  [class.btn-danger]="wishlistActive"
-                  [class.text-white]="wishlistActive"
-                  (click)="toggleWishlist()">
-            <i class="bi bi-heart"></i>
-          </button>
-        </div>
-
-        <!-- SKU del producto -->
-        <div class="text-muted small mb-4">
-          Product
-          SKU:
-          1035045S
-        </div>
-
-        <!-- Acordeón con componente nativo de Bootstrap -->
-        <div class="accordion accordion-flush" id="productAccordion">
-          <div class="accordion-item">
-            <h2 class="accordion-header">
-              <button class="accordion-button collapsed fw-bold"
-                      type="button"
-                      data-bs-toggle="collapse"
-                      data-bs-target="#details"
-                      aria-expanded="false"
-                      aria-controls="details">
-                DETAILS
-              </button>
-            </h2>
-            <div id="details" class="accordion-collapse collapse" data-bs-parent="#productAccordion">
-              <div class="accordion-body">
-                <p>
-                  Comfortable
-                  and
-                  stylish
-                  sweatshirt
-                  made
-                  from
-                  premium
-                  cotton
-                  blend.
-                  Features
-                  a
-                  relaxed
-                  fit
-                  and
-                  soft
-                  interior
-                  lining
-                  for
-                  maximum
-                  comfort.</p>
-                <ul class="list-unstyled">
-                  <li>
-                    <i class="bi bi-check2 me-2"></i>80%
-                    Cotton,
-                    20%
-                    Polyester
-                  </li>
-                  <li>
-                    <i class="bi bi-check2 me-2"></i>Machine
-                    washable
-                  </li>
-                  <li>
-                    <i class="bi bi-check2 me-2"></i>Relaxed
-                    fit
-                  </li>
-                  <li>
-                    <i class="bi bi-check2 me-2"></i>Ribbed
-                    cuffs
-                    and
-                    hem
-                  </li>
-                </ul>
-              </div>
+    <div class="row g-4">
+      <!-- Sección de imágenes -->
+      <div class="col-lg-7">
+        <div class="row">
+          <!-- Miniaturas -->
+          <div class="col-2">
+            <div class="d-flex flex-column gap-2" [class.opacity-100]="imagesInView">
+              @for (thumbnail of thumbnails; track $index) {
+                <img
+                  [src]="thumbnail.src"
+                  [alt]="thumbnail.alt"
+                  class="img-thumbnail rounded cursor-pointer"
+                  [class.border-dark]="$index === activeThumbnailIndex"
+                  (click)="selectThumbnail($index)">
+              }
             </div>
           </div>
 
-          <div class="accordion-item">
-            <h2 class="accordion-header">
-              <button class="accordion-button collapsed fw-bold"
-                      type="button"
-                      data-bs-toggle="collapse"
-                      data-bs-target="#shipping"
-                      aria-expanded="false"
-                      aria-controls="shipping">
-                SHIPPING
-                /
-                RETURNS
-              </button>
-            </h2>
-            <div id="shipping" class="accordion-collapse collapse" data-bs-parent="#productAccordion">
-              <div class="accordion-body">
-                <h6 class="fw-bold">
-                  Shipping</h6>
-                <p>
-                  Free
-                  shipping
-                  on
-                  orders
-                  over
-                  $50.
-                  Standard
-                  delivery
-                  takes
-                  3-5
-                  business
-                  days.</p>
-                <h6 class="fw-bold">
-                  Returns</h6>
-                <p>
-                  30-day
-                  return
-                  policy.
-                  Items
-                  must
-                  be
-                  in
-                  original
-                  condition
-                  with
-                  tags
-                  attached.</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="accordion-item">
-            <h2 class="accordion-header">
-              <button class="accordion-button collapsed fw-bold"
-                      type="button"
-                      data-bs-toggle="collapse"
-                      data-bs-target="#payment"
-                      aria-expanded="false"
-                      aria-controls="payment">
-                BUY
-                NOW,
-                PAY
-                LATER
-              </button>
-            </h2>
-            <div id="payment" class="accordion-collapse collapse" data-bs-parent="#productAccordion">
-              <div class="accordion-body">
-                <p>
-                  Split
-                  your
-                  purchase
-                  into
-                  4
-                  interest-free
-                  payments
-                  with
-                  our
-                  payment
-                  partners.</p>
-                <ul class="list-unstyled">
-                  <li>
-                    <i class="bi bi-check2 me-2"></i>No
-                    interest
-                    or
-                    fees
-                    when
-                    you
-                    pay
-                    on
-                    time
-                  </li>
-                  <li>
-                    <i class="bi bi-check2 me-2"></i>25%
-                    due
-                    today,
-                    25%
-                    in
-                    2
-                    weeks,
-                    25%
-                    in
-                    4
-                    weeks,
-                    25%
-                    in
-                    6
-                    weeks
-                  </li>
-                  <li>
-                    <i class="bi bi-check2 me-2"></i>Instant
-                    approval
-                    decision
-                  </li>
-                </ul>
-              </div>
+          <!-- Imagen principal -->
+          <div class="col-10">
+            <div class="position-relative overflow-hidden rounded">
+              @for (image of mainImages; track $index) {
+                <img
+                  [src]="image"
+                  [alt]="productName"
+                  class="img-fluid rounded shadow-sm"
+                  [class.d-block]="$index === activeThumbnailIndex"
+                  [class.d-none]="$index !== activeThumbnailIndex">
+              }
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <h1 class="display-1 fw-bold mb-3">RECOMMENDED</h1>
-    <div class="container">
-      <div class="row g-3">
-        @for (
-          product of products; track product.id; let
-          i = $index) {
-          <div class="col-12 col-md-4">
-            <div class="card text-center h-100 product-card"
-                 (mouseenter)="setHover(i, true)"
-                 (mouseleave)="setHover(i, false)">
-              <img [src]="hoveredIndex === i && product.images[1] ? product.images[1] : product.images[0]"
-                   class="card-img-top img-fluid"
-                   style="aspect-ratio: 1/1; object-fit: cover;"
-                   [alt]="product.name">
-              <div class="card-body d-flex flex-column justify-content-center position-relative">
-                <div class="product-content" [class.opacity-0]="hoveredIndex === i">
-                  <h5 class="card-title">{{ product.name }}</h5>
-                  <p class="card-text fw-bold text-primary">
-                    ${{ product.price }}</p>
-                </div>
-                <div class="product-hover position-absolute top-50 start-50 translate-middle w-100"
-                     [class.opacity-0]="hoveredIndex !== i">
-                  <h6 class="text-muted mb-2">
-                    Talles
-                    disponibles</h6>
-                  <div class="d-flex flex-wrap justify-content-center gap-1">
-                    @for (
-                      size of product.sizes; track size) {
-                      <span class="badge bg-secondary">
-                {{ size }}
-              </span>
+
+      <!-- Detalles del producto -->
+      <div class="col-lg-5">
+        <div class="ps-lg-4">
+          <!-- Título del producto -->
+          <h1 class="display-4 fw-bold mb-3">{{ productName }}</h1>
+
+          <!-- Precio y información de stock -->
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="fs-3 fw-bold">${{ productPrice }}</div>
+            @if (selectedSize) {
+              <div class="text-muted small">
+                {{ stockInfo }}
+              </div>
+            }
+          </div>
+
+          <!-- Color -->
+          @if (hasColor()) {
+            <div class="mb-3">
+              <span class="fw-bold">Color: </span>
+              <span>{{ currentProduct!.color }}</span>
+            </div>
+          }
+
+          <!-- Selección de tallas -->
+          <div class="mb-4">
+            <h6 class="fw-bold mb-2">Talla:</h6>
+            <div class="btn-group" role="group" aria-label="Size selection">
+              @for (size of sizes; track size) {
+                <button
+                  type="button"
+                  class="btn"
+                  [class.btn-dark]="size === selectedSize"
+                  [class.btn-outline-dark]="size !== selectedSize"
+                  (click)="selectSize(size)">
+                  {{ size }}
+                </button>
+              }
+            </div>
+            @if (sizes.length === 0) {
+              <div class="text-muted small mt-1">
+                No hay tallas disponibles
+              </div>
+            }
+          </div>
+
+          <!-- Agregar info de debug temporalmente -->
+          <div class="mb-2 p-2 bg-light rounded text-small">
+            <strong>Debug Info:</strong><br>
+            Selected Size: "{{ selectedSize }}"<br>
+            Stock Total: {{ currentProduct?.stockTotal }}<br>
+            Stock para talla seleccionada: {{ selectedSize ? (currentProduct?.getStockPorTalla(selectedSize) || 0) : 'No hay talla' }}<br>
+            Botón habilitado: {{ isButtonEnabled }}
+          </div>
+
+          <!-- Botones de compra -->
+          <div class="d-flex gap-2 mb-4">
+            <button
+              class="btn btn-primary flex-grow-1 text-white fw-bold py-2"
+              (click)="addToBag()"
+              [disabled]="!isButtonEnabled">
+              {{ !hasStock ? 'SIN STOCK' : 'AGREGAR AL CARRITO' }}
+            </button>
+          </div>
+
+          <!-- SKU del producto -->
+          <div class="text-muted small mb-4">
+            Product SKU: {{ productSku }}
+          </div>
+
+          <!-- Descripción del producto -->
+          @if (hasDescription()) {
+            <div class="mb-4">
+              <h6 class="fw-bold">Descripción:</h6>
+              <p>{{ currentProduct!.descripcion }}</p>
+            </div>
+          }
+
+          <!-- Información de stock total -->
+          @if (hasStockTotal()) {
+            <div class="text-muted small mb-4">
+              Stock total disponible: {{ currentProduct!.stockTotal }} unidades
+            </div>
+          }
+
+          <!-- Acordeón de información adicional -->
+          <div class="accordion" id="productAccordion">
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDetails">
+                  <i class="bi bi-info-circle me-2"></i>
+                  Detalles del Producto
+                </button>
+              </h2>
+              <div id="collapseDetails" class="accordion-collapse collapse" data-bs-parent="#productAccordion">
+                <div class="accordion-body">
+                  <ul class="list-unstyled">
+                    <li><strong>Material:</strong> 100% Algodón premium</li>
+                    <li><strong>Cuidado:</strong> Lavar a máquina, agua fría</li>
+                    <li><strong>Origen:</strong> Fabricado responsablemente</li>
+                    @if (hasColor()) {
+                      <li><strong>Color:</strong> {{ currentProduct!.color }}</li>
                     }
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseShipping">
+                  <i class="bi bi-truck me-2"></i>
+                  Envío y Devoluciones
+                </button>
+              </h2>
+              <div id="collapseShipping" class="accordion-collapse collapse" data-bs-parent="#productAccordion">
+                <div class="accordion-body">
+                  <ul class="list-unstyled">
+                    <li><strong>Envío gratis</strong> en pedidos superiores a $50</li>
+                    <li><strong>Entrega:</strong> 2-5 días hábiles</li>
+                    <li><strong>Devoluciones:</strong> 30 días sin preguntas</li>
+                    <li><strong>Cambios:</strong> Gratis en la primera vez</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            @if (hasTallas()) {
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSizing">
+                    <i class="bi bi-rulers me-2"></i>
+                    Guía de Tallas
+                  </button>
+                </h2>
+                <div id="collapseSizing" class="accordion-collapse collapse" data-bs-parent="#productAccordion">
+                  <div class="accordion-body">
+                    <div class="table-responsive">
+                      <table class="table table-sm">
+                        <thead>
+                          <tr>
+                            <th>Talla</th>
+                            <th>Pecho (cm)</th>
+                            <th>Cintura (cm)</th>
+                            <th>Stock</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          @for (talla of currentProduct!.tallas; track talla.talla) {
+                            <tr>
+                              <td><strong>{{ talla.talla }}</strong></td>
+                              <td>{{ getTallaInfo(talla.talla, 'pecho') }}</td>
+                              <td>{{ getTallaInfo(talla.talla, 'cintura') }}</td>
+                              <td>
+                                <span class="badge"
+                                      [class.bg-success]="talla.stock > 5"
+                                      [class.bg-warning]="talla.stock > 0 && talla.stock <= 5"
+                                      [class.bg-danger]="talla.stock === 0">
+                                  {{ talla.stock }}
+                                </span>
+                              </td>
+                            </tr>
+                          }
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            }
           </div>
-        }
+        </div>
       </div>
     </div>
-
-  </div>
+  } @else {
+    <!-- Estado de carga -->
+    <div class="d-flex justify-content-center align-items-center" style="min-height: 50vh;">
+      <div class="text-center">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Cargando...</span>
+        </div>
+        <p class="mt-3 text-muted">Cargando producto...</p>
+      </div>
+    </div>
+  }
 </div>
+
+<!-- Modal del carrito -->
+<app-add-to-cart
+  [isVisible]="showCartModal"
+  (modalClosed)="onCartModalClosed()">
+</app-add-to-cart>

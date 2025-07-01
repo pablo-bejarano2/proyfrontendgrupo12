@@ -14,6 +14,9 @@ import { Cupones } from './admin/cupones/cupones';
 import { PublicLayout } from './components/layout/public-layout/public-layout';
 import { ProductList } from './components/public/product-list/product-list';
 import { ErrorPage } from './components/public/error-page/error-page';
+import {
+  CheckoutComponent
+} from '@/app/components/public/checkout/checkout';
 
 
 export const routes: Routes = [
@@ -21,8 +24,17 @@ export const routes: Routes = [
     path: '',
     component: PublicLayout,
     children: [
+      { path: 'checkout', component: CheckoutComponent },
+      { path: 'products', component: ProductList },
+      { path: 'products/:categoryName', component: ProductList },
+      { path: 'product-detail/:id', component: ProductDetailComponent },
       { path: '', component: Home },
       { path: 'product/:id', component: ProductDetailComponent },
+      {
+        path: 'product-detail',
+        component: ProductDetailComponent
+      },
+
       { path: 'contact', component: ContactComponent },
       { path: 'product-list', component: ProductList },
       { path: 'products/:categoryName', component: ProductList },
@@ -31,7 +43,7 @@ export const routes: Routes = [
       { path: 'cuenta', component: CuentaUsuario },
     ]
   },
-  // Admin routes 
+  // Admin routes
   {
     path: 'admin', component: AdminLayout,
     children: [

@@ -54,4 +54,11 @@ export class MisValidadores {
     const confirmPassword = form.get('confirmPassword')?.value;
     return password === confirmPassword ? null : { passwordsMismatch: true };
   }
+
+  //validar un array no vacio
+  static minLengthArray(min: number) {
+    return (formArray: any) => {
+      return formArray && formArray.length >= min ? null : { minLengthArray: true };
+    };
+  }
 }

@@ -1,7 +1,11 @@
 <nav class="navbar navbar-expand-lg custom-navbar">
   <div class="container-md">
     <a class="navbar-brand" href="#">
-      <img src="assets/logo-removebg.png" alt="oversizex Logo" class="logo-img" />
+      <img
+        src="assets/logo-removebg.png"
+        alt="oversizex Logo"
+        class="logo-img"
+      />
     </a>
 
     <button
@@ -19,7 +23,7 @@
     >
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link custom-link" [routerLink]="['']">Inicio</a>
+          <a class="nav-link custom-link" [routerLink]="['/home']">Inicio</a>
         </li>
         <!-- Dropdown con hover y clic -->
         <li class="nav-item dropdown hover-dropdown">
@@ -42,14 +46,16 @@
           </ul>
         </li>
         <li class="nav-item">
-          <a class="nav-link custom-link" [routerLink]="['/contact']">Contacto</a>
+          <a class="nav-link custom-link" [routerLink]="['/contact']"
+            >Contacto</a
+          >
         </li>
         <li class="nav-item">
           <a class="nav-link custom-link">Políticas</a>
         </li>
         <!-- Botón de Acceder -->
         <li class="nav-item" *ngIf="!userLogged()">
-          <button class="btn-access me-2" [routerLink]="['/form']">
+          <button class="btn-access me-2" (click)="irAFormulario()">
             Acceder
           </button>
         </li>

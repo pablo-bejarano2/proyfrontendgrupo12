@@ -133,23 +133,32 @@ export class CuentaUsuario implements OnInit {
 
   private obtenerControlesFormulario() {
     return {
-      nombres: new FormControl('', [
-        Validators.required,
-        Validators.minLength(3),
-        Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$'),
-        MisValidadores.validarPrimerLetra,
-      ]),
-      apellido: new FormControl('', [
-        Validators.required,
-        Validators.minLength(3),
-        Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$'),
-        MisValidadores.validarPrimerLetra,
-      ]),
-      username: new FormControl('', [
-        Validators.required,
-        Validators.minLength(4),
-        Validators.pattern('^[a-zA-Z0-9_ ]+$'),
-      ]),
+      nombres: new FormControl<string>('', {
+        nonNullable: true,
+        validators: [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$'),
+          MisValidadores.validarPrimerLetra,
+        ],
+      }),
+      apellido: new FormControl<string>('', {
+        nonNullable: true,
+        validators: [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$'),
+          MisValidadores.validarPrimerLetra,
+        ],
+      }),
+      username: new FormControl<string>('', {
+        nonNullable: true,
+        validators: [
+          Validators.required,
+          Validators.minLength(4),
+          Validators.pattern('^[a-zA-Z0-9_ ]+$'),
+        ],
+      }),
     };
   }
 }

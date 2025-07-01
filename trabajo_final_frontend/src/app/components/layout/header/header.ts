@@ -31,10 +31,12 @@ export class Header implements OnInit {
     private itemPedidoService: ItemPedidoService // Inyecta el servicio del carrito
   ) { }
 
-  ngOnInit(): void {
+
+  ngOnInit() {
     this.cargarCategorias();
     this.email = sessionStorage.getItem('email') || '';
     this.imagen = sessionStorage.getItem('imagen') || 'assets/user.jpg';
+    //console.log('Img en el header: ' + this.imagen);
     this.username = sessionStorage.getItem('username') || '';
     this.itemPedidoService.cartItemsCount$.subscribe(count => {
       this.cartItemsCount = count;
@@ -78,5 +80,11 @@ export class Header implements OnInit {
   abrirCarrito() {
     console.log('Botón de carrito clickeado');
     this.itemPedidoService.abrirCarrito();
+  }
+  irAFormulario() {
+    this.router.navigate(['/form'], {
+      queryParams: { returnUrl: this.router.url, accion: 'login' },
+    });
+
   }
 }

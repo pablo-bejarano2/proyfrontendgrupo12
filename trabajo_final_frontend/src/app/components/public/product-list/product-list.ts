@@ -6,6 +6,7 @@ import * as bootstrap from 'bootstrap';
 import { ProductoService } from '../../../services/producto';
 import { Producto, Categoria } from '../../../models/producto';
 import { ActivatedRoute, Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-product-list',
@@ -13,7 +14,8 @@ import { ActivatedRoute, Router } from '@angular/router';
     FormsModule,
     TitleCasePipe,
     Accordion,
-    AccordionItemDirective
+    AccordionItemDirective,
+    CommonModule,
   ],
   templateUrl: './product-list.html',
   styleUrl: './product-list.css'

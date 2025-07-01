@@ -53,11 +53,26 @@ export class LoginService {
       nombres: updatedUser.nombres,
       apellido: updatedUser.apellido,
     });
-    console.log(body);
     return this._http.put(
       this.hostBase + updatedUser._id,
       body,
       this.httpOption
     );
+  }
+
+  public getUsers(): Observable<any> {
+    return this._http.get<any>(this.hostBase);
+  }
+
+  public getUserById(id: string): Observable<any> {
+    return this._http.get<any>(this.hostBase + id);
+  }
+
+  public getUsersByUsername(username: string): Observable<any> {
+    return this._http.get<any>(this.hostBase + 'filtrado/' + username);
+  }
+
+  public deleteUser(id: string): Observable<any> {
+    return this._http.delete<any>(this.hostBase + id);
   }
 }

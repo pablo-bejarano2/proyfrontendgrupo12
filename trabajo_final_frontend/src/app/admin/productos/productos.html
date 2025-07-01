@@ -16,9 +16,9 @@
 
   </div>
   <div class="productos-admin-content" *ngIf="productos.length > 0">
-    <div class="productos-lista" *ngFor="let producto of productos">
+    <div class="productos-lista">
       <!-- Ejemplo de card de producto -->
-      <div class="producto-card">
+      <div class="producto-card" *ngFor="let producto of productos">
         <img *ngIf="producto.imagenes?.length" [src]="producto.imagenes[0]" alt="{{ producto.nombre }}"
           class="producto-img">
         <div class="producto-info">

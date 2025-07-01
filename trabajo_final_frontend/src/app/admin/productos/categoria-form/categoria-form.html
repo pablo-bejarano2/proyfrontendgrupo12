@@ -1,18 +1,40 @@
-   <form class="mb-4" (ngSubmit)="crearCategoria()">
-          <div class="row g-2 align-items-end">
-            <div class="col-5">
-              <input type="text" class="form-control" placeholder="Nombre" [(ngModel)]="nombre" name="nombre" required>
-            </div>
-            <div class="col-5">
-              <input type="text" class="form-control" placeholder="Descripción" [(ngModel)]="descripcion" name="descripcion">
-            </div>
-            <div class="col-2">
-              <button type="submit" class="btn btn-info text-white w-100">
-                <i class="fas fa-plus"></i>
-              </button>
-            </div>
-          </div>
-        </form>
+<form class="mb-4" (ngSubmit)="crearCategoria()" #categoriaForm="ngForm">
+  <div class="row g-2 align-items-end">
+    <div class="col-5">
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Nombre"
+        [(ngModel)]="nombre"
+        name="nombre"
+        required
+        #nombreInput="ngModel"
+      />
+      <div class="text-danger" *ngIf="nombreInput.invalid && (nombreInput.dirty || nombreInput.touched)">
+        nombre obligatorio
+      </div>
+    </div>
+    <div class="col-5">
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Descripción"
+        [(ngModel)]="descripcion"
+        name="descripcion"
+        required
+        #descripcionInput="ngModel"
+      />
+      <div class="text-danger" *ngIf="descripcionInput.invalid && (descripcionInput.dirty || descripcionInput.touched)">
+       descripción obligatoria
+      </div>
+    </div>
+    <div class="col-2">
+      <button type="submit" class="btn btn-info text-white w-100" [disabled]="categoriaForm.invalid">
+        <i class="fas fa-plus"></i>
+      </button>
+    </div>
+  </div>
+</form>
 
         <!-- Tabla de categorías existentes -->
         <div class="table-responsive">

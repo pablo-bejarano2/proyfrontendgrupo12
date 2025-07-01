@@ -6,8 +6,6 @@ import { Categoria, CategoriaService } from '../../../services/categoria';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MisValidadores } from '../../../validadores/mis-validadores';
-import { ToastrService } from 'ngx-toastr';
-import { CategoriaForm } from '../categoria-form/categoria-form';
 @Component({
   selector: 'app-producto-form',
   imports: [FormsModule, ReactiveFormsModule, CommonModule],
@@ -68,11 +66,21 @@ export class ProductoForm implements OnInit {
         precio: this.producto.precio,
         color: this.producto.color,
         imagenes: this.producto.imagenes,
-        tallas: this.producto.tallas,
         categoria: typeof this.producto.categoria === 'object'
           ? this.producto.categoria._id
           : this.producto.categoria
-      })
+      });
+  
+      // Limpiar tallas actuales
+      while (this.tallas.length !== 0) {
+        this.tallas.removeAt(0);
+      }
+      // Agregar las tallas del producto
+      if (this.producto.tallas && this.producto.tallas.length) {
+        this.producto.tallas.forEach((t: any) => this.agregarTalla(t));
+      } else {
+        this.agregarTalla();
+      }
     }
   }
 

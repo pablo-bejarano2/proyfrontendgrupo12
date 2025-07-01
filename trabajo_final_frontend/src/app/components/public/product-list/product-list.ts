@@ -3,8 +3,9 @@ import { TitleCasePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Accordion, AccordionItemDirective } from '../../shared/accordion/accordion';
 import * as bootstrap from 'bootstrap';
-import { ProductoService, Producto } from '../../../services/producto';
-import { ActivatedRoute } from '@angular/router';
+import { ProductoService } from '../../../services/producto';
+import { Producto, Categoria } from '../../../models/producto';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-product-list',
@@ -35,7 +36,8 @@ export class ProductList implements OnInit {
 
   constructor(
     private productoService: ProductoService,
-    private route: ActivatedRoute) {
+    private route: ActivatedRoute,
+    private router: Router) {
   }
 
   ngOnInit(): void {
@@ -132,8 +134,9 @@ export class ProductList implements OnInit {
   getAllCategories(): string[] {
     const categorySet = new Set<string>();
     this.allProducts.forEach(p => {
-      if (p.categoria && p.categoria.nombre) {
-        categorySet.add(p.categoria.nombre);
+      // Verificar si es un objeto Categoria o un string
+      if (p.categoria && typeof p.categoria === 'object' && (p.categoria as Categoria).nombre) {
+        categorySet.add((p.categoria as Categoria).nombre);
       }
     });
     return Array.from(categorySet);
@@ -177,13 +180,22 @@ export class ProductList implements OnInit {
 
     // Filtrar por categoría (ya no es necesario si venimos de una ruta con categoría)
     if (this.selectedCategory && !this.route.snapshot.params['categoryName']) {
-      filtered = filtered.filter(p =>
-        p.categoria && p.categoria.nombre === this.selectedCategory
-      );
+      filtered = filtered.filter(p => {
+        if (p.categoria && typeof p.categoria === 'object') {
+          return (p.categoria as Categoria).nombre === this.selectedCategory;
+        }
+        return false;
+      });
     }
 
     this.products = filtered;
     this.totalProducts = filtered.length;
     this.currentPage = 1;
+  }
+
+  goToProductDetail(productId: string): void {
+    if (productId) {
+      this.router.navigate(['/product-detail', productId]);
+    }
   }
 }

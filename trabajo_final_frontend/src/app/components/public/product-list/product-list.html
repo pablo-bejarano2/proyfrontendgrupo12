@@ -163,10 +163,12 @@
           <div class="col-12 col-sm-6 col-md-4 mb-4">
             <div class="card text-center h-100 product-card"
                  (mouseenter)="setHover(i, true)"
-                 (mouseleave)="setHover(i, false)">
+                 (mouseleave)="setHover(i, false)"
+                 (click)="product._id && goToProductDetail(product._id)"
+                 style="cursor: pointer;">
               <div class="product-image-container">
                 <!-- Usar la imagen del producto o una imagen por defecto -->
-                <img [src]="product.imagenUrl || 'assets/images/no-image.jpg'"
+                <img [src]="product.imagenes[0] || 'assets/images/no-image.jpg'"
                      class="card-img-top product-image"
                      [alt]="product.nombre">
               </div>
@@ -176,7 +178,7 @@
                   <p class="card-text product-price">${{ product.precio }}</p>
                   @if (product.categoria) {
                     <p class="card-text product-category">
-                      {{ product.categoria.nombre }}
+                      {{ product.categoriaNombre }}
                     </p>
                   }
                 </div>
@@ -184,7 +186,7 @@
                      [class.opacity-0]="hoveredIndex !== i">
                   <h6 class="text-muted mb-2">Detalles</h6>
                   <p class="mb-1">Color: {{ product.color }}</p>
-                  <p class="mb-1">Stock: {{ product.stock }}</p>
+                  <p class="mb-1">Stock: {{ product.stockTotal }}</p>
                   <p class="mb-0">{{ product.descripcion }}</p>
                 </div>
               </div>

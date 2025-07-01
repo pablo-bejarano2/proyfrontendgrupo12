@@ -32,7 +32,7 @@
             Tienda
           </a>
           <ul class="dropdown-menu custom-dropdown">
-            @for ( categoria of categorias; track categoria.id) {
+            @for (categoria of categorias; track categoria._id) {
               <li>
                 <a class="dropdown-item" [routerLink]="['/products', categoria.nombre]">
                   {{ categoria.nombre | uppercase }}
@@ -114,7 +114,30 @@
             </li>
           </ul>
         </li>
+        <!-- Botón de carrito -->
+        <li class="nav-item d-flex align-items-center">
+          <button
+            type="button"
+            class="btn position-relative me-2"
+            style="background: none; border: none; box-shadow: none;"
+            (click)="abrirCarrito()"
+            aria-label="Abrir carrito"
+          >
+            <i class="fas fa-shopping-cart fa-lg" style="color: #15a4c0;"></i>
+            <span
+              *ngIf="cartItemsCount && cartItemsCount > 0"
+              class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+              style="font-size: 0.7rem;"
+            >
+              {{ cartItemsCount }}
+            </span>
+          </button>
+        </li>
       </ul>
     </div>
   </div>
 </nav>
+<app-add-to-cart
+  [isVisible]="showCartModal"
+  (modalClosed)="showCartModal = false">
+</app-add-to-cart>

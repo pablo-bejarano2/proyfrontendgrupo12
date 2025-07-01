@@ -1,12 +1,20 @@
 <div class="container cupones-admin-container my-4 p-4 rounded shadow-sm bg-white">
   <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
     <h2 class="text-custom fw-bold mb-0">Gestión de Cupones</h2>
+    <div *ngIf="mensajeExito" class="alert alert-success alert-dismissible fade show alerta-centro" role="alert">
+      {{ mensajeExito }}
+      <button type="button" class="btn-close" (click)="mensajeExito = null" aria-label="Cerrar"></button>
+    </div>
+    <div *ngIf="mensajeError" class="alert alert-danger alert-dismissible fade show alerta-centro" role="alert">
+      {{ mensajeError }}
+      <button type="button" class="btn-close" (click)="mensajeError = null" aria-label="Cerrar"></button>
+    </div>
     <div class="d-flex flex-wrap align-items-center gap-2">
       <button class="btn btn-info text-white" data-bs-toggle="modal" data-bs-target="#modalNuevoCupon">
         <i class="fas fa-plus"></i> Nuevo Cupón
       </button>
-      <form class="d-flex align-items-center ms-2" onsubmit="return false;">
-        <input type="text" class="form-control me-2" placeholder="Buscar cupón..." style="min-width:160px;">
+      <form class="d-flex align-items-center ms-2" (submit)="$event.preventDefault()">
+        <input type="text" class="form-control me-2" placeholder="Buscar cupón..." style="min-width:160px;" [(ngModel)]="filtro" name="filtro">
         <button class="btn btn-outline-info" type="submit" title="Buscar">
           <i class="fas fa-search"></i>
         </button>
@@ -15,78 +23,155 @@
   </div>
 
   <div class="row g-3">
-    <!-- Card Cupón Activo -->
-    <div class="col-12 col-md-6 col-lg-4">
-      <div class="card cupon-card border-info border-3 shadow-sm h-100">
+    <div class="col-12 col-md-6 col-lg-4" *ngFor="let cupon of filtrarCupones()">
+      <div class="card cupon-card border-3 shadow-sm h-100"
+           [ngClass]="cupon.activo ? 'border-info' : 'border-secondary'">
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-center mb-2">
-            <span class="fw-bold text-info">DESCUENTO20</span>
-            <span class="badge bg-info text-white">Activo</span>
+            <span class="fw-bold" [ngClass]="cupon.activo ? 'text-info' : 'text-secondary'">{{ cupon.codigo }}</span>
+            <span class="badge" [ngClass]="cupon.activo ? 'bg-info text-white' : 'bg-secondary text-white'">
+              {{ cupon.activo ? 'Activo' : 'Inactivo' }}
+            </span>
           </div>
-          <p class="mb-1"><strong>Descuento:</strong> 20%</p>
-          <p class="mb-1"><strong>Válido hasta:</strong> 30/07/2025</p>
-          <p class="mb-2"><strong>Usos restantes:</strong> 15</p>
+          <p class="mb-1"><strong>Nombre:</strong> {{ cupon.nombre | uppercase }}</p>
+          <p class="mb-1"><strong>Descuento:</strong> {{ cupon.descuento }}%</p>
+          <p class="mb-1"><strong>Válido hasta:</strong> {{ cupon.fechaExpiracion | date:'dd/MM/yyyy' }}</p>
+          <p class="mb-2"><strong>Usos máximos:</strong> {{ cupon.usosMaximos }}</p>
+          <p class="mb-2"><strong>Usos restantes:</strong> {{ cupon.usosRestantes }}</p>
           <div class="d-flex gap-2">
-            <button class="btn btn-outline-secondary btn-sm" title="Desactivar"><i class="fas fa-ban"></i></button>
-            <button class="btn btn-outline-primary btn-sm" title="Modificar"><i class="fas fa-edit"></i></button>
-            <button class="btn btn-outline-danger btn-sm" title="Eliminar"><i class="fas fa-trash"></i></button>
+            <button *ngIf="cupon.activo" class="btn btn-outline-secondary btn-sm" (click)="desactivarCupon(cupon)" title="Desactivar"><i class="fas fa-ban"></i></button>
+            <button *ngIf="!cupon.activo" class="btn btn-outline-success btn-sm" (click)="activarCupon(cupon)" title="Activar"><i class="fas fa-check"></i></button>
+            <button class="btn btn-outline-primary btn-sm" (click)="editarCupon(cupon)" data-bs-toggle="modal" data-bs-target="#modalEditarCupon" title="Modificar"><i class="fas fa-edit"></i></button>
+            <button class="btn btn-outline-danger btn-sm" (click)="eliminarCupon(cupon._id)" title="Eliminar"><i class="fas fa-trash"></i></button>
           </div>
         </div>
       </div>
     </div>
-    <!-- Card Cupón Inactivo -->
-    <div class="col-12 col-md-6 col-lg-4">
-      <div class="card cupon-card border-secondary border-3 shadow-sm h-100">
-        <div class="card-body">
-          <div class="d-flex justify-content-between align-items-center mb-2">
-            <span class="fw-bold text-secondary">ENVIOGRATIS</span>
-            <span class="badge bg-secondary text-white">Inactivo</span>
-          </div>
-          <p class="mb-1"><strong>Descuento:</strong> Envío gratis</p>
-          <p class="mb-1"><strong>Válido hasta:</strong> 15/08/2025</p>
-          <p class="mb-2"><strong>Usos restantes:</strong> 0</p>
-          <div class="d-flex gap-2">
-            <button class="btn btn-outline-success btn-sm" title="Activar"><i class="fas fa-check"></i></button>
-            <button class="btn btn-outline-primary btn-sm" title="Modificar"><i class="fas fa-edit"></i></button>
-            <button class="btn btn-outline-danger btn-sm" title="Eliminar"><i class="fas fa-trash"></i></button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- Más cards aquí -->
   </div>
 </div>
 
-<!-- Modal para crear cupón nuevo (opcional, solo estructura) -->
+<!-- Modal para crear cupón nuevo -->
 <div class="modal fade" id="modalNuevoCupon" tabindex="-1" aria-labelledby="modalNuevoCuponLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form>
+      <form (ngSubmit)="crearCupon(formNuevoCupon)" #formNuevoCupon="ngForm" novalidate>
         <div class="modal-header">
           <h5 class="modal-title" id="modalNuevoCuponLabel">Nuevo Cupón</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          <button type="button" class="btn-close" id="modalNuevoCuponClose" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
         <div class="modal-body">
           <div class="mb-3">
             <label for="codigoCupon" class="form-label">Código</label>
-            <input type="text" class="form-control" id="codigoCupon" required>
+            <input type="text" class="form-control" id="codigoCupon" [(ngModel)]="nuevoCupon.codigo" name="codigo"
+              required pattern="^[A-Za-z0-9]{3,10}$" #codigo="ngModel" autocomplete="off">
+            <div *ngIf="formNuevoCupon.submitted && codigo.invalid" class="text-danger small">
+              Código requerido (3-10 letras o números, sin espacios).
+            </div>
+            <div *ngIf="formNuevoCupon.submitted && codigo.errors?.['pattern']" class="text-danger small">
+              El código debe tener entre 3 y 10 caracteres, solo letras y números.
+            </div>
+            <div *ngIf="codigoExistente" class="text-danger small">
+              Ya existe un cupón con ese código.
+            </div>
           </div>
           <div class="mb-3">
-            <label for="descuentoCupon" class="form-label">Descuento</label>
-            <input type="text" class="form-control" id="descuentoCupon" required>
+            <label for="nombreCupon" class="form-label">Nombre</label>
+            <input type="text" class="form-control" id="nombreCupon" [(ngModel)]="nuevoCupon.nombre" name="nombre" required #nombre="ngModel" autocomplete="off">
+            <div *ngIf="formNuevoCupon.submitted && nombre.invalid" class="text-danger small">
+              Nombre requerido.
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="descuentoCupon" class="form-label">Descuento (%)</label>
+            <input type="number" class="form-control" id="descuentoCupon" [(ngModel)]="nuevoCupon.descuento" name="descuento" required min="1" max="100" #descuento="ngModel">
+            <div *ngIf="formNuevoCupon.submitted && descuento.invalid" class="text-danger small">
+              Ingrese un descuento entre 1 y 100.
+            </div>
           </div>
           <div class="mb-3">
             <label for="fechaVencimiento" class="form-label">Válido hasta</label>
-            <input type="date" class="form-control" id="fechaVencimiento" required>
+            <input type="date" class="form-control" id="fechaVencimiento" [(ngModel)]="nuevoCupon.fechaExpiracion" name="fechaExpiracion" required [min]="hoy" #fechaExpiracion="ngModel">
+            <div *ngIf="formNuevoCupon.submitted && fechaExpiracion.invalid" class="text-danger small">
+              Ingrese una fecha válida (no anterior a hoy).
+            </div>
           </div>
           <div class="mb-3">
             <label for="usosCupon" class="form-label">Usos máximos</label>
-            <input type="number" class="form-control" id="usosCupon" min="1" required>
+            <input type="number" class="form-control" id="usosCupon" [(ngModel)]="nuevoCupon.usosMaximos" name="usosMaximos" min="1" required #usosMaximos="ngModel">
+            <div *ngIf="formNuevoCupon.submitted && usosMaximos.invalid" class="text-danger small">
+              Ingrese un número mayor o igual a 1.
+            </div>
           </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
           <button type="submit" class="btn btn-info text-white">Crear Cupón</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para editar cupón -->
+<div class="modal fade" id="modalEditarCupon" tabindex="-1" aria-labelledby="modalEditarCuponLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form (ngSubmit)="guardarEdicion(formEditarCupon)" #formEditarCupon="ngForm" novalidate>
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalEditarCuponLabel">Editar Cupón</h5>
+          <button type="button" class="btn-close" id="modalEditarCuponClose" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body" *ngIf="cuponEditado">
+          <div class="mb-3">
+            <label for="codigoEdit" class="form-label">Código</label>
+            <input type="text" class="form-control" id="codigoEdit" [(ngModel)]="cuponEditado.codigo" name="codigoEdit"
+              required pattern="^[A-Za-z0-9]{3,10}$" #codigoEdit="ngModel" autocomplete="off">
+            <div *ngIf="formEditarCupon.submitted && codigoEdit.invalid" class="text-danger small">
+              Código requerido (3-10 letras o números, sin espacios).
+            </div>
+            <div *ngIf="formEditarCupon.submitted && codigoEdit.errors?.['pattern']" class="text-danger small">
+              El código debe tener entre 3 y 10 caracteres, solo letras y números.
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="nombreEdit" class="form-label">Nombre</label>
+            <input type="text" class="form-control" id="nombreEdit" [(ngModel)]="cuponEditado.nombre" name="nombreEdit" required #nombreEdit="ngModel" autocomplete="off">
+            <div *ngIf="formEditarCupon.submitted && nombreEdit.invalid" class="text-danger small">
+              Nombre requerido.
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="descuentoEdit" class="form-label">Descuento (%)</label>
+            <input type="number" class="form-control" id="descuentoEdit" [(ngModel)]="cuponEditado.descuento" name="descuentoEdit" required min="1" max="100" #descuentoEdit="ngModel">
+            <div *ngIf="formEditarCupon.submitted && descuentoEdit.invalid" class="text-danger small">
+              Ingrese un descuento entre 1 y 100.
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="fechaExpiracionEdit" class="form-label">Válido hasta</label>
+            <input type="date" class="form-control" id="fechaExpiracionEdit" [(ngModel)]="cuponEditado.fechaExpiracion" name="fechaExpiracionEdit" required [min]="hoy" #fechaExpiracionEdit="ngModel">
+            <div *ngIf="formEditarCupon.submitted && fechaExpiracionEdit.invalid" class="text-danger small">
+              Ingrese una fecha válida (no anterior a hoy).
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="usosMaximosEdit" class="form-label">Usos máximos</label>
+            <input type="number" class="form-control" id="usosMaximosEdit" [(ngModel)]="cuponEditado.usosMaximos" name="usosMaximosEdit" min="1" required #usosMaximosEdit="ngModel">
+            <div *ngIf="formEditarCupon.submitted && usosMaximosEdit.invalid" class="text-danger small">
+              Ingrese un número mayor o igual a 1.
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="usosRestantesEdit" class="form-label">Usos restantes</label>
+            <input type="number" class="form-control" id="usosRestantesEdit" [(ngModel)]="cuponEditado.usosRestantes" name="usosRestantesEdit" required min="0" [max]="cuponEditado.usosMaximos" #usosRestantesEdit="ngModel">
+            <div *ngIf="formEditarCupon.submitted && usosRestantesEdit.invalid" class="text-danger small">
+              Ingrese un número entre 0 y el máximo de usos.
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-info text-white">Guardar cambios</button>
         </div>
       </form>
     </div>

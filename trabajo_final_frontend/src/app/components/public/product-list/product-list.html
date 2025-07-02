@@ -178,7 +178,7 @@
                   <p class="card-text product-price">${{ product.precio }}</p>
                   @if (product.categoria) {
                     <p class="card-text product-category">
-                      {{ product.categoriaNombre }}
+                      {{ getCategoriaNombre(product) }}
                     </p>
                   }
                 </div>
@@ -186,8 +186,7 @@
                      [class.opacity-0]="hoveredIndex !== i">
                   <h6 class="text-muted mb-2">Detalles</h6>
                   <p class="mb-1">Color: {{ product.color }}</p>
-                  <p class="mb-1">Stock: {{ product.stockTotal }}</p>
-
+                  <p class="mb-1">Stock: {{ getStockTotal(product) }}</p>
                   <p class="mb-0">{{ product.descripcion }}</p>
                 </div>
               </div>

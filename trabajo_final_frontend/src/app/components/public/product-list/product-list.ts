@@ -3,8 +3,7 @@ import { TitleCasePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Accordion, AccordionItemDirective } from '../../shared/accordion/accordion';
 import * as bootstrap from 'bootstrap';
-import { ProductoService } from '../../../services/producto';
-import { Producto, Categoria } from '../../../models/producto';
+import { ProductoService, Producto, Talla, Categoria } from '../../../services/producto';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
@@ -199,5 +198,17 @@ export class ProductList implements OnInit {
     if (productId) {
       this.router.navigate(['/product-detail', productId]);
     }
+  }
+  getStockTotal(product: Producto): number {
+    return product.tallas?.reduce((acc, t) => acc + (t.stock || 0), 0) || 0;
+  }
+
+  getCategoriaNombre(product: Producto): string {
+    if (!product.categoria) return 'Productos';
+    if (typeof product.categoria === 'string') return product.categoria;
+    if (typeof product.categoria === 'object' && 'nombre' in product.categoria) {
+      return product.categoria.nombre || 'Productos';
+    }
+    return 'Productos';
   }
 }

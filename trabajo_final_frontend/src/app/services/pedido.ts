@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Pedido } from '../models/pedido';
+//import { Pedido } from '../models/pedido';
 import {
   environment
 } from '@/environments/environment';
@@ -38,26 +38,26 @@ export class PedidoService {
   }
 
   obtenerPedidoPorId(id: string): Observable<Pedido> {
-    return this.http.get<Pedido>(`${this.API_URL}/${id}`);
-
+    return this.http.get<Pedido> (`${this.API_URL}/${id}`);
+  }
 
   getPedidos(): Observable<Pedido[]> {
-    return this.http.get<{ pedidos: Pedido[] }>(this.apiUrl).pipe(
+    return this.http.get<{ pedidos: Pedido[] }>(this.API_URL).pipe(
       map(res => res.pedidos)
     );
   }
 
   createPedidos(pedido: Partial<Pedido>): Observable<Pedido> {
-    return this.http.post<Pedido>(this.apiUrl, pedido);
+    return this.http.post<Pedido>(this.API_URL, pedido);
   }
 
   updatePedido(id: string, pedido: Partial<Pedido>): Observable<Pedido> {
-    return this.http.put<{ status: string, msg: string, pedido: Pedido }>(`${this.apiUrl}/${id}`, pedido)
+    return this.http.put<{ status: string, msg: string, pedido: Pedido }>(`${this.API_URL}/${id}`, pedido)
       .pipe(map(res => res.pedido));
   }
 
   deletePedido(id: string): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/${id}`);
+    return this.http.delete(`${this.API_URL}/${id}`);
 
   }
 }

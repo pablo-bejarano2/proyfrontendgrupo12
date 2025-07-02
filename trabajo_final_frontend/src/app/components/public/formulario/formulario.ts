@@ -27,6 +27,7 @@ export class Formulario implements OnInit {
   msglogin!: string; // mensaje que indica si no paso el login
   accion!: string; //accion para el comportamiento del form
   mostrarPassword: boolean = false; //para mostrar la contraseña
+  mostrarConfirmPassword: boolean = false; //para mostrar la confirmación de contraseña
   ingresoDesdeAdmin: boolean = false; //Indica si el formulario se abre desde el admin
   returnUrl!: string;
 
@@ -126,9 +127,15 @@ export class Formulario implements OnInit {
       const token = response.credential;
       this.loginService.loginGoogle(token).subscribe(
         (result) => {
-          this.guardarUsuarioEnStorage(result);
-          sessionStorage.setItem('imagen', result.imagen);
-          this.router.navigate([this.returnUrl]);
+          if (this.ingresoDesdeAdmin) {
+            //No permitir el login del usuario si el admin está creando una cuenta
+            this.toastr.success('Usuario creado correctamente');
+            this.router.navigate([this.returnUrl]);
+          } else {
+            this.guardarUsuarioEnStorage(result);
+            sessionStorage.setItem('imagen', result.imagen);
+            this.router.navigate([this.returnUrl]);
+          }
         },
         (error) => {
           this.toastr.error(error.error.msg || 'Error procensado la operación');

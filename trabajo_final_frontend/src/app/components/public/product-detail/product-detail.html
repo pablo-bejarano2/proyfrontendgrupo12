@@ -100,9 +100,8 @@
           <div class="mb-2 p-2 bg-light rounded text-small">
             <strong>Debug Info:</strong><br>
             Selected Size: "{{ selectedSize }}"<br>
-            Stock Total: {{ currentProduct?.stockTotal }}<br>
-            Stock para talla seleccionada: {{ selectedSize ? (currentProduct?.getStockPorTalla(selectedSize) || 0) : 'No hay talla' }}<br>
-            Botón habilitado: {{ isButtonEnabled }}
+            Stock Total: {{ stockTotal }}<br>
+            Stock para talla seleccionada: {{ selectedSize ? (getStockPorTalla(selectedSize) || 0) : 'No hay talla' }}<br>            Botón habilitado: {{ isButtonEnabled }}
           </div>
 
           <!-- Botones de compra -->
@@ -131,7 +130,7 @@
           <!-- Información de stock total -->
           @if (hasStockTotal()) {
             <div class="text-muted small mb-4">
-              Stock total disponible: {{ currentProduct!.stockTotal }} unidades
+              Stock total disponible: {{ stockTotal }} unidades
             </div>
           }
 

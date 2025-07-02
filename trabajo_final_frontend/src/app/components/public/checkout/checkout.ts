@@ -9,9 +9,8 @@ import {
 } from '@angular/forms';
 import { ItemPedidoService } from 'src/app/services/item-pedido';
 import { CuponService } from 'src/app/services/cupon';
-import { PedidoService } from 'src/app/services/pedido';
+import { PedidoService, Pedido } from 'src/app/services/pedido';
 import { ItemPedido } from 'src/app/models/item-pedido';
-import { Pedido } from 'src/app/models/pedido';
 import { MisValidadores } from '../../../validadores/mis-validadores';
 
 @Component({
@@ -125,21 +124,44 @@ export class CheckoutComponent implements OnInit {
   onSubmit() {
     if (this.checkoutForm.invalid) return;
 
-    const pedido: Pedido = {
-      items: this.cartItems
-        .map(item => item.id)
-        .filter((id): id is string => typeof id === 'string'),
-      metodoPago: 'tarjeta', // o el método seleccionado
-      direccion: 'ID_DE_DIRECCION', // Debes obtener este ID del backend
-      cupon: this.couponCode || undefined,
-      total: this.total
+    // Construir la dirección según el nuevo modelo
+    const direccion = {
+      calle: this.checkoutForm.value.address,
+      ciudad: this.checkoutForm.value.city,
+      provincia: '', // Puedes agregar un campo en el formulario si lo necesitas
+      codigoPostal: this.checkoutForm.value.zip
     };
 
-    this.pedidoService.crearPedido(pedido).subscribe({
+    // Construir los items según el nuevo modelo
+    const items = this.cartItems.map (item => ({
+      producto: {
+        _id: item.producto._id,
+        nombre: item.producto.nombre
+      },
+      cantidad: item.cantidad,
+      subtotal: item.producto.precio * item.cantidad
+    }));
+
+    // Construir el pedido
+    const pedido: Partial<Pedido> = {
+      emailCliente: this.checkoutForm.value.email,
+      items,
+      total: this.total,
+      estado: 'pendiente',
+      fecha: new Date ().toISOString (),
+      direccion,
+      metodoPago: 'tarjeta', // O el método seleccionado
+      cupon: this.couponCode ? {
+        codigo: this.couponCode,
+        descuento: this.descuentoPorcentaje
+      } : undefined
+    };
+
+    this.pedidoService.createPedidos (pedido).subscribe ({
       next: () => {
-        this.itemPedidoService.clearCart();
-        // Aquí puedes redirigir o mostrar mensaje de éxito
+        this.itemPedidoService.clearCart ();
+        // Redirigir o mostrar mensaje de éxito
       }
-    });
+    })
   }
 }

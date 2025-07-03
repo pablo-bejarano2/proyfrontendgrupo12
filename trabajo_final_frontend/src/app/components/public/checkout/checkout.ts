@@ -121,19 +121,12 @@ export class CheckoutComponent implements OnInit {
     return `$${valor.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   }
 
+// checkout.ts
   onSubmit() {
     if (this.checkoutForm.invalid) return;
 
-    // Construir la dirección según el nuevo modelo
-    const direccion = {
-      calle: this.checkoutForm.value.address,
-      ciudad: this.checkoutForm.value.city,
-      provincia: '', // Puedes agregar un campo en el formulario si lo necesitas
-      codigoPostal: this.checkoutForm.value.zip
-    };
-
-    // Construir los items según el nuevo modelo
-    const items = this.cartItems.map (item => ({
+    const items = this.cartItems.map(item => ({
+      _id: '',
       producto: {
         _id: item.producto._id,
         nombre: item.producto.nombre
@@ -142,26 +135,29 @@ export class CheckoutComponent implements OnInit {
       subtotal: item.producto.precio * item.cantidad
     }));
 
-    // Construir el pedido
-    const pedido: Partial<Pedido> = {
+    const pedido = {
       emailCliente: this.checkoutForm.value.email,
       items,
       total: this.total,
       estado: 'pendiente',
-      fecha: new Date ().toISOString (),
-      direccion,
-      metodoPago: 'tarjeta', // O el método seleccionado
-      cupon: this.couponCode ? {
-        codigo: this.couponCode,
-        descuento: this.descuentoPorcentaje
-      } : undefined
+      metodoPago: 'tarjeta',
+      direccion: {
+        _id: '', // Completa según tu lógica
+        calle: this.checkoutForm.value.address,
+        ciudad: this.checkoutForm.value.city,
+        provincia: '', // Completa según tu lógica
+        codigoPostal: this.checkoutForm.value.zip
+      },
+      cupon: this.couponCode
+        ? { _id: '', codigo: this.couponCode, descuento: this.descuentoPorcentaje }
+        : undefined
     };
 
-    this.pedidoService.createPedidos (pedido).subscribe ({
+    this.pedidoService.createPedidos(pedido).subscribe({
       next: () => {
-        this.itemPedidoService.clearCart ();
+        this.itemPedidoService.clearCart();
         // Redirigir o mostrar mensaje de éxito
       }
-    })
+    });
   }
 }

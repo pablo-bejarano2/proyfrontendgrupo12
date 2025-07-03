@@ -1,44 +1,34 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-//import { Pedido } from '../models/pedido';
-import {
-  environment
-} from '@/environments/environment';
+import { environment } from '@/environments/environment';
 import { map, Observable } from 'rxjs';
 
 export interface Pedido {
   _id: string;
   cliente?: { _id: string; nombres: string };
   emailCliente: string;
-  items: { producto: { _id: string; nombre: string }; cantidad: number; subtotal: number }[];
+  items: { _id: string; producto: { _id: string; nombre: string }; cantidad: number; subtotal: number }[];
   total: number;
-  estado: string; // 'pendiente', 'enviado', 'entregado', etc
+  estado: string;
   fecha: string;
-  direccion: { calle: string; ciudad: string; provincia: string; codigoPostal: string };
-  metodoPago: string; // 'tarjeta', 'paypal', etc
-  cupon?: { codigo: string; descuento: number }; // ID del cupón aplicado, si hay
+  direccion: { _id: string; calle: string; ciudad: string; provincia: string; codigoPostal: string };
+  metodoPago: string;
+  cupon?: { _id: string; codigo: string; descuento: number };
 }
-
 
 @Injectable({
   providedIn: 'root'
 })
 export class PedidoService {
 
-  private API_URL = environment.apiUrl;
+  private API_URL = environment.apiUrl + '/pedido';
 
   constructor(private http: HttpClient) {}
 
-  crearPedido(pedido: Pedido): Observable<Pedido> {
-    return this.http.post<Pedido>(this.API_URL, pedido);
-  }
-
-  obtenerPedidos(): Observable<Pedido[]> {
-    return this.http.get<Pedido[]>(this.API_URL);
-  }
-
-  obtenerPedidoPorId(id: string): Observable<Pedido> {
-    return this.http.get<Pedido> (`${this.API_URL}/${id}`);
+  createPedidos(pedido: Partial<Pedido>): Observable<Pedido> {
+    // Envía el objeto tal cual, sin transformar campos a IDs
+    return this.http.post<{ status: string, msg: string, pedido: Pedido }>(this.API_URL, pedido)
+      .pipe(map(res => res.pedido));
   }
 
   getPedidos(): Observable<Pedido[]> {
@@ -47,17 +37,19 @@ export class PedidoService {
     );
   }
 
-  createPedidos(pedido: Partial<Pedido>): Observable<Pedido> {
-    return this.http.post<Pedido>(this.API_URL, pedido);
+  obtenerPedidoPorId(id: string): Observable<Pedido> {
+    return this.http.get<{ pedido: Pedido }>(`${this.API_URL}/${id}`).pipe(
+      map(res => res.pedido)
+    );
   }
 
   updatePedido(id: string, pedido: Partial<Pedido>): Observable<Pedido> {
+    // Envía el objeto tal cual, sin transformar campos a IDs
     return this.http.put<{ status: string, msg: string, pedido: Pedido }>(`${this.API_URL}/${id}`, pedido)
       .pipe(map(res => res.pedido));
   }
 
   deletePedido(id: string): Observable<any> {
     return this.http.delete(`${this.API_URL}/${id}`);
-
   }
 }

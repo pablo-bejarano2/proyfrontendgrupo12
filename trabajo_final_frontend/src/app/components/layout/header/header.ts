@@ -16,8 +16,9 @@ export class Header implements OnInit {
   email: string = '';
   imagen: string = '';
   username: string = '';
-
   categorias: any[] = [];
+  mostrarMenu: boolean = false; // Variable para controlar la visibilidad del menú
+
   constructor(
     private categoriaService: CategoriaService,
     public loginService: LoginService,

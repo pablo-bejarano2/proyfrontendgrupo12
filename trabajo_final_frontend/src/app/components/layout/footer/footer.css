@@ -33,6 +33,13 @@
   padding: 0 10px;
 }
 
+.footer-center,
+.footer-right {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
 .footer-right h4,
 .footer-center h4 {
   text-align: center;
@@ -47,13 +54,33 @@
   cursor: pointer;
 }
 
+.footer-title {
+  font-family: "Bebas Neue", sans-serif;
+  color: #00bcd4;
+  font-size: 1.5rem;
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  text-align: center;
+  font-weight: 700;
+  border-bottom: 2px solid #e0e0e0;
+  display: inline-block;
+  padding-bottom: 4px;
+}
+
+.description {
+  font-family: "Lato", sans-serif;
+  color: #222;
+  font-size: 1.15rem;
+}
+
 .subscribe-form {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
   margin-top: 10px;
   justify-content: center;
-  width: 100%;
+  width: 90%;
 }
 
 .subscribe-form input {
@@ -65,20 +92,19 @@
 }
 
 .subscribe-form button {
-  padding: 10px 20px;
   background-color: #00bcd4;
   color: #fff;
   font-weight: 600;
+  padding: 8px 20px;
   border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background 0.3s ease;
+  border-radius: 50px;
+  text-decoration: none;
+  transition: 0.3s background-color;
 }
 
 .subscribe-form button:hover {
-  background-color: #fff;
-  color: #00bfff;
-  border: 1px solid #00bcd4;
+  background-color: #0097a7;
+  color: #fff;
 }
 
 .social-icons {
@@ -97,9 +123,34 @@
   color: #00bcd4;
 }
 
-.footer-right p i {
-  color: #25d366;
+.contact-us {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  font-size: 1.08em;
+  color: #333;
+  padding: 2px 0;
+}
+
+.contact-item i {
+  color: #00bfae;
+  font-size: 1.2em;
   margin-right: 8px;
+}
+
+.contact-text {
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  color: #222;
+  word-break: break-all;
 }
 
 .footer-bottom {
@@ -126,7 +177,7 @@
   .footer-content {
     flex-direction: column;
     align-items: center;
-    gap: 32px;
+    gap: 20px;
     padding: 0 10px;
   }
 
@@ -138,14 +189,14 @@
   }
 
   .footer-logo {
-    width: 140px;
-    height: 140px;
+    width: 200px;
+    height: 200px;
   }
 }
 
 @media (max-width: 768px) {
   .footer-content {
-    gap: 24px;
+    gap: 16px;
   }
 
   .subscribe-form {
@@ -162,11 +213,11 @@
 
 @media (max-width: 500px) {
   .footer-content {
-    gap: 18px;
+    gap: 8px;
     padding: 0 2px;
   }
   .footer-logo {
-    width: 100px;
-    height: 100px;
+    width: 200px;
+    height: 200px;
   }
 }

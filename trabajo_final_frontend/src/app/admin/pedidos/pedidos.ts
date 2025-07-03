@@ -70,11 +70,10 @@ export class Pedidos {
       }
     );
   }
-
   editarPedido(pedido: Pedido) {
     this.pedidoEditado = { ...pedido };
     if (!this.pedidoEditado.cupon) {
-      this.pedidoEditado.cupon = { codigo: '', descuento: 0 };
+      this.pedidoEditado.cupon = { _id: '', codigo: '', descuento: 0 };
     }
     setTimeout(() => {
       const modal = document.getElementById('modalEditarPedido');
@@ -85,7 +84,6 @@ export class Pedidos {
       }
     });
   }
-
   eliminarPedido(pedido: Pedido) {
     if (!pedido._id) return;
     this.pedidoService.deletePedido(pedido._id).subscribe(

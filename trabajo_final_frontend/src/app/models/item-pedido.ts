@@ -1,4 +1,4 @@
-import { Producto } from './producto';
+import { Producto } from '../services/producto';
 
 export interface ItemPedido {
   id?: string;

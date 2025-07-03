@@ -9,9 +9,8 @@ import {
 } from '@angular/forms';
 import { ItemPedidoService } from 'src/app/services/item-pedido';
 import { CuponService } from 'src/app/services/cupon';
-import { PedidoService } from 'src/app/services/pedido';
+import { PedidoService, Pedido } from 'src/app/services/pedido';
 import { ItemPedido } from 'src/app/models/item-pedido';
-import { Pedido } from 'src/app/models/pedido';
 import { MisValidadores } from '../../../validadores/mis-validadores';
 
 @Component({
@@ -122,23 +121,42 @@ export class CheckoutComponent implements OnInit {
     return `$${valor.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   }
 
+// checkout.ts
   onSubmit() {
     if (this.checkoutForm.invalid) return;
 
-    const pedido: Pedido = {
-      items: this.cartItems
-        .map(item => item.id)
-        .filter((id): id is string => typeof id === 'string'),
-      metodoPago: 'tarjeta', // o el método seleccionado
-      direccion: 'ID_DE_DIRECCION', // Debes obtener este ID del backend
-      cupon: this.couponCode || undefined,
-      total: this.total
+    const items = this.cartItems.map(item => ({
+      _id: '',
+      producto: {
+        _id: item.producto._id,
+        nombre: item.producto.nombre
+      },
+      cantidad: item.cantidad,
+      subtotal: item.producto.precio * item.cantidad
+    }));
+
+    const pedido = {
+      emailCliente: this.checkoutForm.value.email,
+      items,
+      total: this.total,
+      estado: 'pendiente',
+      metodoPago: 'tarjeta',
+      direccion: {
+        _id: '', // Completa según tu lógica
+        calle: this.checkoutForm.value.address,
+        ciudad: this.checkoutForm.value.city,
+        provincia: '', // Completa según tu lógica
+        codigoPostal: this.checkoutForm.value.zip
+      },
+      cupon: this.couponCode
+        ? { _id: '', codigo: this.couponCode, descuento: this.descuentoPorcentaje }
+        : undefined
     };
 
-    this.pedidoService.crearPedido(pedido).subscribe({
+    this.pedidoService.createPedidos(pedido).subscribe({
       next: () => {
         this.itemPedidoService.clearCart();
-        // Aquí puedes redirigir o mostrar mensaje de éxito
+        // Redirigir o mostrar mensaje de éxito
       }
     });
   }

@@ -3,8 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, map, catchError, of, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
 
-import { Producto } from '../models/producto';
-
 export interface Producto {
   _id: string;
   nombre: string;
@@ -21,7 +19,10 @@ export interface Talla{
   stock: number;
 }
 
-
+export interface Categoria {
+  _id: string;
+  nombre: string;
+}
 export interface ProductoResponse {
   status: string;
   msg: string;

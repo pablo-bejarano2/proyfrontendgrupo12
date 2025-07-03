@@ -2,9 +2,8 @@ import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ItemPedidoService } from '../../../services/item-pedido';
-import { ProductoService } from '../../../services/producto';
+import { ProductoService, Producto, Talla } from '../../../services/producto';
 import { ItemPedido } from '../../../models/item-pedido';
-import { Producto } from '../../../models/producto';
 import { AddToCart } from '../add-to-cart/add-to-cart';
 
 @Component({
@@ -30,20 +29,19 @@ export class ProductDetailComponent implements OnInit {
   mainImages: string[] = [];
   thumbnails: { src: string, alt: string }[] = [];
 
-
   ngOnInit(): void {
-     const productId = this.route.snapshot.paramMap.get('id');
-     if (productId) {
-       this.loadProduct(productId);
-     } else {
-       this.loadExampleProduct();
-     }
-   }
+    const productId = this.route.snapshot.paramMap.get('id');
+    if (productId) {
+      this.loadProduct(productId);
+    } else {
+      this.loadExampleProduct();
+    }
+  }
 
   private loadProduct(id: string): void {
     this.productoService.obtenerProductoPorId(id).subscribe(
       (producto) => {
-        this.currentProduct = new Producto(producto) ;
+        this.currentProduct = producto;
         this.initImages();
       },
       (error) => {
@@ -51,6 +49,7 @@ export class ProductDetailComponent implements OnInit {
       }
     );
   }
+
   private initImages(): void {
     if (this.currentProduct && this.currentProduct.imagenes) {
       this.mainImages = this.currentProduct.imagenes;
@@ -62,7 +61,7 @@ export class ProductDetailComponent implements OnInit {
   }
 
   private loadExampleProduct(): void {
-    this.currentProduct = new Producto({
+    this.currentProduct = {
       _id: '1',
       nombre: 'Forever Lover Sweat',
       descripcion: 'Comfortable and stylish sweatshirt made from premium cotton blend. Features a relaxed fit and soft interior lining for maximum comfort.',
@@ -74,25 +73,23 @@ export class ProductDetailComponent implements OnInit {
         '/assets/product3.jpg'
       ],
       tallas: [
-        { talla: 'XS', stock: 5 },
-        { talla: 'S', stock: 10 },
-        { talla: 'M', stock: 15 },
-        { talla: 'L', stock: 8 },
-        { talla: 'XL', stock: 3 }
+        { _id: 't1', talla: 'XS', stock: 5 },
+        { _id: 't2', talla: 'S', stock: 10 },
+        { _id: 't3', talla: 'M', stock: 15 },
+        { _id: 't4', talla: 'L', stock: 8 },
+        { _id: 't5', talla: 'XL', stock: 3 }
       ],
       categoria: {
         _id: 'cat1',
         nombre: 'Apparel'
       }
-    });
+    };
     this.initImages();
-
   }
 
   get sizes(): string[] {
-    return this.currentProduct?.tallasDisponibles || [];
+    return this.tallasDisponibles;
   }
-
 
   selectSize(size: string): void {
     this.selectedSize = size;
@@ -111,31 +108,19 @@ export class ProductDetailComponent implements OnInit {
   }
 
   addToBag(): void {
-    console.log('=== INICIO addToBag() ===');
-    console.log('currentProduct:', this.currentProduct);
-    console.log('selectedSize:', this.selectedSize);
-
     if (!this.currentProduct) {
-      console.error('No hay producto cargado');
       alert('Error: No hay producto cargado');
       return;
     }
-
     if (!this.selectedSize) {
-      console.warn('No hay talla seleccionada');
       alert('Por favor selecciona una talla');
       return;
     }
-
-    const stockDisponible = this.currentProduct.getStockPorTalla(this.selectedSize);
-    console.log('Stock disponible para talla', this.selectedSize, ':', stockDisponible);
-
+    const stockDisponible = this.getStockPorTalla(this.selectedSize);
     if (stockDisponible <= 0) {
-      console.warn(`Sin stock para talla ${this.selectedSize}`);
       alert(`La talla ${this.selectedSize} no tiene stock disponible`);
       return;
     }
-
     const itemPedido: ItemPedido = {
       id: this.generateItemId(),
       producto: this.currentProduct,
@@ -144,19 +129,10 @@ export class ProductDetailComponent implements OnInit {
       precio_unitario: this.currentProduct.precio,
       color: this.currentProduct.color
     };
-
-    console.log('ItemPedido creado:', itemPedido);
-
     try {
       this.itemProductService.addItem(itemPedido);
-      console.log('Item agregado al servicio exitosamente');
-
       this.showCartModal = true;
-      console.log('Modal del carrito mostrado');
-
-      console.log('=== FIN addToBag() EXITOSO ===');
     } catch (error) {
-      console.error('Error agregando producto al carrito:', error);
       alert('Hubo un error al agregar el producto al carrito');
     }
   }
@@ -183,7 +159,7 @@ export class ProductDetailComponent implements OnInit {
 
   get stockInfo(): string {
     if (!this.selectedSize || !this.currentProduct) return '';
-    const stock = this.currentProduct.getStockPorTalla(this.selectedSize) || 0;
+    const stock = this.getStockPorTalla(this.selectedSize) || 0;
     return stock > 0 ? `${stock} disponibles` : 'Sin stock';
   }
 
@@ -191,22 +167,12 @@ export class ProductDetailComponent implements OnInit {
     return this.currentProduct !== null;
   }
 
-  // Getter corregido para categoría
-  get categoriaNombre(): string {
-    if (!this.currentProduct?.categoria) {
-      return 'Productos';
-    }
-
-    // Si categoria es un string, devolverlo directamente
-    if (typeof this.currentProduct.categoria === 'string') {
-      return this.currentProduct.categoria;
-    }
-
-    // Si categoria es un objeto, devolver su propiedad nombre
+  getCategoryName(): string {
+    if (!this.currentProduct?.categoria) return 'Productos';
+    if (typeof this.currentProduct.categoria === 'string') return this.currentProduct.categoria;
     if (typeof this.currentProduct.categoria === 'object' && 'nombre' in this.currentProduct.categoria) {
       return this.currentProduct.categoria.nombre || 'Productos';
     }
-
     return 'Productos';
   }
 
@@ -218,55 +184,47 @@ export class ProductDetailComponent implements OnInit {
       'L': { pecho: '98-101', cintura: '78-81' },
       'XL': { pecho: '102-105', cintura: '82-85' }
     };
-
     return medidas[talla]?.[medida] || '-';
   }
 
-  // Método helper para obtener el nombre de la categoría de forma segura
-  getCategoryName(): string {
-    return this.categoriaNombre;
-  }
-
-  // Método helper para verificar si hay descripción
   hasDescription(): boolean {
     return !!(this.currentProduct?.descripcion && this.currentProduct.descripcion.trim().length > 0);
   }
 
-  // Método helper para verificar si hay stock total
-  hasStockTotal(): boolean {
-    return !!(this.currentProduct?.stockTotal && this.currentProduct.stockTotal > 0);
+
+  get stockTotal(): number {
+    return this.currentProduct?.tallas?.reduce((acc, t) => acc + (t.stock || 0), 0) || 0;
   }
 
-  // Método helper para verificar si hay color
+  get tallasDisponibles(): string[] {
+    return this.currentProduct?.tallas?.map(t => t.talla) || [];
+  }
+
+  getStockPorTalla(talla: string): number {
+    return this.currentProduct?.tallas?.find(t => t.talla === talla)?.stock || 0;
+  }
+
+  hasStockTotal(): boolean {
+    return this.stockTotal > 0;
+  }
+
   hasColor(): boolean {
     return !!(this.currentProduct?.color && this.currentProduct.color.trim().length > 0);
   }
 
-  // Método helper para verificar si hay tallas
   hasTallas(): boolean {
     return !!(this.currentProduct?.tallas && this.currentProduct.tallas.length > 0);
   }
 
-  // Agregar estos métodos para debug y verificación
   get isButtonEnabled(): boolean {
     const hasSize = !!this.selectedSize;
-    const hasStock = this.currentProduct ? this.currentProduct.stockTotal > 0 : false;
-
-    console.log('Debug botón:', {
-      selectedSize: this.selectedSize,
-      hasSize,
-      stockTotal: this.currentProduct?.stockTotal,
-      hasStock,
-      enabled: hasSize && hasStock
-    });
-
+    const hasStock = this.stockTotal > 0;
     return hasSize && hasStock;
   }
 
-  // Método mejorado para verificar stock
   get hasStock(): boolean {
     if (!this.currentProduct || !this.selectedSize) return false;
-    const stock = this.currentProduct.getStockPorTalla(this.selectedSize);
+    const stock = this.getStockPorTalla(this.selectedSize);
     return stock > 0;
   }
 }

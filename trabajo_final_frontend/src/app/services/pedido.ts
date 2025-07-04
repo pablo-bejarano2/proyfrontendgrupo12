@@ -43,6 +43,12 @@ export class PedidoService {
     );
   }
 
+  obtenerPedidoPorClienteId(clienteId: string): Observable<Pedido[]> {
+    return this.http.get<{ pedidos: Pedido[] }>(`${this.API_URL}/cliente/${clienteId}`).pipe(
+      map(res => res.pedidos)
+    );
+  }
+
   updatePedido(id: string, pedido: Partial<Pedido>): Observable<Pedido> {
     // Envía el objeto tal cual, sin transformar campos a IDs
     return this.http.put<{ status: string, msg: string, pedido: Pedido }>(`${this.API_URL}/${id}`, pedido)

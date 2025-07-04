@@ -1,149 +1,146 @@
-<nav class="navbar navbar-expand-lg custom-navbar">
-  <div class="container-md">
-    <a class="navbar-brand" href="#">
-      <img
-        src="assets/logo-removebg.png"
-        alt="oversizex Logo"
-        class="logo-img"
-      />
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg">
+  <div class="container-lg">
+    <a class="navbar-brand me-auto" href="#">
+      <img src="assets/logo-removebg.png" alt="logo" class="logo-img" />
     </a>
-
+    <div
+      class="offcanvas offcanvas-end"
+      tabindex="-1"
+      id="offcanvasNavbar"
+      aria-labelledby="offcanvasNavbarLabel"
+    >
+      <div class="offcanvas-header">
+        <img src="assets/logo-removebg.png" alt="logo" class="logo-img" />
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="offcanvas"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="offcanvas-body">
+        <ul class="navbar-nav justify-content-center flex-grow-1 pe-3">
+          <li class="nav-item">
+            <a class="nav-link" [routerLink]="['/home']">Inicio</a>
+          </li>
+          <li class="nav-item dropdown hover-dropdown">
+            <a
+              class="nav-link dropdown-toggle mx-lg-2"
+              [routerLink]="['/product-list']"
+              id="tiendaDropdown"
+              role="button"
+              >Tienda</a
+            >
+            <ul class="dropdown-menu custom-dropdown">
+              @for ( categoria of categorias; track categoria.id) {
+              <li>
+                <a
+                  class="dropdown-item"
+                  [routerLink]="['/products', categoria.nombre]"
+                >
+                  {{ categoria.nombre | uppercase }}
+                </a>
+              </li>
+              }
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link mx-lg-2" [routerLink]="['/contact']">Contacto</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link mx-lg-2" [routerLink]="['/policy']">Políticas</a>
+          </li>
+          <!-- Botón de carrito -->
+          <li class="nav-item d-flex align-items-center">
+            <button
+              type="button"
+              class="btn position-relative me-2"
+              style="background: none; border: none; box-shadow: none"
+              (click)="abrirCarrito()"
+              aria-label="Abrir carrito"
+            >
+              <i class="fas fa-shopping-cart fa-lg" style="color: #15a4c0"></i>
+              <span
+                *ngIf="cartItemsCount && cartItemsCount > 0"
+                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                style="font-size: 0.7rem"
+              >
+                {{ cartItemsCount }}
+              </span>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!-- Acceso -->
     <button
-      class="navbar-toggler"
+      *ngIf="!userLogged()"
+      class="login-button"
+      (click)="irAFormulario()"
+    >
+      Acceder
+    </button>
+    <!-- Usuario Logueado -->
+    <div *ngIf="userLogged()" class="user-dropdown">
+      <div
+        class="user-avatar-container"
+        (click)="mostrarMenu = !mostrarMenu"
+        style="cursor: pointer"
+      >
+        <img
+          [src]="imagen"
+          alt="img_user"
+          width="55"
+          height="55"
+          class="rounded-circle user-avatar"
+        />
+      </div>
+      <div class="user-menu" *ngIf="mostrarMenu">
+        <div class="user-info text-center py-2 px-3">
+          <img
+            [src]="imagen"
+            alt="img_user"
+            width="60"
+            height="60"
+            class="rounded-circle mb-2"
+          />
+          <div class="fw-bold">{{ username }}</div>
+          <div class="text-muted" style="font-size: 0.95em">{{ email }}</div>
+        </div>
+        <hr class="my-1" />
+        <button
+          class="dropdown-item text-start"
+          type="button"
+          (click)="configurarCuenta()"
+        >
+          <i class="fa-solid fa-gear me-1"></i> Configuración
+        </button>
+        <button
+          class="dropdown-item text-danger text-start"
+          type="button"
+          (click)="logout()"
+        >
+          <i class="fa-solid fa-right-from-bracket me-1"></i> Cerrar Sesión
+        </button>
+      </div>
+    </div>
+    <button
+      class="navbar-toggler pe-0"
       type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#navbarNavDropdown"
+      data-bs-toggle="offcanvas"
+      data-bs-target="#offcanvasNavbar"
+      aria-controls="offcanvasNavbar"
+      aria-label="Toggle navigation"
     >
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div
-      class="collapse navbar-collapse justify-content-end"
-      id="navbarNavDropdown"
+    <app-add-to-cart
+      [isVisible]="showCartModal"
+      (modalClosed)="showCartModal = false"
     >
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link custom-link" [routerLink]="['/home']">Inicio</a>
-        </li>
-        <!-- Dropdown con hover y clic -->
-        <li class="nav-item dropdown hover-dropdown">
-          <a
-            class="nav-link custom-link dropdown-toggle"
-            [routerLink]="['/product-list']"
-            id="tiendaDropdown"
-            role="button"
-          >
-            Tienda
-          </a>
-          <ul class="dropdown-menu custom-dropdown">
-            @for (categoria of categorias; track categoria._id) {
-              <li>
-                <a class="dropdown-item" [routerLink]="['/products', categoria.nombre]">
-                  {{ categoria.nombre | uppercase }}
-                </a>
-              </li>
-            }
-          </ul>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link custom-link" [routerLink]="['/contact']"
-            >Contacto</a
-          >
-        </li>
-        <li class="nav-item">
-          <a class="nav-link custom-link">Políticas</a>
-        </li>
-        <!-- Botón de Acceder -->
-        <li class="nav-item" *ngIf="!userLogged()">
-          <button class="btn-access me-2" (click)="irAFormulario()">
-            Acceder
-          </button>
-        </li>
-        <!-- Usuario Logueado -->
-        <li class="nav-item dropdown hover-dropdown" *ngIf="userLogged()">
-          <a
-            class="nav-link dropdown-toggle d-flex align-items-center justify-content-center"
-            href="#"
-            id="userDropdown"
-            role="button"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            <img
-              [src]="imagen"
-              alt="img_user"
-              width="60"
-              height="60"
-              class="rounded-circle me-2"
-            />
-          </a>
-          <ul
-            class="dropdown-menu dropdown-menu-end text-center"
-            aria-labelledby="userDropdown"
-          >
-            <li class="px-3 py-3">
-              <div class="d-flex flex-column align-items-center">
-                <img
-                  [src]="imagen"
-                  alt="img_user"
-                  width="60"
-                  height="60"
-                  class="rounded-circle mb-2"
-                />
-                <div class="fw-bold" style="font-size: 1.05em">
-                  {{ username }}
-                </div>
-                <div class="text-muted" style="font-size: 0.95em">
-                  {{ email }}
-                </div>
-              </div>
-            </li>
-            <li><hr class="dropdown-divider" /></li>
-            <li>
-              <button
-                class="dropdown-item text-start"
-                type="button"
-                (click)="configurarCuenta()"
-              >
-                <i class="fa-solid fa-gear me-1"></i>Configuración
-              </button>
-            </li>
-            <li><hr class="dropdown-divider" /></li>
-            <li>
-              <button
-                class="dropdown-item text-danger text-start"
-                type="button"
-                (click)="logout()"
-              >
-                <i class="fa-solid fa-right-from-bracket me-1"></i>Cerrar Sesión
-              </button>
-            </li>
-          </ul>
-        </li>
-        <!-- Botón de carrito -->
-        <li class="nav-item d-flex align-items-center">
-          <button
-            type="button"
-            class="btn position-relative me-2"
-            style="background: none; border: none; box-shadow: none;"
-            (click)="abrirCarrito()"
-            aria-label="Abrir carrito"
-          >
-            <i class="fas fa-shopping-cart fa-lg" style="color: #15a4c0;"></i>
-            <span
-              *ngIf="cartItemsCount && cartItemsCount > 0"
-              class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-              style="font-size: 0.7rem;"
-            >
-              {{ cartItemsCount }}
-            </span>
-          </button>
-        </li>
-      </ul>
-    </div>
+    </app-add-to-cart>
   </div>
 </nav>
-<app-add-to-cart
-  [isVisible]="showCartModal"
-  (modalClosed)="showCartModal = false">
-</app-add-to-cart>
+<!-- Fin Navbar -->

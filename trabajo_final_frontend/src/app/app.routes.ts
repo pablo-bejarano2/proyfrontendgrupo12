@@ -5,6 +5,7 @@ import { Formulario } from './components/public/formulario/formulario';
 import { CuentaUsuario } from './components/public/cuenta-usuario/cuenta-usuario';
 import { ProductDetailComponent } from './components/public/product-detail/product-detail';
 import { ContactComponent } from './components/public/contact/contact';
+import { PolicyComponent } from './components/public/policy/policy';
 import { Dashboard } from './admin/dashboard/dashboard';
 import { AdminLayout } from './admin/layout/admin-layout/admin-layout';
 import { Usuarios } from './admin/usuarios/usuarios';
@@ -36,6 +37,7 @@ export const routes: Routes = [
       },
 
       { path: 'contact', component: ContactComponent },
+      { path: 'policy', component: PolicyComponent },
       { path: 'product-list', component: ProductList },
       { path: 'products/:categoryName', component: ProductList },
       { path: 'home', component: Home },

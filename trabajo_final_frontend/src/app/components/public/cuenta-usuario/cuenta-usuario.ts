@@ -64,73 +64,6 @@ export class CuentaUsuario implements OnInit {
     this.formUsuario = this.fb.group(this.obtenerControlesFormulario());
   }
 
-  ngOnInit(): void {
-    //Valores del sessionStorage
-    this.idUsuario = sessionStorage.getItem('id') || '';
-    this.emailUsuario = sessionStorage.getItem('email') || '';
-    this.imagenUsuario = sessionStorage.getItem('imagen') || 'assets/user.jpg';
-    // Inicializa el formulario con los valores
-    this.formUsuario.patchValue(this.obtenerDatosUsuarioDesdeStorage());
-  }
-
-  seleccionarOpcion(opcion: string): void {
-    this.opcionSeleccionada = opcion;
-  }
-
-  actualizarUsuario() {
-    this.cargarUsuario();
-    this.loginService.updateCount(this.userUpdated).subscribe(
-      (result) => {
-        if (result.status == 1) {
-          const { username, nombres, apellido } = result.usuario;
-          //Actualizar formulario
-          this.formUsuario.patchValue({ username, nombres, apellido });
-          this.actualizarSessionStorage({ username, nombres, apellido });
-          this.msgUpdate = '';
-          this.toastr.success(result.msg);
-        } else {
-          this.formUsuario.patchValue(this.obtenerDatosUsuarioDesdeStorage());
-          this.msgUpdate = result.msg;
-        }
-      },
-      (error) => {
-        this.toastr.error(error.error.msg || 'Error procensado la operación');
-      }
-    );
-  }
-
-  private cargarUsuario(): void {
-    const { username, nombres, apellido } = this.formUsuario.value;
-
-    this.userUpdated = {
-      _id: this.idUsuario,
-      email: this.emailUsuario,
-      username,
-      nombres,
-      apellido,
-      password: '', // Asignar el valor adecuado si es necesario
-      rol: '', // Asignar el valor adecuado si es necesario
-    };
-  }
-
-  private obtenerDatosUsuarioDesdeStorage(): any {
-    return {
-      username: sessionStorage.getItem('username') || '',
-      nombres: sessionStorage.getItem('nombres') || '',
-      apellido: sessionStorage.getItem('apellido') || '',
-    };
-  }
-
-  private actualizarSessionStorage(datos: {
-    username: string;
-    nombres: string;
-    apellido: string;
-  }): void {
-    sessionStorage.setItem('username', datos.username);
-    sessionStorage.setItem('nombres', datos.nombres);
-    sessionStorage.setItem('apellido', datos.apellido);
-  }
-
   private obtenerControlesFormulario() {
     return {
       nombres: new FormControl<string>('', {
@@ -160,5 +93,89 @@ export class CuentaUsuario implements OnInit {
         ],
       }),
     };
+  }
+
+  ngOnInit(): void {
+    //Valores del sessionStorage
+    this.idUsuario = sessionStorage.getItem('id') || '';
+    this.emailUsuario = sessionStorage.getItem('email') || '';
+    this.imagenUsuario = sessionStorage.getItem('imagen') || 'assets/user.jpg';
+    // Inicializa el formulario con los valores
+    this.formUsuario.patchValue(this.obtenerDatosUsuarioDesdeStorage());
+  }
+
+  private obtenerDatosUsuarioDesdeStorage(): any {
+    return {
+      username: sessionStorage.getItem('username') || '',
+      nombres: sessionStorage.getItem('nombres') || '',
+      apellido: sessionStorage.getItem('apellido') || '',
+    };
+  }
+
+  seleccionarOpcion(opcion: string): void {
+    this.opcionSeleccionada = opcion;
+  }
+
+  actualizarUsuario() {
+    if (this.sinCambios()) {
+      this.toastr.info('No se han realizado cambios en los datos del usuario');
+      return;
+    }
+
+    this.cargarUsuario();
+    this.loginService.updateCount(this.userUpdated).subscribe(
+      (result) => {
+        if (result.status == 1) {
+          const { username, nombres, apellido } = result.usuario;
+          console.log(result.usuario);
+          //Actualizar formulario
+          this.formUsuario.patchValue({ username, nombres, apellido });
+          this.actualizarSessionStorage({ username, nombres, apellido });
+          this.msgUpdate = '';
+          this.toastr.success(result.msg);
+        } else {
+          this.formUsuario.patchValue(this.obtenerDatosUsuarioDesdeStorage());
+          this.msgUpdate = result.msg;
+        }
+      },
+      (error) => {
+        this.toastr.error(error.error.msg || 'Error procensado la operación');
+      }
+    );
+  }
+
+  private sinCambios(): boolean {
+    const datosOriginales = this.obtenerDatosUsuarioDesdeStorage();
+    const datosActuales = this.formUsuario.value;
+
+    return (
+      datosOriginales.username === datosActuales.username &&
+      datosOriginales.nombres === datosActuales.nombres &&
+      datosOriginales.apellido === datosActuales.apellido
+    );
+  }
+
+  private cargarUsuario(): void {
+    const { username, nombres, apellido } = this.formUsuario.value;
+
+    this.userUpdated = {
+      _id: this.idUsuario,
+      email: this.emailUsuario,
+      username,
+      nombres,
+      apellido,
+      password: '', // Asignar el valor adecuado si es necesario
+      rol: '', // Asignar el valor adecuado si es necesario
+    };
+  }
+
+  private actualizarSessionStorage(datos: {
+    username: string;
+    nombres: string;
+    apellido: string;
+  }): void {
+    sessionStorage.setItem('username', datos.username);
+    sessionStorage.setItem('nombres', datos.nombres);
+    sessionStorage.setItem('apellido', datos.apellido);
   }
 }

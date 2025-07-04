@@ -22,7 +22,6 @@ export class LoginService {
   //Login Normal
   public login(username: string, password: string): Observable<any> {
     let body = JSON.stringify({ username: username, password: password });
-    console.log(body);
     return this._http.post(this.hostBase + 'login', body, this.httpOption);
   }
 
@@ -74,5 +73,14 @@ export class LoginService {
 
   public deleteUser(id: string): Observable<any> {
     return this._http.delete<any>(this.hostBase + id);
+  }
+
+  public getToken(): string | null {
+    let token = sessionStorage.getItem('token');
+    if (token) {
+      return token;
+    }
+
+    return null;
   }
 }

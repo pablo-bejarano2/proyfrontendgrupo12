@@ -5,9 +5,7 @@ import { LoginService } from '../../../services/login';
 import { Router, ActivatedRoute } from '@angular/router';
 import { CategoriaService } from '../../../services/categoria';
 import { ItemPedidoService } from '../../../services/item-pedido';
-import {
-  AddToCart
-} from '@/app/components/public/add-to-cart/add-to-cart';
+import { AddToCart } from '@/app/components/public/add-to-cart/add-to-cart';
 
 @Component({
   selector: 'app-header',
@@ -22,15 +20,15 @@ export class Header implements OnInit {
   username: string = '';
   cartItemsCount: number = 0;
   showCartModal = false;
-
   categorias: any[] = [];
+  mostrarMenu: boolean = false; // Variable para controlar la visibilidad del menú
+
   constructor(
     private categoriaService: CategoriaService,
     public loginService: LoginService,
     private router: Router,
     private itemPedidoService: ItemPedidoService // Inyecta el servicio del carrito
-  ) { }
-
+  ) {}
 
   ngOnInit() {
     this.cargarCategorias();
@@ -38,7 +36,7 @@ export class Header implements OnInit {
     this.imagen = sessionStorage.getItem('imagen') || 'assets/user.jpg';
     //console.log('Img en el header: ' + this.imagen);
     this.username = sessionStorage.getItem('username') || '';
-    this.itemPedidoService.cartItemsCount$.subscribe(count => {
+    this.itemPedidoService.cartItemsCount$.subscribe((count) => {
       this.cartItemsCount = count;
     });
     this.itemPedidoService.abrirCarrito$.subscribe(() => {
@@ -85,6 +83,5 @@ export class Header implements OnInit {
     this.router.navigate(['/form'], {
       queryParams: { returnUrl: this.router.url, accion: 'login' },
     });
-
   }
 }

@@ -245,13 +245,27 @@
         <label for="confirmPassword" class="form-label"
           >Repetir Contraseña</label
         >
-        <input
-          type="text"
-          class="form-control"
-          id="confirmPassword"
-          placeholder="Repite la contraseña"
-          formControlName="confirmPassword"
-        />
+        <div class="input-group">
+          <input
+            [type]="mostrarConfirmPassword ? 'text' : 'password'"
+            class="form-control"
+            id="confirmPassword"
+            placeholder="Repite la contraseña"
+            formControlName="confirmPassword"
+          />
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="mostrarConfirmPassword = !mostrarConfirmPassword"
+            tabindex="-1"
+            style="border: none"
+          >
+            <i
+              class="fa-solid"
+              [ngClass]="mostrarConfirmPassword ? ' fa-eye-slash' : ' fa-eye'"
+            ></i>
+          </button>
+        </div>
         <div
           *ngIf="formUsuario.get('confirmPassword')?.touched"
           class="text-danger mt-1"

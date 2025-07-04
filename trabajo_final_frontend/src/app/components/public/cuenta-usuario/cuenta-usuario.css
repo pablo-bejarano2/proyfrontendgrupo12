@@ -2,26 +2,46 @@
   box-shadow: 4px 4px 16px rgba(0, 0, 0, 0.15);
 }
 
-.btn-option {
-  padding: 10px 20px;
-  background-color: #00bcd4;
+.title {
   color: #fff;
+}
+
+.btn-option {
+  padding: 5px 20px;
+  background-color: #fff;
+  color: #00bfae;
   font-weight: 600;
   border: none;
   border-radius: 5px;
-  border: #00bcd4 1px solid;
+  border: #00bfae 1px solid;
   cursor: pointer;
   transition: background 0.3s ease;
 }
 
 .btn-option:hover {
-  background-color: #fff;
-  color: #00bcd4;
+  background-color: #00bfae;
+  color: #fff;
 }
 
 .btn-option.activo {
-  background-color: #fff;
-  color: #00bcd4;
+  background-color: #00bfae;
+  color: #fff;
+}
+
+.btn-form {
+  background-color: #00bcd4;
+  color: #fff;
+  font-weight: 600;
+  padding: 8px 20px;
+  border: none;
+  border-radius: 50px;
+  text-decoration: none;
+  transition: 0.3s background-color;
+}
+
+.btn-form:hover {
+  background-color: #0097a7;
+  color: #fff;
 }
 
 .table th,
@@ -34,7 +54,16 @@
 }
 
 .headers-table {
-  background-color: #00bcd4;
+  background-color: #00bfae;
   color: #fff;
-  border: 1px solid #00bcd4;
+  border: 1px solid #00bfae;
+}
+
+.tabla-pedidos-scroll {
+  max-height: 230px;
+  overflow-y: auto;
+}
+
+.favorites {
+  max-height: 230px;
 }

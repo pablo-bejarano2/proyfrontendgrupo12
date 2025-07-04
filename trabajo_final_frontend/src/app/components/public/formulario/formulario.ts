@@ -12,6 +12,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { MisValidadores } from '../../../validadores/mis-validadores';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 declare const google: any; //para evitar errores de TypeScript
 
@@ -37,7 +38,8 @@ export class Formulario implements OnInit {
     private loginService: LoginService,
     private toastr: ToastrService,
     private fb: FormBuilder,
-    private ngZone: NgZone
+    private ngZone: NgZone,
+    private spinner: NgxSpinnerService
   ) {
     this.formUsuario = this.fb.group(this.obtenerControlesFormulario(), {
       validators: MisValidadores.passwordsIguales,
@@ -124,21 +126,29 @@ export class Formulario implements OnInit {
   //Valida el token en el backend y regresa los datos del usuario de Google
   handleCredentialResponse(response: any): void {
     this.ngZone.run(() => {
+      this.spinner.show();
       const token = response.credential;
       this.loginService.loginGoogle(token).subscribe(
         (result) => {
-          if (this.ingresoDesdeAdmin) {
-            //No permitir el login del usuario si el admin está creando una cuenta
-            this.toastr.success('Usuario creado correctamente');
-            this.router.navigate([this.returnUrl]);
-          } else {
-            this.guardarUsuarioEnStorage(result);
-            sessionStorage.setItem('imagen', result.imagen);
-            this.router.navigate([this.returnUrl]);
-          }
+          setTimeout(() => {
+            this.spinner.hide();
+            if (this.ingresoDesdeAdmin) {
+              this.toastr.success('Usuario creado correctamente');
+              this.router.navigate([this.returnUrl]);
+            } else {
+              this.guardarUsuarioEnStorage(result);
+              sessionStorage.setItem('imagen', result.imagen);
+              this.router.navigate([this.returnUrl]);
+            }
+          }, 3000);
         },
         (error) => {
-          this.toastr.error(error.error.msg || 'Error procensado la operación');
+          setTimeout(() => {
+            this.spinner.hide();
+            this.toastr.error(
+              error.error.msg || 'Error procensado la operación'
+            );
+          }, 3000);
         }
       );
     });
@@ -146,22 +156,28 @@ export class Formulario implements OnInit {
 
   //Login normal
   login() {
+    this.spinner.show();
     this.loginService
       .login(this.userform.username, this.userform.password)
       .subscribe(
         (result) => {
-          if (result.status == 1) {
-            //Guardar el usuario en cookies en el cliente
-            this.guardarUsuarioEnStorage(result);
-            //Redirigimos a home o a pagina que llamo
-            this.router.navigate([this.returnUrl]);
-          } else {
-            //Usuario o contraseña incorrectos
-            this.msglogin = result.msg;
-          }
+          setTimeout(() => {
+            this.spinner.hide();
+            if (result.status == 1) {
+              this.guardarUsuarioEnStorage(result);
+              this.router.navigate([this.returnUrl]);
+            } else {
+              this.toastr.error(result.msg);
+            }
+          }, 3000);
         },
         (error) => {
-          this.toastr.error(error.error.msg || 'Error procensado la operación');
+          setTimeout(() => {
+            this.spinner.hide();
+            this.toastr.error(
+              error.error.msg || 'Error procensado la operación'
+            );
+          }, 3000);
         }
       );
     this.formUsuario.reset(); //Limpiar el formulario
@@ -180,16 +196,23 @@ export class Formulario implements OnInit {
 
   //Crear cuenta
   createCount() {
+    this.spinner.show();
     this.loginService.createCount(this.userform).subscribe(
       (result) => {
-        if (result.status == 1) {
-          this.toastr.success(result.msg);
-        } else {
-          this.msglogin = result.msg;
-        }
+        setTimeout(() => {
+          this.spinner.hide();
+          if (result.status == 1) {
+            this.toastr.success(result.msg);
+          } else {
+            this.toastr.error(result.msg);
+          }
+        }, 3000);
       },
       (error) => {
-        this.toastr.error(error.error.msg || 'Error procensado la operación');
+        setTimeout(() => {
+          this.spinner.hide();
+          this.toastr.error(error.error.msg || 'Error procensado la operación');
+        }, 3000);
       }
     );
     this.formUsuario.reset(); //Limpiar el formulario

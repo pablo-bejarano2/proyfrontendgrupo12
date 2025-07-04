@@ -6,6 +6,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { CategoriaService } from '../../../services/categoria';
 import { ItemPedidoService } from '../../../services/item-pedido';
 import { AddToCart } from '@/app/components/public/add-to-cart/add-to-cart';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-header',
@@ -27,7 +28,8 @@ export class Header implements OnInit {
     private categoriaService: CategoriaService,
     public loginService: LoginService,
     private router: Router,
-    private itemPedidoService: ItemPedidoService // Inyecta el servicio del carrito
+    private itemPedidoService: ItemPedidoService, // Inyecta el servicio del carrito
+    private spinner: NgxSpinnerService
   ) {}
 
   ngOnInit() {
@@ -57,9 +59,13 @@ export class Header implements OnInit {
   }
 
   logout() {
-    //Borrar las variables almacenadas mediante el storage
-    sessionStorage.clear();
-    this.router.navigate(['/home']);
+    this.spinner.show();
+    setTimeout(() => {
+      this.spinner.hide();
+      //Borrar las variables almacenadas mediante el storage
+      sessionStorage.clear();
+      this.router.navigate(['/home']);
+    }, 3000);
   }
 
   userLogged(): boolean {

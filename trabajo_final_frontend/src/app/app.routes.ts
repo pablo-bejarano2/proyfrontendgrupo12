@@ -48,6 +48,7 @@ export const routes: Routes = [
     path: 'admin', component: AdminLayout,
     children: [
       { path: '', component: Dashboard },
+      { path: 'dashboard', component: Dashboard },
       { path: 'users', component: Usuarios },
       { path: 'products', component: Productos },
       { path: 'orders', component: Pedidos },

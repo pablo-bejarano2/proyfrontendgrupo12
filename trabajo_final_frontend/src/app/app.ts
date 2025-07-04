@@ -3,7 +3,6 @@ import { Router, NavigationEnd, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { LoginService } from './services/login';
 import { RouterOutlet} from '@angular/router';
-
 @Component({
   selector: 'app-root',
   imports: [RouterModule, CommonModule, RouterOutlet],

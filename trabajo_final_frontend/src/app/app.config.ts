@@ -12,7 +12,9 @@ import {
 } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideToastr } from 'ngx-toastr';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { TokenInterceptorService } from './services/token-interceptor';
+
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -27,6 +29,7 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
+    provideHttpClient(), provideCharts(withDefaultRegisterables()),
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptorService, // Interceptor para agregar el token a las pet

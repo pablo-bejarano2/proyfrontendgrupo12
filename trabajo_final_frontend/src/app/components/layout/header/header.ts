@@ -22,6 +22,7 @@ export class Header implements OnInit {
   showCartModal = false;
   categorias: any[] = [];
   mostrarMenu: boolean = false; // Variable para controlar la visibilidad del menú
+  rol!: string;
 
   constructor(
     private categoriaService: CategoriaService,
@@ -34,8 +35,9 @@ export class Header implements OnInit {
     this.cargarCategorias();
     this.email = sessionStorage.getItem('email') || '';
     this.imagen = sessionStorage.getItem('imagen') || 'assets/user.jpg';
-    //console.log('Img en el header: ' + this.imagen);
     this.username = sessionStorage.getItem('username') || '';
+    this.rol = sessionStorage.getItem('rol') || '';
+    console.log('Rol del usuario: ' + this.rol);
     this.itemPedidoService.cartItemsCount$.subscribe((count) => {
       this.cartItemsCount = count;
     });
@@ -59,6 +61,11 @@ export class Header implements OnInit {
   logout() {
     //Borrar las variables almacenadas mediante el storage
     sessionStorage.clear();
+    //Borrar las variables del login
+    this.email = '';
+    this.imagen = '';
+    this.username = '';
+    this.rol = '';
     this.router.navigate(['/home']);
   }
 
@@ -79,9 +86,14 @@ export class Header implements OnInit {
     console.log('Botón de carrito clickeado');
     this.itemPedidoService.abrirCarrito();
   }
+
   irAFormulario() {
     this.router.navigate(['/form'], {
       queryParams: { returnUrl: this.router.url, accion: 'login' },
     });
+  }
+
+  irADashboard() {
+    this.router.navigate(['/admin']);
   }
 }

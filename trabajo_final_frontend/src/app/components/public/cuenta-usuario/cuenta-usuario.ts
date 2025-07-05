@@ -54,6 +54,62 @@ export class CuentaUsuario implements OnInit {
       metodoPago: 'Efectivo',
       total: 3200,
     },
+    {
+      fecha: '2025-06-10',
+      estado: 'Cancelado',
+      direccion: 'San Martín 456, Rosario',
+      metodoPago: 'Efectivo',
+      total: 3200,
+    },
+    {
+      fecha: '2025-06-20',
+      estado: 'Entregado',
+      direccion: 'Calle Falsa 123, Buenos Aires',
+      metodoPago: 'Tarjeta de crédito',
+      total: 12500,
+    },
+    {
+      fecha: '2025-06-10',
+      estado: 'Cancelado',
+      direccion: 'San Martín 456, Rosario',
+      metodoPago: 'Efectivo',
+      total: 3200,
+    },
+    {
+      fecha: '2025-06-10',
+      estado: 'Cancelado',
+      direccion: 'San Martín 456, Rosario',
+      metodoPago: 'Efectivo',
+      total: 3200,
+    },
+    {
+      fecha: '2025-06-20',
+      estado: 'Entregado',
+      direccion: 'Calle Falsa 123, Buenos Aires',
+      metodoPago: 'Tarjeta de crédito',
+      total: 12500,
+    },
+    {
+      fecha: '2025-06-10',
+      estado: 'Cancelado',
+      direccion: 'San Martín 456, Rosario',
+      metodoPago: 'Efectivo',
+      total: 3200,
+    },
+    {
+      fecha: '2025-06-10',
+      estado: 'Cancelado',
+      direccion: 'San Martín 456, Rosario',
+      metodoPago: 'Efectivo',
+      total: 3200,
+    },
+    {
+      fecha: '2025-06-20',
+      estado: 'Entregado',
+      direccion: 'Calle Falsa 123, Buenos Aires',
+      metodoPago: 'Tarjeta de crédito',
+      total: 12500,
+    },
   ];
 
   constructor(

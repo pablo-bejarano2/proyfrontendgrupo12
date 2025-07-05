@@ -7,7 +7,6 @@ bootstrapApplication(App, {
   ...appConfig,
   providers: [
     ...(appConfig.providers || []),
-    provideCharts(withDefaultRegisterables())
-  ]
-})
-  .catch((err) => console.error(err));
+    provideCharts(withDefaultRegisterables()),
+  ],
+}).catch((err) => console.error(err));

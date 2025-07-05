@@ -128,7 +128,6 @@ export class Formulario implements OnInit {
       this.loginService.loginGoogle(token).subscribe(
         (result) => {
           if (this.ingresoDesdeAdmin) {
-            //No permitir el login del usuario si el admin está creando una cuenta
             this.toastr.success('Usuario creado correctamente');
             this.router.navigate([this.returnUrl]);
           } else {
@@ -151,13 +150,10 @@ export class Formulario implements OnInit {
       .subscribe(
         (result) => {
           if (result.status == 1) {
-            //Guardar el usuario en cookies en el cliente
             this.guardarUsuarioEnStorage(result);
-            //Redirigimos a home o a pagina que llamo
             this.router.navigate([this.returnUrl]);
           } else {
-            //Usuario o contraseña incorrectos
-            this.msglogin = result.msg;
+            this.toastr.error(result.msg);
           }
         },
         (error) => {
@@ -169,13 +165,14 @@ export class Formulario implements OnInit {
 
   //Guarda los datos del usuario en sessionStorage
   guardarUsuarioEnStorage(usuario: any) {
-    const { username, email, nombres, apellido, userId, token } = usuario;
+    const { username, email, nombres, apellido, userId, token, rol } = usuario;
     sessionStorage.setItem('username', username);
     sessionStorage.setItem('email', email);
     sessionStorage.setItem('nombres', nombres);
     sessionStorage.setItem('apellido', apellido);
     sessionStorage.setItem('id', userId);
     sessionStorage.setItem('token', token);
+    sessionStorage.setItem('rol', rol);
   }
 
   //Crear cuenta
@@ -185,7 +182,7 @@ export class Formulario implements OnInit {
         if (result.status == 1) {
           this.toastr.success(result.msg);
         } else {
-          this.msglogin = result.msg;
+          this.toastr.error(result.msg);
         }
       },
       (error) => {

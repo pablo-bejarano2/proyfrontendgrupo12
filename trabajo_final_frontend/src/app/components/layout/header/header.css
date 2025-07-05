@@ -1,5 +1,6 @@
 .navbar {
   padding: 0.5rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .login-button {
@@ -136,4 +137,20 @@
 
 .user-menu .dropdown-item:hover {
   background: #f5f5f5;
+}
+
+.admin-btn {
+  color: #fff;
+  font-size: 18px;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  background: linear-gradient(90deg, #00bcd4 0%, #2196f3 100%);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.admin-btn:hover {
+  transform: scale(1.05);
 }

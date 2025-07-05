@@ -1,9 +1,10 @@
 import { Producto } from '../services/producto';
 
 export interface ItemPedido {
-  id?: string;
+  _id?: string;
   producto: Producto;
   cantidad: number;
+  subtotal: number;
   talla: string;
   precio_unitario: number;
   color?: string;

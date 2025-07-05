@@ -52,6 +52,11 @@
           <li class="nav-item">
             <a class="nav-link mx-lg-2">Políticas</a>
           </li>
+          <li *ngIf="rol === 'administrador'" class="nav-item">
+            <button id="adminBtn" class="admin-btn" (click)="irADashboard()">
+              Administrar
+            </button>
+          </li>
           <!-- Botón de carrito -->
           <li class="nav-item d-flex align-items-center">
             <button

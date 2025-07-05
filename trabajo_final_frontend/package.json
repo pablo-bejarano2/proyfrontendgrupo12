@@ -17,6 +17,8 @@
     "@angular/forms": "^20.0.0",
     "@angular/platform-browser": "^20.0.0",
     "@angular/router": "^20.0.0",
+    "@techiediaries/ngx-qrcode": "^9.1.0",
+    "angularx-qrcode": "^20.0.0",
     "bootstrap": "^5.3.3",
     "chart.js": "^4.5.0",
     "emailjs-com": "^3.2.0",

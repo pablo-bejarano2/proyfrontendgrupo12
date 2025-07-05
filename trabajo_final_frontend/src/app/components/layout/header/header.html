@@ -34,15 +34,15 @@
             >
             <!--
             <ul class="dropdown-menu custom-dropdown">
-              @for ( categoria of categorias; track categoria.id) {
-              <li>
-                <a
-                  class="dropdown-item"
-                  [routerLink]="['/products', categoria.nombre]"
-                >
-                  {{ categoria.nombre | uppercase }}
-                </a>
-              </li>
+              @for (categoria of categorias; track $index) {
+                <li>
+                  <a
+                    class="dropdown-item"
+                    [routerLink]="['/products', categoria.nombre]"
+                  >
+                    {{ categoria.nombre | uppercase }}
+                  </a>
+                </li>
               }
             </ul>-->
           </li>
@@ -142,11 +142,11 @@
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <app-add-to-cart
-      [isVisible]="showCartModal"
-      (modalClosed)="showCartModal = false"
-    >
-    </app-add-to-cart>
   </div>
 </nav>
-<!-- Fin Navbar -->
+
+<app-add-to-cart
+  [isVisible]="showCartModal"
+  (modalClosed)="showCartModal = false">
+</app-add-to-cart>
+

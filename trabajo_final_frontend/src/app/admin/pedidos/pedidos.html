@@ -33,20 +33,27 @@
                         <p class="mb-1"><strong>Email:</strong> {{ pedido.emailCliente }}</p>
                         <p class="mb-1"><strong>Fecha:</strong> {{ pedido.fecha | date:'dd/MM/yyyy' }}</p>
                         <p class="mb-2"><strong>Total:</strong> ${{ pedido.total | number:'1.0-0' }}</p>
-                        <div class="d-flex gap-2">
+                        <div class="d-flex flex-wrap gap-2 justify-content-end mt-3">
                             <button class="btn btn-outline-primary btn-sm" title="Listo"
-                                (click)="marcarEnviado(pedido)"><i class="fas"
-                                    [ngClass]="pedido.estado==='enviado' ? 'fa-undo' : 'fa-check'"></i></button>
+                                (click)="marcarEnviado(pedido)">
+                                <i class="fas" [ngClass]="pedido.estado==='enviado' ? 'fa-undo' : 'fa-check'"></i>
+                            </button>
                             <button class="btn btn-outline-primary btn-sm" title="Cancelar"
-                                (click)="marcarCancelado(pedido)"><i class="fas"
-                                    [ngClass]="pedido.estado==='cancelado' ? 'fa-undo' : 'fa-ban'"></i></button>
+                                (click)="marcarCancelado(pedido)">
+                                <i class="fas" [ngClass]="pedido.estado==='cancelado' ? 'fa-undo' : 'fa-ban'"></i>
+                            </button>
                             <button class="btn btn-outline-primary btn-sm" title="Ver"
-                                (click)="toggleExpandirPedido(pedido._id)"><i class="fas"
-                                    [ngClass]="pedidosExpandidos.has(pedido._id) ? 'fa-eye-slash' : 'fa-eye'"></i></button>
-                            <button class="btn btn-outline-info btn-sm" title="Editar" (click)="editarPedido(pedido)"><i
-                                    class="fas fa-edit"></i></button>
+                                (click)="toggleExpandirPedido(pedido._id)">
+                                <i class="fas"
+                                    [ngClass]="pedidosExpandidos.has(pedido._id) ? 'fa-eye-slash' : 'fa-eye'"></i>
+                            </button>
+                            <button class="btn btn-outline-info btn-sm" title="Editar" (click)="editarPedido(pedido)">
+                                <i class="fas fa-edit"></i>
+                            </button>
                             <button class="btn btn-outline-danger btn-sm" title="Eliminar"
-                                (click)="eliminarPedido(pedido)"><i class="fas fa-trash"></i></button>
+                                (click)="eliminarPedido(pedido)">
+                                <i class="fas fa-trash"></i>
+                            </button>
                         </div>
                     </div>
 
@@ -103,63 +110,76 @@
             </div>
             <div class="modal-body">
                 <form *ngIf="pedidoEditado" #formEditar="ngForm" (ngSubmit)="actualizarPedido(formEditar)" novalidate>
-                    <div class="mb-3">
-                        <label class="form-label">Estado</label>
-                        <select class="form-select" [(ngModel)]="pedidoEditado.estado" name="estado" required>
-                            <option value="" disabled selected>Seleccione estado</option>
-                            <option value="pendiente">Pendiente</option>
-                            <option value="enviado">Enviado</option>
-                            <option value="entregado">Entregado</option>
-                            <option value="cancelado">Cancelado</option>
-                        </select>
-                        <div *ngIf="formEditar.submitted && formEditar.controls['estado']?.invalid"
-                            class="text-danger small">
-                            El estado es obligatorio.
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Email Cliente</label>
-                        <input type="email" class="form-control" [(ngModel)]="pedidoEditado.emailCliente"
-                            name="emailCliente" required email>
-                        <div *ngIf="formEditar.submitted && formEditar.controls['emailCliente']?.invalid"
-                            class="text-danger small">
-                            Ingrese un email válido.
-                        </div>
-                    </div>
-                    <div class="mb-3" *ngIf="pedidoEditado.cupon">
-                        <label class="form-label">Cupón</label>
-                        <input type="text" class="form-control" [(ngModel)]="pedidoEditado.cupon.codigo"
-                            name="cuponCodigo" placeholder="Código de cupón">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Método de pago</label>
-                        <select class="form-select" [(ngModel)]="pedidoEditado.metodoPago" name="metodoPago">
-                            <option value="" disabled selected>Seleccione método</option>
-                            <option value="tarjeta">Tarjeta</option>
-                            <option value="efectivo">Efectivo</option>
-                            <option value="transferencia">Transferencia</option>
-                        </select>
-                        <div *ngIf="formEditar.submitted && formEditar.controls['metodoPago']?.invalid"
-                            class="text-danger small">
-                            El método de pago es obligatorio.
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Items</label>
-                        <div *ngFor="let item of pedidoEditado.items; let i = index"
-                            class="mb-2 border rounded p-2 bg-light">
-                            <div><strong>{{ item.producto.nombre }}</strong></div>
-                            <label class="form-label mb-0">Cantidad:</label>
-                            <input type="number" class="form-control" [(ngModel)]="item.cantidad" name="cantidad{{i}}"
-                                min="1" required>
-                            <div *ngIf="formEditar.submitted && formEditar.controls['cantidad'+i]?.invalid"
+                    <div class="row g-2">
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label">Estado</label>
+                            <select class="form-select form-select-sm" [(ngModel)]="pedidoEditado.estado" name="estado"
+                                required>
+                                <option value="" disabled selected>Seleccione estado</option>
+                                <option value="pendiente">Pendiente</option>
+                                <option value="enviado">Enviado</option>
+                                <option value="entregado">Entregado</option>
+                                <option value="cancelado">Cancelado</option>
+                            </select>
+                            <div *ngIf="formEditar.submitted && formEditar.controls['estado']?.invalid"
                                 class="text-danger small">
-                                La cantidad debe ser mayor a 0.
+                                El estado es obligatorio.
                             </div>
-                            <div class="text-muted small">Subtotal: ${{ item.subtotal | number:'1.0-0' }}</div>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label">Método de pago</label>
+                            <select class="form-select form-select-sm" [(ngModel)]="pedidoEditado.metodoPago"
+                                name="metodoPago" required>
+                                <option value="" disabled selected>Seleccione método</option>
+                                <option value="tarjeta">Tarjeta</option>
+                                <option value="efectivo">Efectivo</option>
+                                <option value="transferencia">Transferencia</option>
+                            </select>
+                            <div *ngIf="formEditar.submitted && formEditar.controls['metodoPago']?.invalid"
+                                class="text-danger small">
+                                El método de pago es obligatorio.
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label">Email Cliente</label>
+                            <input type="email" class="form-control form-control-sm"
+                                [(ngModel)]="pedidoEditado.emailCliente" name="emailCliente" required email>
+                            <div *ngIf="formEditar.submitted && formEditar.controls['emailCliente']?.invalid"
+                                class="text-danger small">
+                                Ingrese un email válido.
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-2" *ngIf="pedidoEditado.cupon">
+                            <label class="form-label">Cupón</label>
+                            <input type="text" class="form-control form-control-sm"
+                                [(ngModel)]="pedidoEditado.cupon.codigo" name="cuponCodigo"
+                                placeholder="Código de cupón">
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                    <div class="mb-2">
+                        <label class="form-label">Items</label>
+                        <div class="row g-2">
+                            <div *ngFor="let item of pedidoEditado.items; let i = index" class="col-12 col-md-6">
+                                <div class="border rounded p-2 bg-light mb-2">
+                                    <div class="fw-bold small">{{ item.producto.nombre }}</div>
+                                    <div class="d-flex align-items-center">
+                                        <label class="form-label mb-0 me-2 small">Cantidad:</label>
+                                        <input type="number" class="form-control form-control-sm w-auto"
+                                            [(ngModel)]="item.cantidad" name="cantidad{{i}}" min="1" required>
+                                        <span class="ms-2 text-muted small">Subtotal: ${{ item.subtotal | number:'1.0-0'
+                                            }}</span>
+                                    </div>
+                                    <div *ngIf="formEditar.submitted && formEditar.controls['cantidad'+i]?.invalid"
+                                        class="text-danger small">
+                                        La cantidad debe ser mayor a 0.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-end">
+                        <button type="submit" class="btn btn-primary btn-sm">Guardar cambios</button>
+                    </div>
                 </form>
             </div>
         </div>

@@ -42,22 +42,27 @@ export class AddToCart implements OnInit {
     return `$${valor.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   }
   trackByItem(index: number, item: ItemPedido): string | number {
-    return item.id || index;
+    return item._id || index;
   }
 
   increaseQuantity(item: ItemPedido): void {
-    if (!item.id) {
+    if (!item._id) {
       console.error('Item ID is required');
       return;
     }
+    const stockDisponible = item.producto.tallas?.find((t: any) => t.talla === item.talla)?.stock ?? 0;
+    if (item.cantidad >= stockDisponible) {
+      console.warn('No hay más stock disponible para este producto y talla');
+      return;
+    }
     this.itemProductService.updateQuantity(
-      item.id,
+      item._id,
       item.cantidad + 1
     );
   }
 
   decreaseQuantity(item: ItemPedido): void {
-    if (!item.id) {
+    if (!item._id) {
       console.error('Item ID is required');
       return;
     }
@@ -67,7 +72,7 @@ export class AddToCart implements OnInit {
     }
     try {
       this.itemProductService.updateQuantity(
-        item.id,
+        item._id,
         item.cantidad - 1
       );
     } catch (error) {
@@ -76,11 +81,11 @@ export class AddToCart implements OnInit {
   }
 
   removeItem(item: ItemPedido): void {
-    if (!item.id) {
+    if (!item._id) {
       console.error('Item ID is required for removal');
       return;
     }
-    this.itemProductService.removeItem(item.id);
+    this.itemProductService.removeItem(item._id);
   }
 
   proceedToCheckout(): void {
@@ -92,6 +97,7 @@ export class AddToCart implements OnInit {
       console.warn('Cannot proceed with empty cart');
       return;
     }
+    this.cerrarModal();
     this.router.navigate(['/checkout']);
   }
 

@@ -18,3 +18,8 @@ app-admin-sidebar {
   max-width: 260px;
   /* position: relative; */
 }
+@media (max-width: 991.98px) {
+  .admin-content {
+    margin-top: 3.5rem;
+  }
+}

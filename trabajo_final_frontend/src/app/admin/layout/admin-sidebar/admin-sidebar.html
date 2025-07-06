@@ -1,26 +1,26 @@
 <aside class="dashboard-sidebar">
-  <div class="sidebar-logo mb-4">
+  <div class="sidebar-logo mb-4 text-center">
     <img src="assets/logo-removebg.png" alt="OversizeX" />
   </div>
   <nav>
-    <ul class="sidebar-nav">
+    <ul class="sidebar-nav list-unstyled nav flex-column">
       <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-        <a [routerLink]="['/admin']"><i class="fas fa-chart-line"></i> Dashboard</a>
+        <a [routerLink]="['/admin']" class="nav-link d-block py-2"><i class="fas fa-chart-line me-2"></i> Dashboard</a>
       </li>
       <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-        <a [routerLink]="['/']"><i class="fas fa-store"></i> Tienda</a>
+        <a [routerLink]="['/']" class="nav-link d-block py-2"><i class="fas fa-store me-2"></i> Tienda</a>
       </li>
       <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: false }">
-        <a [routerLink]="['/admin/products']"><i class="fas fa-tshirt"></i> Productos</a>
+        <a [routerLink]="['/admin/products']" class="nav-link d-block py-2"><i class="fas fa-tshirt me-2"></i> Productos</a>
       </li>
       <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: false }">
-        <a [routerLink]="['/admin/users']"><i class="fas fa-users"></i> Usuarios</a>
+        <a [routerLink]="['/admin/users']" class="nav-link d-block py-2"><i class="fas fa-users me-2"></i> Usuarios</a>
       </li>
       <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: false }">
-        <a [routerLink]="['/admin/orders']"><i class="fas fa-shopping-cart"></i> Pedidos</a>
+        <a [routerLink]="['/admin/orders']" class="nav-link d-block py-2"><i class="fas fa-shopping-cart me-2"></i> Pedidos</a>
       </li>
       <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: false }">
-        <a [routerLink]="['/admin/coupons']"><i class="fas fa-ticket-alt"></i> Cupones</a>
+        <a [routerLink]="['/admin/coupons']" class="nav-link d-block py-2"><i class="fas fa-ticket-alt me-2"></i> Cupones</a>
       </li>
     </ul>
 

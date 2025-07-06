@@ -6,7 +6,7 @@ import { RouterOutlet } from '@angular/router';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterModule, CommonModule, RouterOutlet, NgxSpinnerModule],
+  imports: [RouterModule, CommonModule, RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.css',
   providers: [LoginService], //servicio de login

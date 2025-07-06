@@ -1,0 +1,56 @@
+@if (qrDataString) {
+  <div class="qr-container text-center p-4 border rounded mt-3">
+    <h5>Escanea para pagar</h5>
+    <p class="text-muted">Total: <strong>{{ amount | currency:'$' }}</strong></p>
+    @if (paymentState === 'polling') {
+      <qrcode
+        [qrdata]="qrDataString"
+        [width]="250"
+        [errorCorrectionLevel]="'M'">
+      </qrcode>
+    }
+
+    <div class="status-indicator mt-3">
+      @switch (paymentState) {
+        @case ('polling') {
+          <div>
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Cargando...</span>
+            </div>
+            <p class="fw-bold mt-2">{{ statusMessage }}</p>
+          </div>
+        }
+        @case ('approved') {
+          <div class="text-success">
+            <i class="fas fa-check-circle fa-3x"></i>
+            <p class="fw-bold mt-2 fs-5">{{ statusMessage }}</p>
+          </div>
+        }
+        @case ('rejected') {
+          <div class="text-danger">
+            <i class="fas fa-times-circle fa-3x"></i>
+            <p class="fw-bold mt-2">{{ statusMessage }}</p>
+          </div>
+        }
+        @case ('cancelled') {
+          <div class="text-warning">
+            <i class="fas fa-ban fa-3x"></i>
+            <p class="fw-bold mt-2">Pago cancelado</p>
+          </div>
+        }
+      }
+    </div>
+    @if (paymentState === 'polling') {
+      <button class="btn btn-secondary btn-sm mt-3" (click)="cancelarPago()">
+        Cancelar
+      </button>
+    }
+  </div>
+}
+
+@if (isLoading) {
+  <div class="text-center p-4">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p class="mt-2">Generando código QR...</p>
+  </div>
+}

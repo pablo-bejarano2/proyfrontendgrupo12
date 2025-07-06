@@ -30,7 +30,14 @@ export class Header implements OnInit {
     public loginService: LoginService,
     private router: Router,
     private itemPedidoService: ItemPedidoService // Inyecta el servicio del carrito
-  ) {}
+  ) {
+    this.showCartModal = false;
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationStart) {
+        this.showCartModal = false;
+      }
+    });
+  }
 
   ngOnInit() {
     this.showCartModal = false;

@@ -31,6 +31,7 @@
         </button>
         <!-- MIS PEDIDOS -->
         <button
+          *ngIf="rolUsuario === 'cliente'"
           class="btn-option"
           [ngClass]="{ 'activo': opcionSeleccionada === 'pedidos' }"
           (click)="seleccionarOpcion('pedidos')"
@@ -39,6 +40,7 @@
         </button>
         <!-- MIS FAVs -->
         <button
+          *ngIf="rolUsuario === 'cliente'"
           class="btn-option"
           [ngClass]="{ 'activo': opcionSeleccionada === 'favoritos' }"
           (click)="seleccionarOpcion('favoritos')"
@@ -225,7 +227,10 @@
                     {{ pedido.estado }}
                   </span>
                 </td>
-                <td>{{ pedido.direccion.calle }}, {{ pedido.direccion.ciudad }}, {{ pedido.direccion.provincia }}</td>
+                <td>
+                  {{ pedido.direccion.calle }}, {{ pedido.direccion.ciudad }},
+                  {{ pedido.direccion.provincia }}
+                </td>
                 <td>{{ pedido.metodoPago }}</td>
                 <td>${{ pedido.total }}</td>
               </tr>

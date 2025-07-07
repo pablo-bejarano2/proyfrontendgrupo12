@@ -30,6 +30,7 @@ export class CuentaUsuario implements OnInit {
   nombreUsuario: string = '';
   apellidoUsuario: string = '';
   idUsuario: string = '';
+  rolUsuario: string = '';
   //Usuario para el update
   userUpdated: Usuario = new Usuario();
   //quitar
@@ -80,6 +81,7 @@ export class CuentaUsuario implements OnInit {
     this.idUsuario = sessionStorage.getItem('id') || '';
     this.emailUsuario = sessionStorage.getItem('email') || '';
     this.imagenUsuario = sessionStorage.getItem('imagen') || 'assets/user.jpg';
+    this.rolUsuario = sessionStorage.getItem('rol') || '';
     // Inicializa el formulario con los valores
     this.formUsuario.patchValue(this.obtenerDatosUsuarioDesdeStorage());
     this.obtenerPedidos();
@@ -104,25 +106,21 @@ export class CuentaUsuario implements OnInit {
     }
 
     this.cargarUsuario();
-    this.loginService.updateCount(this.userUpdated).subscribe(
-      (result) => {
-        if (result.status == 1) {
-          const { username, nombres, apellido } = result.usuario;
-          console.log(result.usuario);
-          //Actualizar formulario
-          this.formUsuario.patchValue({ username, nombres, apellido });
-          this.actualizarSessionStorage({ username, nombres, apellido });
-          this.msgUpdate = '';
-          this.toastr.success(result.msg);
-        } else {
-          this.formUsuario.patchValue(this.obtenerDatosUsuarioDesdeStorage());
-          this.msgUpdate = result.msg;
-        }
+    this.loginService.updateCount(this.userUpdated).subscribe({
+      next: (result) => {
+        const { username, nombres, apellido } = result.usuario;
+        console.log(result.usuario);
+        //Actualizar formulario
+        this.formUsuario.patchValue({ username, nombres, apellido });
+        this.actualizarSessionStorage({ username, nombres, apellido });
+        this.msgUpdate = '';
+        this.toastr.success(result.msg);
       },
-      (error) => {
+      error: (error) => {
+        this.formUsuario.patchValue(this.obtenerDatosUsuarioDesdeStorage());
         this.toastr.error(error.error.msg || 'Error procensado la operación');
-      }
-    );
+      },
+    });
   }
 
   private sinCambios(): boolean {
@@ -141,12 +139,12 @@ export class CuentaUsuario implements OnInit {
 
     this.userUpdated = {
       _id: this.idUsuario,
-      email: this.emailUsuario,
       username,
+      password: '',
+      email: '',
       nombres,
       apellido,
-      password: '', // Asignar el valor adecuado si es necesario
-      rol: '', // Asignar el valor adecuado si es necesario
+      rol: '',
     };
   }
 
@@ -161,13 +159,13 @@ export class CuentaUsuario implements OnInit {
   }
 
   obtenerPedidos(): void {
-  this.PedidoService.obtenerPedidoPorClienteId(this.idUsuario).subscribe({
-    next: (data) => {
-      this.pedidos = data;
-    },
-    error: (err) => {
-      console.error('Error al cargar pedidos', err);
-    }
-  });
+    this.PedidoService.obtenerPedidoPorClienteId(this.idUsuario).subscribe({
+      next: (data) => {
+        this.pedidos = data;
+      },
+      error: (err) => {
+        console.error('Error al cargar pedidos', err);
+      },
+    });
   }
 }

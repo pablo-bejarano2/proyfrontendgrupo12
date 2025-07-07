@@ -119,6 +119,7 @@ export class Usuarios implements OnInit {
     this.loginService.updateCount(this.usuario).subscribe({
       next: (result) => {
         this.editandoUsuario = false;
+        this.actualizarSessionStorage();
         this.cargarUsuarios();
         this.toastr.success(result.msg);
       },
@@ -126,6 +127,15 @@ export class Usuarios implements OnInit {
         this.mostrarError(error, 'Error al actualizar el usuario');
       },
     });
+  }
+
+  // Actualiza los datos del usuario en el sessionStorage
+  // para que se reflejen en otras partes de la app (cuenta del usuario, etc.)
+  actualizarSessionStorage() {
+    const { username, nombres, apellido } = this.formUsuario.value;
+    sessionStorage.setItem('username', username);
+    sessionStorage.setItem('nombres', nombres);
+    sessionStorage.setItem('apellido', apellido);
   }
 
   filtrarUsuarios() {
@@ -161,7 +171,14 @@ export class Usuarios implements OnInit {
     });
   }
 
-  eliminarUsuario(id: string) {
+  eliminarUsuario(id: string, username: string) {
+    const usuarioLogueado = sessionStorage.getItem('username');
+
+    if (usuarioLogueado === username) {
+      this.toastr.error('No puedes eliminar tu usuario estando conectado');
+      return;
+    }
+
     this.confirmarEliminacion().then((result) => {
       if (result.isConfirmed) {
         this.loginService.deleteUser(id).subscribe({

@@ -39,42 +39,57 @@
             </div>
           }
         </div>
-        <div class="row">
-          <div class="col">
-            <label>Ciudad</label>
-            <input class="form-control" formControlName="city" required>
-            @if (checkoutForm.get('city')?.touched && checkoutForm.get('city')?.invalid) {
-              <div class="text-danger small">
-                @if (checkoutForm.get('city')?.errors?.['required']) {
-                  <div>La ciudad es obligatoria.</div>
-                }
-                @if (checkoutForm.get('city')?.errors?.['minlength']) {
-                  <div>Debe tener al menos 3 caracteres.</div>
-                }
-                @if (checkoutForm.get('city')?.errors?.['pattern']) {
-                  <div>Solo letras y espacios.</div>
-                }
-              </div>
-            }
-          </div>
-          <div class="col">
+
+        <!-- Sección de Código Postal y Provincia -->
+        <div class="row mb-3">
+          <div class="col-md-6">
             <label>Código postal</label>
-            <input class="form-control" formControlName="zip" required>
+            <div class="input-group">
+              <input class="form-control" formControlName="zip" required
+                     (blur)="buscarCodigoPostal()">
+              <button class="btn btn-outline-secondary" type="button"
+                      (click)="buscarCodigoPostal()">
+                <i class="fas fa-search"></i>
+              </button>
+            </div>
             @if (checkoutForm.get('zip')?.touched && checkoutForm.get('zip')?.invalid) {
               <div class="text-danger small">
                 @if (checkoutForm.get('zip')?.errors?.['required']) {
                   <div>El código postal es obligatorio.</div>
                 }
                 @if (checkoutForm.get('zip')?.errors?.['pattern']) {
-                  <div>Debe ser numérico (4 a 10 dígitos).</div>
+                  <div>Formato inválido. Debe tener entre 4 y 10 dígitos.</div>
                 }
               </div>
             }
           </div>
+          <div class="col-md-6">
+            <label>Provincia</label>
+            <input class="form-control" [value]="provinciaSeleccionada" readonly>
+          </div>
         </div>
+
+        <div class="row mb-3">
+          <!-- Eliminar el input de ciudad y modificar la validación del select de localidad -->
+          <div class="col-md-6">
+            <label>Localidad</label>
+            <select class="form-control" formControlName="localidad" required>
+              <option value="">Seleccione una localidad</option>
+              @for (loc of localidades; track loc.localidad) {
+                <option [value]="loc.localidad">{{loc.localidad}}</option>
+              }
+            </select>
+            @if (checkoutForm.get('localidad')?.touched && checkoutForm.get('localidad')?.invalid) {
+              <div class="text-danger small">
+                <div>Seleccione una localidad.</div>
+              </div>
+            }
+          </div>
+        </div>
+
         <div class="mb-3 mt-3">
           <label>Email</label>
-          <input class="form-control" formControlName="email" required>
+          <input type="email" class="form-control" formControlName="email" required>
           @if (checkoutForm.get('email')?.touched && checkoutForm.get('email')?.invalid) {
             <div class="text-danger small">
               @if (checkoutForm.get('email')?.errors?.['required']) {
@@ -84,7 +99,7 @@
                 <div>Formato de email inválido.</div>
               }
               @if (checkoutForm.get('email')?.errors?.['emailInvalido']) {
-                <div>Email inválido.</div>
+                <div>Email inválido. Debe tener un dominio válido.</div>
               }
             </div>
           }
@@ -95,95 +110,106 @@
 
         <!-- Botón de pago QR -->
         <button type="button"
-                class="btn btn-primary w-100 mt-4"
-                (click)="pagarConQR()"
-                [disabled]="cartItems.length === 0 || !camposEnvioValidos()">
-          <i class="fas fa-qrcode me-2"></i>
-          Pagar con QR - {{formatearMoneda(total)}}
+                class="btn btn-primary w-100"
+                [disabled]="!camposEnvioValidos()"
+                (click)="pagarConQR()">
+          <i class="fas fa-qrcode me-2"></i> Pagar con QR
         </button>
 
         <!-- Botón de finalizar pedido (solo aparece cuando el pago está completado) -->
         @if (pagoCompletado) {
-          <button class="btn btn-success w-100 mt-3"
-                  type="submit"
-                  [disabled]="checkoutForm.invalid">
-            <i class="fas fa-check me-2"></i>
-            Confirmar pedido
+          <button type="submit" class="btn btn-success w-100 mt-3">
+            <i class="fas fa-check-circle me-2"></i> Finalizar pedido
           </button>
         }
 
         <button type="button" class="btn btn-outline-secondary w-100 mt-2" (click)="verEstadoFormulario()">
-          Ver estado formulario
+          Ver estado del formulario
         </button>
       </form>
     </div>
 
     <!-- Columna Resumen Carrito -->
     <div class="col-md-5">
-      <h4>Resumen del pedido</h4>
-      @if (cartItems.length === 0) {
-        <div class="text-center py-5">
-          <i class="fas fa-shopping-cart" style="font-size: 3rem; color: #638288;"></i>
-          <h5 class="fw-bold mt-3">Tu carrito está vacío</h5>
-          <p class="text-muted">¡Agrega algunos productos increíbles!</p>
+      <div class="card">
+        <div class="card-header">
+          <h4>Resumen del pedido</h4>
         </div>
-      }
-      @if (cartItems.length > 0) {
-        <div>
-          @for (item of cartItems; track trackByItem($index, item)) {
-            <div class="d-flex align-items-center mb-3 border-bottom pb-2">
-              <div>
-                @if (item.producto.imagenes && item.producto.imagenes.length > 0) {
-                  <img [src]="item.producto.imagenes[0]" class="rounded me-3" width="60" height="60" [alt]="item.producto.nombre">
-                } @else {
-                  <span class="d-inline-flex align-items-center justify-content-center rounded me-3" style="width:60px;height:60px;background:#f0f0f0;">
-                    <i class="fas fa-image text-muted" style="font-size:2.5rem;"></i>
-                  </span>
-                }
-              </div>
-              <div class="flex-grow-1">
-                <div class="fw-medium">{{item.producto.nombre}}</div>
-                <div class="mt-1">
-                  <span class="me-2">Cantidad:</span>
-                  <span class="fw-bold">{{item.cantidad}}</span>
+        <div class="card-body">
+          @if (cartItems.length === 0) {
+            <div class="empty-cart text-center py-4">
+              <svg width="120" height="120" viewBox="0 0 24 24">
+                <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z" fill="#ccc"/>
+              </svg>
+              <h5 class="mt-3">Tu carrito está vacío</h5>
+              <p class="text-muted">¡Agrega algunos productos increíbles!</p>
+              <a routerLink="/tienda" class="btn btn-primary mt-2">
+                Ver productos
+              </a>
+            </div>
+          } @else {
+            <div class="cart-items">
+              @for (item of cartItems; track trackByItem($index, item)) {
+                <div class="d-flex mb-3 border-bottom pb-3">
+                  <div class="me-3">
+                    @if (item.producto.imagenes && item.producto.imagenes.length > 0) {
+                      <img [src]="item.producto.imagenes[0]" alt="{{item.producto.nombre}}" class="img-thumbnail" style="width: 80px; height: 80px; object-fit: cover;">
+                    } @else {
+                      <div class="placeholder-img" style="width: 80px; height: 80px; background-color: #f0f0f0; display: flex; align-items: center; justify-content: center;">
+                        <span class="text-muted">Sin imagen</span>
+                      </div>
+                    }
+                  </div>
+                  <div class="flex-grow-1">
+                    <h5 class="mb-1">{{item.producto.nombre}}</h5>
+                    <p class="mb-1 text-muted small">{{item.cantidad}} x {{formatearMoneda(item.producto.precio)}}</p>
+                    <p class="text-end mb-0"><strong>{{formatearMoneda(item.producto.precio * item.cantidad)}}</strong></p>
+                  </div>
                 </div>
-              </div>
-              <div class="fw-bold ms-2">{{formatearMoneda(item.producto.precio * item.cantidad)}}</div>
+              }
             </div>
           }
+          <!-- Cupón -->
+          <div class="mb-3">
+            <label>¿Tienes un cupón?</label>
+            <div class="input-group">
+              <input type="text" class="form-control" [(ngModel)]="couponCode" [ngModelOptions]="{standalone: true}">
+              <button class="btn btn-outline-secondary" type="button" (click)="applyCoupon()">Aplicar</button>
+            </div>
+            @if (couponMessage) {
+              <div class="small mt-1" [ngClass]="{'text-success': descuento > 0, 'text-danger': descuento === 0}">
+                {{couponMessage}}
+              </div>
+            }
+          </div>
+
+          <!-- Totales -->
+          <div class="mt-4">
+            <div class="d-flex justify-content-between mb-2">
+              <span>Subtotal</span>
+              <span>{{formatearMoneda(subtotal)}}</span>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span>Envío</span>
+              <span>{{shipping}}</span>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span>Impuestos</span>
+              <span>{{formatearMoneda(tax)}}</span>
+            </div>
+            @if (descuento > 0) {
+              <div class="d-flex justify-content-between mb-2 text-success">
+                <span>Descuento ({{descuentoPorcentaje}}%)</span>
+                <span>-{{formatearMoneda(descuento)}}</span>
+              </div>
+            }
+            <div class="d-flex justify-content-between mt-3 border-top pt-3">
+              <span class="fw-bold">Total</span>
+              <span class="fw-bold">{{formatearMoneda(total)}}</span>
+            </div>
+          </div>
         </div>
-        <form (ngSubmit)="applyCoupon()" class="input-group mb-3">
-          <input type="text" class="form-control" placeholder="Cupón" [(ngModel)]="couponCode" name="couponCode">
-          <button class="btn btn-outline-secondary" type="submit">Aplicar</button>
-        </form>
-        @if (couponMessage) {
-          <div class="alert alert-info py-1">{{couponMessage}}</div>
-        }
-        <ul class="list-group mb-3">
-          @if (descuento>0) {
-            <li class="list-group-item d-flex justify-content-between">
-              <span>Descuento cupón ({{descuentoPorcentaje}}%)</span>
-              <span class="text-success">-{{formatearMoneda(descuento)}}</span>
-            </li>
-          }
-          <li class="list-group-item d-flex justify-content-between">
-            <span>Subtotal</span>
-            <span>{{formatearMoneda(subtotal)}}</span>
-          </li>
-          <li class="list-group-item d-flex justify-content-between">
-            <span>Envío</span>
-            <span>{{shipping}}</span>
-          </li>
-          <li class="list-group-item d-flex justify-content-between">
-            <span>Impuestos</span>
-            <span>{{formatearMoneda(tax)}}</span>
-          </li>
-          <li class="list-group-item d-flex justify-content-between fw-bold">
-            <span>Total</span>
-            <span>{{formatearMoneda(total)}}</span>
-          </li>
-        </ul>
-      }
+      </div>
     </div>
   </div>
 </div>
@@ -193,31 +219,20 @@
   <div class="modal fade show" style="display: block;" tabindex="-1" aria-labelledby="qrPaymentModalLabel">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
-        <div class="modal-header border-0 pb-0">
-          <h5 class="modal-title" id="qrPaymentModalLabel">
-            <i class="fas fa-qrcode me-2"></i>
-            Pago con QR
-          </h5>
-          <button type="button" class="btn-close" (click)="onPaymentFailure()" aria-label="Close"></button>
+        <div class="modal-header">
+          <h5 class="modal-title" id="qrPaymentModalLabel">Pago con QR</h5>
+          <button type="button" class="btn-close" (click)="onPaymentFailure()"></button>
         </div>
-        <div class="modal-body text-center">
-          <div class="mb-3">
-            <h6 class="text-muted">Total a pagar</h6>
-            <h4 class="text-primary fw-bold">{{ formatearMoneda(total) }}</h4>
-          </div>
-
-          <div class="qr-code-wrapper p-4 bg-light rounded-3 mb-4">
-            <app-qr-payment
-              [amount]="total"
-              [description]="'Pago de pedido'"
-              (pagoExitoso)="onPaymentSuccess($event)"
-              (pagoFallido)="onPaymentFailure($event)">
-            </app-qr-payment>
-          </div>
+        <div class="modal-body">
+          <app-qr-payment
+            [amount]="total"
+            [description]="'Pago de compra en Mi Tienda'"
+            (paymentSuccess)="onPaymentSuccess($event)"
+            (paymentFailure)="onPaymentFailure($event)">
+          </app-qr-payment>
         </div>
       </div>
     </div>
   </div>
   <div class="modal-backdrop fade show"></div>
 }
-

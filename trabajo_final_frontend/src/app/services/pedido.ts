@@ -11,9 +11,10 @@ export interface Pedido {
   total: number;
   estado: string;
   fecha: string;
-  direccion: { _id: string; calle: string; ciudad: string; provincia: string; codigoPostal: string; sucursalEnvio: string; transportadora: string  };
+  direccion: { _id: string; calle: string; ciudad: string; provincia: string; codigoPostal: string  };
   metodoPago: string;
   cupon?: { _id: string; codigo: string; descuento: number };
+  transportadora: string;
 }
 
 @Injectable({

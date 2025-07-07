@@ -71,9 +71,12 @@ export class ProductoService {
       );
   }
 
-  actualizarProducto(id: string, producto:FormData): Observable<any>{
-    return this.http.put<Producto>(`${this.API_URL}/producto/${id}`, producto);
-  }
+actualizarProducto(id: string, producto: FormData): Observable<Producto> {
+  return this.http.put<any>(`${this.API_URL}/producto/${id}`, producto)
+    .pipe(
+      map(response => response.producto)
+    );
+}
 
   eliminarProducto(id: string): Observable<any> {
     return this.http.delete(`${this.API_URL}/producto/${id}`);

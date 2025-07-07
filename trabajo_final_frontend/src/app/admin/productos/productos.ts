@@ -15,7 +15,6 @@ import Swal from 'sweetalert2';
 })
 export class Productos implements OnInit {
   productos: Producto[] = [];
-  mostrarModal = false; // Controla la visibilidad del modal
   productoSeleccionado: Producto | null = null;
   busquedaControl = new FormControl('');
 
@@ -27,29 +26,30 @@ export class Productos implements OnInit {
     this.buscarProductoPorNombre();
   }
 
+
   abrirModal(producto?: Producto): void {
-    if(producto){
+    if (producto) {
       this.productoSeleccionado = producto;
     } else {
       this.productoSeleccionado = null;
     }
-    }
-
-  cerrarModal(): void {
-    this.productoSeleccionado = null; // Reinicia la selección del producto
   }
 
-  buscarProductoPorNombre(){
+  cerrarModal(): void {
+    this.productoSeleccionado = null;
+  }
+
+  buscarProductoPorNombre() {
     this.busquedaControl.setValue(this.productoService.valorBusqueda);
- this.busquedaControl.valueChanges
-    .pipe(
-      debounceTime(300),
-      distinctUntilChanged(),
-      switchMap((valor) => this.productoService.buscarPorNombre(valor ?? ''))
-    )
-    .subscribe((respuesta) =>{
-      this.productos = respuesta;
-    })
+    this.busquedaControl.valueChanges
+      .pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+        switchMap((valor) => this.productoService.buscarPorNombre(valor ?? ''))
+      )
+      .subscribe((respuesta) => {
+        this.productos = respuesta;
+      })
   }
   guardarProducto(productoForm: FormData) {
     if (this.productoSeleccionado) {
@@ -60,6 +60,8 @@ export class Productos implements OnInit {
           const index = this.productos.findIndex(p => p._id === productoActualizado._id);
           if (index !== -1) {
             this.productos[index] = productoActualizado;
+            this.productos = [...this.productos]; // Forzar refresco
+
           }
           this.toastr.success('Producto actualizado con éxito');
           this.cerrarModal();
@@ -108,26 +110,26 @@ export class Productos implements OnInit {
   }
   // Método para eliminar un producto por ID
   eliminarProducto(id: string): void {
- Swal.fire({
-    title: '¿Eliminar producto?',
-    text: 'Esta acción no se puede deshacer.',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#00bcd4',
-    cancelButtonColor: '#d33',
-    confirmButtonText: 'Sí, eliminar',
-    cancelButtonText: 'Cancelar'
-  }).then((result) => {
-    if (result.isConfirmed) {
-      this.productoService.eliminarProducto(id).subscribe({
-        next: () => {
-          this.productos = this.productos.filter(prod => prod._id !== id);
-          this.toastr.success('Producto eliminado con éxito !');
-        },
-        error: () => this.toastr.error('Error al eliminar Producto')
-      });
-    }
-  });
+    Swal.fire({
+      title: '¿Eliminar producto?',
+      text: 'Esta acción no se puede deshacer.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#00bcd4',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.productoService.eliminarProducto(id).subscribe({
+          next: () => {
+            this.productos = this.productos.filter(prod => prod._id !== id);
+            this.toastr.success('Producto eliminado con éxito !');
+          },
+          error: () => this.toastr.error('Error al eliminar Producto')
+        });
+      }
+    });
   }
   // Método para actualizar un producto
   actualizarProducto(id: string, productoActualizado: FormData): void {

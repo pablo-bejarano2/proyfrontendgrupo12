@@ -41,7 +41,24 @@ export class CheckoutComponent implements OnInit {
   public pagoCompletado=false
 
   pagarConQR() {
+    if (this.checkoutForm.invalid) {
+      this.toastr.error('Por favor, completa todos los campos obligatorios antes de pagar.', 'Formulario Incompleto');
+      Object.keys(this.checkoutForm.controls).forEach(key => {
+        const control = this.checkoutForm.get(key);
+        if (control?.invalid) {
+          control.markAsTouched();
+        }
+      });
+      return;
+    }
     this.mostrarQR = true;
+    document.body.classList.add('modal-open');
+    setTimeout(() => {
+      document.body.classList.add('modal-open');
+      document.body.style.overflow = 'hidden';
+      document.body.style.paddingRight = '0px';
+    }, 10);
+
   }
   // En tu CheckoutComponent
   verEstadoFormulario() {
@@ -93,6 +110,19 @@ export class CheckoutComponent implements OnInit {
   camposEnvioValidos(): boolean {
     const campos = ['fullName', 'address', 'city', 'zip', 'email'];
     return campos.every(campo => this.checkoutForm.get(campo)?.valid);
+  }
+  onPaymentSuccess(paymentData: any) {
+    this.pagoCompletado = true;
+    this.toastr.success('¡Pago realizado con éxito!', 'Pago Exitoso');
+  }
+
+  onPaymentFailure(error?: any) {
+    this.mostrarQR = false;
+    document.body.classList.remove('modal-open');
+    document.body.style.overflow = '';
+    document.body.style.paddingRight = '';
+    const message = error?.message || 'El pago fue cancelado o falló. Por favor, intenta de nuevo.';
+    this.toastr.error(message, 'Pago Fallido');
   }
 
   ngOnInit() {

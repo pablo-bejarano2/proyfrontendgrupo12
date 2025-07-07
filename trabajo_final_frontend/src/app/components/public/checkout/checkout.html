@@ -89,24 +89,35 @@
             </div>
           }
         </div>
-        <h4>Información de pago</h4>
-        <div class="mb-3">
-          <button type="button" (click)="pagarConQR()" [disabled]="cartItems.length === 0 || !camposEnvioValidos()">
-            Pagar con QR
+
+        <!-- Sección de pago QR -->
+        <h4>Método de pago</h4>
+
+        <!-- Botón de pago QR -->
+        <button type="button"
+                class="btn btn-primary w-100 mt-4"
+                (click)="pagarConQR()"
+                [disabled]="cartItems.length === 0 || !camposEnvioValidos()">
+          <i class="fas fa-qrcode me-2"></i>
+          Pagar con QR - {{formatearMoneda(total)}}
+        </button>
+
+        <!-- Botón de finalizar pedido (solo aparece cuando el pago está completado) -->
+        @if (pagoCompletado) {
+          <button class="btn btn-success w-100 mt-3"
+                  type="submit"
+                  [disabled]="checkoutForm.invalid">
+            <i class="fas fa-check me-2"></i>
+            Confirmar pedido
           </button>
-          @if (mostrarQR) {
-            <app-qr-payment
-              [amount]="total"
-              [description]="'Pago de pedido'"
-              (pagoExitoso)="finalizarPedido()"
-              (pagoFallido)="onPagoFallido()">
-            </app-qr-payment>
-          }
-        </div>
-        <button class="btn btn-primary w-100 mt-4" type="submit" [disabled]="checkoutForm.invalid">Realizar pedido</button>
-        <button type="button" (click)="verEstadoFormulario()">Ver estado formulario</button>
+        }
+
+        <button type="button" class="btn btn-outline-secondary w-100 mt-2" (click)="verEstadoFormulario()">
+          Ver estado formulario
+        </button>
       </form>
     </div>
+
     <!-- Columna Resumen Carrito -->
     <div class="col-md-5">
       <h4>Resumen del pedido</h4>
@@ -176,3 +187,37 @@
     </div>
   </div>
 </div>
+
+<!-- Modal de pago QR -->
+@if (mostrarQR) {
+  <div class="modal fade show" style="display: block;" tabindex="-1" aria-labelledby="qrPaymentModalLabel">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="modal-title" id="qrPaymentModalLabel">
+            <i class="fas fa-qrcode me-2"></i>
+            Pago con QR
+          </h5>
+          <button type="button" class="btn-close" (click)="onPaymentFailure()" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center">
+          <div class="mb-3">
+            <h6 class="text-muted">Total a pagar</h6>
+            <h4 class="text-primary fw-bold">{{ formatearMoneda(total) }}</h4>
+          </div>
+
+          <div class="qr-code-wrapper p-4 bg-light rounded-3 mb-4">
+            <app-qr-payment
+              [amount]="total"
+              [description]="'Pago de pedido'"
+              (pagoExitoso)="onPaymentSuccess($event)"
+              (pagoFallido)="onPaymentFailure($event)">
+            </app-qr-payment>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade show"></div>
+}
+

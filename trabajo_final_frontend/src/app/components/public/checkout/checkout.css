@@ -5,12 +5,12 @@
 }
 
 .payment-option:hover {
-  border-color: #0d6efd !important;
+  border-color: #0099cc !important;
   background-color: #f8f9fa;
 }
 
 .payment-option.selected {
-  border-color: #0d6efd !important;
+  border-color: #0099cc !important;
   background-color: #e7f3ff;
 }
 
@@ -38,7 +38,7 @@
 }
 
 .modal-header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #0099cc 0%, #0077cc 100%);
   color: white;
   border-radius: 0.375rem 0.375rem 0 0;
 }
@@ -59,4 +59,35 @@
   .qr-code-wrapper {
     max-width: 250px;
   }
+}
+:host-context(body) {
+  overflow: hidden;
+}
+.modal-open {
+  overflow: hidden !important;
+  padding-right: 0 !important;
+}
+
+.modal-dialog {
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+/* Evitar que el contenido del modal se desborde */
+.modal-body {
+  max-height: calc(90vh - 120px);
+  overflow-y: auto;
+}
+.btn-primary {
+  background-color: #0099cc !important;
+  border-color: #0099cc !important;
+}
+
+.btn-primary:hover {
+  background-color: #0077cc !important;
+  border-color: #0077cc !important;
+}
+
+.text-primary {
+  color: #0099cc !important;
 }

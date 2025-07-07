@@ -1,15 +1,21 @@
+/* Contenedor principal más adaptable */
 .qr-container {
-  max-width: 300px;
+  max-width: 100%;
   margin: 0 auto;
+  padding: 0;
 }
 
+/* Ajuste del contenedor del QR */
 .qr-display {
   background: white;
   border-radius: 8px;
-  padding: 20px;
+  padding: 15px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
 }
 
+/* Estado del pago - cabecera */
 .payment-status-header {
   min-height: 30px;
   display: flex;
@@ -17,23 +23,20 @@
   justify-content: center;
 }
 
-.check-animation {
-  animation: checkPulse 0.6s ease-in-out;
+/* Tamaños de spinner */
+.text-center .spinner-border {
+  width: 3rem;
+  height: 3rem;
 }
 
-@keyframes checkPulse {
-  0% {
-    transform: scale(0.8);
-    opacity: 0.5;
-  }
-  50% {
-    transform: scale(1.1);
-    opacity: 0.8;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
+.spinner-border-sm {
+  width: 1rem !important;
+  height: 1rem !important;
+}
+
+/* Animaciones */
+.check-animation {
+  animation: checkPulse 0.6s ease-in-out;
 }
 
 .success-animation,
@@ -42,37 +45,95 @@
   animation: fadeInUp 0.5s ease-out;
 }
 
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+@keyframes checkPulse {
+  0% { transform: scale(0.8); opacity: 0.5; }
+  50% { transform: scale(1.1); opacity: 0.8; }
+  100% { transform: scale(1); opacity: 1; }
 }
 
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Estilos QR e instrucciones */
 .qr-instructions {
   margin-top: 15px;
 }
 
-.alert {
-  border-radius: 8px;
-  border: none;
+/* Cambio a tema celeste */
+.alert-info {
+  background-color: #e6f7ff;
+  color: #0099cc;
 }
 
-.btn {
-  border-radius: 6px;
-  font-weight: 500;
+.text-primary {
+  color: #0099cc !important;
 }
 
+.btn-outline-primary {
+  color: #0099cc;
+  border-color: #0099cc;
+}
+
+.btn-outline-primary:hover {
+  background-color: #0099cc;
+  color: white;
+}
+
+/* Modal con tema celeste */
+.modal-header {
+  background: linear-gradient(135deg, #0099cc 0%, #0077cc 100%);
+  color: white;
+}
+
+/* Mejoras para el QR en dispositivos móviles */
 @media (max-width: 576px) {
-  .qr-display qrcode {
-    width: 200px !important;
+  .qr-display {
+    padding: 8px;
+    margin: 0 auto;
+    max-width: 200px;
   }
 
-  .qr-container {
-    max-width: 250px;
+  .qr-display qrcode {
+    width: 180px !important;
+    height: auto !important;
   }
+
+  .modal-body {
+    padding: 0.75rem !important;
+  }
+
+  .qr-code-wrapper {
+    padding: 8px !important;
+  }
+
+  .modal-dialog {
+    margin: 0.5rem;
+    max-width: 330px;
+  }
+}
+
+/* Estilo adicional para botones y alertas */
+.btn-outline-secondary {
+  border-color: #0099cc;
+  color: #0099cc;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #0099cc;
+  color: white;
+}
+
+.alert-info {
+  background-color: #e6f7ff;
+  color: #0099cc;
+  border-color: #b3e0ff;
+}
+
+/* Prevención de scroll */
+body.modal-open {
+  overflow: hidden !important;
+  position: fixed;
+  width: 100%;
 }

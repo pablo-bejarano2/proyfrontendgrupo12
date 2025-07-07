@@ -1,56 +1,103 @@
-@if (qrDataString) {
-  <div class="qr-container text-center p-4 border rounded mt-3">
-    <h5>Escanea para pagar</h5>
-    <p class="text-muted">Total: <strong>{{ amount | currency:'$' }}</strong></p>
-    @if (paymentState === 'polling') {
-      <qrcode
-        [qrdata]="qrDataString"
-        [width]="250"
-        [errorCorrectionLevel]="'M'">
-      </qrcode>
-    }
-
-    <div class="status-indicator mt-3">
+<!-- qr-payment.component.html -->
+@if (isLoading) {
+  <div class="text-center py-4">
+    <div class="spinner-border text-primary mb-3" role="status" style="width: 3rem; height: 3rem;">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+    <p class="text-muted">Generando código QR...</p>
+  </div>
+} @else if (qrDataString) {
+  <div class="qr-container">
+    <!-- Estado del pago -->
+    <div class="payment-status-header mb-3">
       @switch (paymentState) {
         @case ('polling') {
-          <div>
-            <div class="spinner-border text-primary" role="status">
+          <div class="d-flex align-items-center justify-content-center">
+            <div class="spinner-border spinner-border-sm text-primary me-2" role="status">
               <span class="visually-hidden">Cargando...</span>
             </div>
-            <p class="fw-bold mt-2">{{ statusMessage }}</p>
+            <span class="fw-medium text-muted">Escanea el código QR para pagar</span>
           </div>
         }
         @case ('approved') {
           <div class="text-success">
-            <i class="fas fa-check-circle fa-3x"></i>
-            <p class="fw-bold mt-2 fs-5">{{ statusMessage }}</p>
+            <i class="fas fa-check-circle me-2"></i>
+            <span class="fw-bold">¡Pago Aprobado!</span>
           </div>
         }
         @case ('rejected') {
           <div class="text-danger">
-            <i class="fas fa-times-circle fa-3x"></i>
-            <p class="fw-bold mt-2">{{ statusMessage }}</p>
+            <i class="fas fa-times-circle me-2"></i>
+            <span class="fw-bold">Pago Rechazado. Intenta de nuevo.</span>
           </div>
         }
         @case ('cancelled') {
           <div class="text-warning">
-            <i class="fas fa-ban fa-3x"></i>
-            <p class="fw-bold mt-2">Pago cancelado</p>
+            <i class="fas fa-ban me-2"></i>
+            <span class="fw-bold">Pago cancelado</span>
           </div>
         }
       }
     </div>
+
+    <!-- Código QR -->
     @if (paymentState === 'polling') {
-      <button class="btn btn-secondary btn-sm mt-3" (click)="cancelarPago()">
-        Cancelar
-      </button>
+      <div class="qr-display text-center mb-3">
+        <qrcode
+          [qrdata]="qrDataString"
+          [width]="window.innerWidth < 576 ? 180 : 220"
+          [errorCorrectionLevel]="'M'">
+        </qrcode>
+      </div>
+
+      <div class="qr-instructions">
+        <div class="alert alert-info py-2 px-3 small text-center">
+          <i class="fas fa-mobile-alt me-1"></i>
+          Escanea el código QR con tu app de pagos favorita
+        </div>
+      </div>
+    }
+
+    <!-- Estados finales -->
+    @if (paymentState === 'approved') {
+      <div class="success-animation text-center py-4">
+        <div class="check-animation">
+          <i class="fas fa-check-circle fa-4x text-success mb-3"></i>
+        </div>
+        <h5 class="text-success mb-1">¡Pago exitoso!</h5>
+        <p class="text-muted small">Tu pago ha sido procesado correctamente</p>
+      </div>
+    }
+
+    @if (paymentState === 'rejected') {
+      <div class="error-animation text-center py-4">
+        <i class="fas fa-times-circle fa-4x text-danger mb-3"></i>
+        <h5 class="text-danger mb-1">Pago rechazado</h5>
+        <p class="text-muted small">{{ statusMessage }}</p>
+        <button class="btn btn-outline-primary btn-sm mt-2" (click)="reintentar()">
+          <i class="fas fa-redo me-1"></i>
+          Reintentar
+        </button>
+      </div>
+    }
+
+    @if (paymentState === 'cancelled') {
+      <div class="cancelled-animation text-center py-4">
+        <i class="fas fa-ban fa-4x text-warning mb-3"></i>
+        <h5 class="text-warning mb-1">Pago cancelado</h5>
+        <p class="text-muted small">Puedes intentar nuevamente cuando desees</p>
+      </div>
+    }
+
+    <!-- Botón de cancelar (solo visible durante polling) -->
+    @if (paymentState === 'polling') {
+      <div class="text-center mt-3">
+        <button class="btn btn-outline-secondary btn-sm" (click)="cancelarPago()">
+          <i class="fas fa-times me-1"></i>
+          Cancelar pago
+        </button>
+      </div>
     }
   </div>
 }
 
-@if (isLoading) {
-  <div class="text-center p-4">
-    <div class="spinner-border text-primary" role="status"></div>
-    <p class="mt-2">Generando código QR...</p>
-  </div>
-}

@@ -58,4 +58,8 @@ export class PedidoService {
   deletePedido(id: string): Observable<any> {
     return this.http.delete(`${this.API_URL}/${id}`);
   }
+
+  getPedidoById(pedidoId: string) {
+    return this.http.get(`${this.API_URL}/${pedidoId}`).pipe()
+  }
 }

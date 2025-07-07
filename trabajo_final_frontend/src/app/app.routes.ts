@@ -39,6 +39,7 @@ export const routes: Routes = [
       { path: 'contact', component: ContactComponent },
       { path: 'policy', component: PolicyComponent },
       { path: 'product-list', component: ProductList },
+      { path: 'tienda', component: ProductList },
       { path: 'products/:categoryName', component: ProductList },
       { path: 'home', component: Home },
       { path: 'form', component: Formulario },

@@ -38,6 +38,7 @@ export class CheckoutComponent implements OnInit {
   descuento = 0;
   public mostrarQR = false;
   public descuentoPorcentaje = 0;
+  public pagoCompletado=false
 
   pagarConQR() {
     this.mostrarQR = true;
@@ -95,6 +96,10 @@ export class CheckoutComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.checkoutForm.patchValue({
+      fullName: `${sessionStorage.getItem('nombres') || ''} ${sessionStorage.getItem('apellido') || ''}`,
+      email: sessionStorage.getItem('email') || '',
+    });
     this.itemPedidoService.cartItems$.subscribe(items => {
       this.cartItems = items;
       this.calcularTotales();

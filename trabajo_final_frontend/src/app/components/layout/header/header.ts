@@ -6,7 +6,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { CategoriaService } from '../../../services/categoria';
 import { ItemPedidoService } from '../../../services/item-pedido';
 import { AddToCart } from '@/app/components/public/add-to-cart/add-to-cart';
-import { NavigationStart} from '@angular/router';
+import { NavigationStart } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -32,7 +32,7 @@ export class Header implements OnInit {
     private itemPedidoService: ItemPedidoService // Inyecta el servicio del carrito
   ) {
     this.showCartModal = false;
-    this.router.events.subscribe(event => {
+    this.router.events.subscribe((event) => {
       if (event instanceof NavigationStart) {
         this.showCartModal = false;
       }
@@ -52,7 +52,7 @@ export class Header implements OnInit {
     });
     this.itemPedidoService.abrirCarrito$.subscribe(() => {
       console.log('Evento abrirCarrito$ recibido');
-      if(!this.showCartModal){
+      if (!this.showCartModal) {
         this.showCartModal = true;
       }
     });
@@ -82,8 +82,8 @@ export class Header implements OnInit {
 
   userLogged(): boolean {
     var resultado = false;
-    var usuarioGoogle = sessionStorage.getItem('username');
-    if (usuarioGoogle != null) {
+    var usuarioLogueado = sessionStorage.getItem('username');
+    if (usuarioLogueado != null) {
       resultado = true;
     }
     return resultado;
@@ -95,8 +95,7 @@ export class Header implements OnInit {
 
   abrirCarrito() {
     console.log('Botón de carrito clickeado');
-
-    this.showCartModal=true;
+    this.showCartModal = true;
   }
 
   irAFormulario() {

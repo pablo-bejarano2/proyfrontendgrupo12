@@ -1,15 +1,15 @@
 <!-- dashboard.component.html -->
 <div class="dashboard-charts-container">
   <div class="dashboard-chart-card">
-    <h3>Usuarios nuevos</h3>
+    <h3>Usuarios nuevos (últimos 7 días)</h3>
     <canvas baseChart [data]="usuariosData" [type]="'line'"></canvas>
   </div>
   <div class="dashboard-chart-card">
-    <h3>Pedidos semanales</h3>
+    <h3>Pedidos por día (últimos 7 días)</h3>
     <canvas baseChart [data]="pedidosData" [type]="'bar'"></canvas>
   </div>
   <div class="dashboard-chart-card">
-    <h3>Dinero por pedido</h3>
+    <h3>Monto de los últimos pedidos</h3>
     <canvas baseChart [data]="dineroData" [type]="'doughnut'"></canvas>
   </div>
   <div class="dashboard-chart-card">

@@ -12,7 +12,7 @@ bootstrapApplication(App, {
     provideCharts(withDefaultRegisterables()),
     provideAnimations(),
     provideToastr({
-      positionClass: 'toast-bottom-right',
+      positionClass: 'toast-top-right',
       timeOut: 7000,
       closeButton: true,
       progressBar: true

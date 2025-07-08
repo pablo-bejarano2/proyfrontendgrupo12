@@ -3,17 +3,17 @@
   @if (isProductLoaded) {
     <!-- Breadcrumb -->
     <nav aria-label="breadcrumb" class="mb-4">
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item">
-          <a href="#" class="text-decoration-none">Home</a>
-        </li>
-        <li class="breadcrumb-item">
-          <a href="#" class="text-decoration-none">{{ getCategoryName() }}</a>
-        </li>
-        <li class="breadcrumb-item active" aria-current="page">
-          {{ productName }}
-        </li>
-      </ol>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a [routerLink]="['/tienda']" class="text-decoration-none">Tienda</a>
+      </li>
+      <li class="breadcrumb-item">
+        <a [routerLink]="['/products', getCategoryName()]" class="text-decoration-none">{{ getCategoryName() }}</a>
+      </li>
+      <li class="breadcrumb-item active" aria-current="page">
+        {{ productName }}
+      </li>
+    </ol>
     </nav>
 
     <div class="row g-4">
@@ -94,14 +94,6 @@
                 No hay tallas disponibles
               </div>
             }
-          </div>
-
-          <!-- Agregar info de debug temporalmente -->
-          <div class="mb-2 p-2 bg-light rounded text-small">
-            <strong>Debug Info:</strong><br>
-            Selected Size: "{{ selectedSize }}"<br>
-            Stock Total: {{ stockTotal }}<br>
-            Stock para talla seleccionada: {{ selectedSize ? (getStockPorTalla(selectedSize) || 0) : 'No hay talla' }}<br>            Botón habilitado: {{ isButtonEnabled }}
           </div>
 
           <!-- Botones de compra -->
@@ -221,6 +213,25 @@
             }
           </div>
         </div>
+      </div>
+    </div>
+    <!-- Sección de recomendados -->
+    <div class="mt-5">
+      <h3 class="mb-4 fw-bold">Recomendados para ti</h3>
+      <div class="row g-4">
+        @for (product of recommendedProducts; track product._id) {
+          <div class="col-6 col-md-3">
+            <div class="card h-100 product-card">
+              <a [routerLink]="['/product-detail', product._id]" class="text-decoration-none">
+                <img [src]="product.imagenes[0]" [alt]="product.nombre" class="card-img-top product-image" style="height: 200px; object-fit: cover;">
+                <div class="card-body">
+                  <h5 class="card-title product-name">{{ product.nombre }}</h5>
+                  <p class="card-text product-price">${{ product.precio }}</p>
+                </div>
+              </a>
+            </div>
+          </div>
+        }
       </div>
     </div>
   } @else {

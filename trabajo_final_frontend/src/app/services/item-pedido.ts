@@ -11,7 +11,6 @@ export class ItemPedidoService {
   private API_URL = environment.apiUrl + '/itemPedido';
   private CART_STORAGE_KEY = 'shopping_cart_items';
 
-  // Eliminar la duplicación de este subject
   private cartItemsSubject = new BehaviorSubject<ItemPedido[]>([]);
   public cartItems$ = this.cartItemsSubject.asObservable();
 
@@ -44,12 +43,6 @@ export class ItemPedidoService {
     localStorage.setItem(this.CART_STORAGE_KEY, JSON.stringify(items));
   }
 
-  createItemPedido(item: Partial<ItemPedido>): Observable<ItemPedido> {
-    return this.http.post<any>(this.API_URL, item).pipe(
-      map(response => response.itemPedido)
-    );
-  }
-
   addItem(item: ItemPedido) {
     const items = [...this.cartItemsSubject.value, item];
     this.cartItemsSubject.next(items);
@@ -57,7 +50,8 @@ export class ItemPedidoService {
     this.updateCartCount();
   }
 
-  updateQuantity(id: string, cantidad: number) {
+  // Solo actualiza localmente
+  updateQuantityLocal(id: string, cantidad: number) {
     const items = this.cartItemsSubject.value.map(item =>
       item._id === id ? { ...item, cantidad } : item
     );
@@ -66,11 +60,24 @@ export class ItemPedidoService {
     this.updateCartCount();
   }
 
+  // Actualiza en el backend
+  updateItemPedido(id: string, data: { cantidad: number }): Observable<ItemPedido> {
+    return this.http.put<any>(`${this.API_URL}/${id}`, data).pipe(
+      map(response => response.itemPedido)
+    );
+  }
+
+  // Solo elimina localmente
   removeItem(id: string) {
     const items = this.cartItemsSubject.value.filter(item => item._id !== id);
     this.cartItemsSubject.next(items);
     this.saveCartToStorage(items);
     this.updateCartCount();
+  }
+
+  // Elimina en el backend
+  deleteItemPedido(id: string): Observable<any> {
+    return this.http.delete<any>(`${this.API_URL}/${id}`);
   }
 
   clearCart() {
@@ -93,5 +100,11 @@ export class ItemPedidoService {
 
   private updateCartCount() {
     this.cartItemsCountSubject.next(this.cartItemsSubject.value.length);
+  }
+
+  crearItemPedido(item: { producto: string; cantidad: number ; talla: string}): Observable<ItemPedido> {
+    return this.http.post<any>(this.API_URL, item).pipe(
+      map(response => response.itemPedido)
+    );
   }
 }

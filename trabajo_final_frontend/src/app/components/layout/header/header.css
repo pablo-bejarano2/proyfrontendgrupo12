@@ -62,7 +62,29 @@
     visibility: visible;
     width: 100%;
   }
+
+  .nav-link.active::before {
+    visibility: visible;
+    width: 100%;
+  }
+
+  .navbar .nav-link.active::before,
+  .navbar .nav-link.router-link-active::before {
+    visibility: visible !important;
+    width: 100% !important;
+    background-color: #00bcd4 !important;
+    z-index: 2;
+  }
+
+  .navbar .nav-link.active,
+  .navbar .nav-link.router-link-active {
+    background: transparent !important;
+    position: relative;
+    border-bottom: 2px solid #00bcd4;
+    /* fallback visual */
+  }
 }
+
 
 .logo-img {
   height: 125px;
@@ -74,7 +96,7 @@
   margin-top: 0;
 }
 
-.hover-dropdown > .nav-link {
+.hover-dropdown>.nav-link {
   pointer-events: auto;
 }
 
@@ -119,6 +141,7 @@
     opacity: 0;
     transform: translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);

@@ -5,10 +5,10 @@
     <nav aria-label="breadcrumb" class="mb-4">
       <ol class="breadcrumb">
         <li class="breadcrumb-item">
-          <a href="#" class="text-decoration-none">Home</a>
+          <a routerLink="/" class="text-decoration-none">Home</a>
         </li>
         <li class="breadcrumb-item">
-          <a href="#" class="text-decoration-none">{{ getCategoryName() }}</a>
+          <a [routerLink]="['/product-list']" class="text-decoration-none">{{ getCategoryName() }}</a>
         </li>
         <li class="breadcrumb-item active" aria-current="page">
           {{ productName }}

@@ -70,6 +70,8 @@
                                 <span>
                                     {{ pedido.direccion.calle }}, {{ pedido.direccion.ciudad }},
                                     {{ pedido.direccion.provincia }}, {{ pedido.direccion.codigoPostal }}
+                                    {{ pedido.direccion.sucursalEnvio ? 'Sucursal: ' + pedido.direccion.sucursalEnvio : '' }}
+                                    {{ pedido.direccion.transportadora ? 'Transportadora: ' + pedido.direccion.transportadora : '' }}
                                 </span>
                             </div>
                         </div>

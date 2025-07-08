@@ -211,20 +211,21 @@
             </thead>
             <tbody>
               <tr *ngFor="let pedido of pedidos">
-                <td>{{ pedido.fecha }}</td>
+                <td>{{ pedido.fecha | date:'dd/MM/yyyy' }}</td>
                 <td>
                   <span
                     class="badge"
                     [ngClass]="{
-                      'text-bg-success': pedido.estado === 'Entregado',
-                      'text-bg-danger': pedido.estado === 'Cancelado',
-                      'text-bg-warning': pedido.estado === 'Pendiente'
+                      'text-bg-success': pedido.estado === 'entregado',
+                      'text-bg-danger': pedido.estado === 'cancelado',
+                      'text-bg-warning': pedido.estado === 'pendiente',
+                      'text-bg-info': pedido.estado === 'entregado'
                     }"
                   >
                     {{ pedido.estado }}
                   </span>
                 </td>
-                <td>{{ pedido.direccion }}</td>
+                <td>{{ pedido.direccion.calle }}, {{ pedido.direccion.ciudad }}</td>
                 <td>{{ pedido.metodoPago }}</td>
                 <td>${{ pedido.total }}</td>
               </tr>

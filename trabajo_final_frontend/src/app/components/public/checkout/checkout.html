@@ -3,7 +3,7 @@
     <!-- Columna Formulario -->
     <div class="col-md-7">
       <h2>Checkout</h2>
-      <form [formGroup]="checkoutForm" (ngSubmit)="onSubmit()">
+      <form [formGroup]="checkoutForm" (ngSubmit)="finalizarPedido()">
         <h4>Información de envío</h4>
         <div class="mb-3">
           <label>Nombre completo</label>
@@ -91,50 +91,20 @@
         </div>
         <h4>Información de pago</h4>
         <div class="mb-3">
-          <label>Número de tarjeta</label>
-          <input class="form-control" formControlName="cardNumber" required>
-          @if (checkoutForm.get('cardNumber')?.touched && checkoutForm.get('cardNumber')?.invalid) {
-            <div class="text-danger small">
-              @if (checkoutForm.get('cardNumber')?.errors?.['required']) {
-                <div>El número de tarjeta es obligatorio.</div>
-              }
-              @if (checkoutForm.get('cardNumber')?.errors?.['pattern']) {
-                <div>Debe tener entre 13 y 19 dígitos numéricos.</div>
-              }
-            </div>
+          <button type="button" (click)="pagarConQR()" [disabled]="cartItems.length === 0 || !camposEnvioValidos()">
+            Pagar con QR
+          </button>
+          @if (mostrarQR) {
+            <app-qr-payment
+              [amount]="total"
+              [description]="'Pago de pedido'"
+              (pagoExitoso)="finalizarPedido()"
+              (pagoFallido)="onPagoFallido()">
+            </app-qr-payment>
           }
         </div>
-        <div class="row">
-          <div class="col">
-            <label>Expiración</label>
-            <input class="form-control" formControlName="expiration" required>
-            @if (checkoutForm.get('expiration')?.touched && checkoutForm.get('expiration')?.invalid) {
-              <div class="text-danger small">
-                @if (checkoutForm.get('expiration')?.errors?.['required']) {
-                  <div>La expiración es obligatoria.</div>
-                }
-                @if (checkoutForm.get('expiration')?.errors?.['pattern']) {
-                  <div>Formato inválido (MM/YY).</div>
-                }
-              </div>
-            }
-          </div>
-          <div class="col">
-            <label>CVV</label>
-            <input class="form-control" formControlName="cvv" required>
-            @if (checkoutForm.get('cvv')?.touched && checkoutForm.get('cvv')?.invalid) {
-              <div class="text-danger small">
-                @if (checkoutForm.get('cvv')?.errors?.['required']) {
-                  <div>El CVV es obligatorio.</div>
-                }
-                @if (checkoutForm.get('cvv')?.errors?.['pattern']) {
-                  <div>Debe tener 3 o 4 dígitos.</div>
-                }
-              </div>
-            }
-          </div>
-        </div>
         <button class="btn btn-primary w-100 mt-4" type="submit" [disabled]="checkoutForm.invalid">Realizar pedido</button>
+        <button type="button" (click)="verEstadoFormulario()">Ver estado formulario</button>
       </form>
     </div>
     <!-- Columna Resumen Carrito -->

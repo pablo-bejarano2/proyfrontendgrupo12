@@ -11,7 +11,7 @@ export interface Pedido {
   total: number;
   estado: string;
   fecha: string;
-  direccion: { _id: string; calle: string; ciudad: string; provincia: string; codigoPostal: string };
+  direccion: { _id: string; calle: string; ciudad: string; provincia: string; codigoPostal: string; sucursalEnvio: string; transportadora: string  };
   metodoPago: string;
   cupon?: { _id: string; codigo: string; descuento: number };
 }

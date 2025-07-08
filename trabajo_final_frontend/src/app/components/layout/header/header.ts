@@ -6,6 +6,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { CategoriaService } from '../../../services/categoria';
 import { ItemPedidoService } from '../../../services/item-pedido';
 import { AddToCart } from '@/app/components/public/add-to-cart/add-to-cart';
+import { NavigationStart} from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -29,9 +30,17 @@ export class Header implements OnInit {
     public loginService: LoginService,
     private router: Router,
     private itemPedidoService: ItemPedidoService // Inyecta el servicio del carrito
-  ) {}
+  ) {
+    this.showCartModal = false;
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationStart) {
+        this.showCartModal = false;
+      }
+    });
+  }
 
   ngOnInit() {
+    this.showCartModal = false;
     this.cargarCategorias();
     this.email = sessionStorage.getItem('email') || '';
     this.imagen = sessionStorage.getItem('imagen') || 'assets/user.jpg';
@@ -43,7 +52,9 @@ export class Header implements OnInit {
     });
     this.itemPedidoService.abrirCarrito$.subscribe(() => {
       console.log('Evento abrirCarrito$ recibido');
-      this.showCartModal = true;
+      if(!this.showCartModal){
+        this.showCartModal = true;
+      }
     });
   }
 
@@ -84,7 +95,8 @@ export class Header implements OnInit {
 
   abrirCarrito() {
     console.log('Botón de carrito clickeado');
-    this.itemPedidoService.abrirCarrito();
+
+    this.showCartModal=true;
   }
 
   irAFormulario() {

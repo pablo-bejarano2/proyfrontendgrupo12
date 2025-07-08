@@ -4,12 +4,11 @@ import { CommonModule } from '@angular/common';
 import { ItemPedidoService } from '../../../services/item-pedido';
 import { ProductoService, Producto, Talla } from '../../../services/producto';
 import { ItemPedido } from '../../../models/item-pedido';
-import { AddToCart } from '../add-to-cart/add-to-cart';
 
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [CommonModule, AddToCart],
+  imports: [CommonModule],
   templateUrl: './product-detail.html',
   styleUrl: './product-detail.css'
 })
@@ -17,8 +16,6 @@ export class ProductDetailComponent implements OnInit {
   itemProductService = inject(ItemPedidoService);
   productoService = inject(ProductoService);
   private route = inject(ActivatedRoute);
-
-  showCartModal = false;
   currentProduct: Producto | null = null;
   selectedSize = '';
   activeThumbnailIndex = 0;
@@ -122,23 +119,20 @@ export class ProductDetailComponent implements OnInit {
       return;
     }
     const itemPedido: ItemPedido = {
-      id: this.generateItemId(),
+      _id: this.generateItemId(),
       producto: this.currentProduct,
       cantidad: 1,
       talla: this.selectedSize,
       precio_unitario: this.currentProduct.precio,
-      color: this.currentProduct.color
+      color: this.currentProduct.color,
+      subtotal: this.currentProduct.precio*1
     };
     try {
       this.itemProductService.addItem(itemPedido);
-      this.showCartModal = true;
+      this.itemProductService.abrirCarrito();
     } catch (error) {
       alert('Hubo un error al agregar el producto al carrito');
     }
-  }
-
-  onCartModalClosed(): void {
-    this.showCartModal = false;
   }
 
   private generateItemId(): string {

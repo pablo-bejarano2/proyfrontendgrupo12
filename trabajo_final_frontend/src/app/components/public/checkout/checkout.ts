@@ -1,4 +1,3 @@
-// trabajo_final_frontend/src/app/components/public/checkout/checkout.ts
 import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -8,23 +7,28 @@ import {
   Validators
 } from '@angular/forms';
 import { ItemPedidoService } from 'src/app/services/item-pedido';
-import { CuponService } from 'src/app/services/cupon';
+import { DireccionService} from '@/app/services/direccion';
+import { CuponService } from 'src/app/services/cupon/cupon';
 import { PedidoService, Pedido } from 'src/app/services/pedido';
-import { ItemPedido } from 'src/app/models/item-pedido';
 import { MisValidadores } from '../../../validadores/mis-validadores';
+import { QrPayment} from '@/app/components/public/qr-payment/qr-payment';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { firstValueFrom }  from 'rxjs';
 
 @Component({
   selector: 'app-checkout',
   templateUrl: './checkout.html',
   imports: [
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    QrPayment
   ],
   styleUrls: ['./checkout.css']
 })
 export class CheckoutComponent implements OnInit {
   checkoutForm: FormGroup;
-  cartItems: ItemPedido[] = [];
+  cartItems: any[] = [];
   subtotal = 0;
   shipping = 'Gratis';
   tax = 0;
@@ -32,13 +36,31 @@ export class CheckoutComponent implements OnInit {
   couponCode = '';
   couponMessage = '';
   descuento = 0;
+  public mostrarQR = false;
   public descuentoPorcentaje = 0;
+
+  pagarConQR() {
+    this.mostrarQR = true;
+  }
+  // En tu CheckoutComponent
+  verEstadoFormulario() {
+    console.log(this.checkoutForm.status); // 'VALID' o 'INVALID'
+    console.log(this.checkoutForm.errors); // Errores generales
+    console.log(this.checkoutForm.value);  // Valores actuales
+    Object.keys(this.checkoutForm.controls).forEach(key => {
+      const control = this.checkoutForm.get(key);
+      console.log(key, control?.status, control?.errors);
+    });
+  }
 
   constructor(
     private fb: FormBuilder,
     private itemPedidoService: ItemPedidoService,
+    private direccionService: DireccionService,
     private cuponService: CuponService,
-    private pedidoService: PedidoService
+    private pedidoService: PedidoService,
+    private toastr: ToastrService,
+    private router: Router
   ) {
     this.checkoutForm = this.fb.group({
       fullName: ['', [
@@ -64,20 +86,12 @@ export class CheckoutComponent implements OnInit {
         Validators.required,
         Validators.email,
         MisValidadores.validarEmail,
-      ]],
-      cardNumber: ['', [
-        Validators.required,
-        Validators.pattern('^[0-9]{13,19}$')
-      ]],
-      expiration: ['', [
-        Validators.required,
-        Validators.pattern('^(0[1-9]|1[0-2])\\/([0-9]{2})$') // MM/YY
-      ]],
-      cvv: ['', [
-        Validators.required,
-        Validators.pattern('^[0-9]{3,4}$')
       ]]
     });
+  }
+  camposEnvioValidos(): boolean {
+    const campos = ['fullName', 'address', 'city', 'zip', 'email'];
+    return campos.every(campo => this.checkoutForm.get(campo)?.valid);
   }
 
   ngOnInit() {
@@ -103,9 +117,11 @@ export class CheckoutComponent implements OnInit {
           this.descuento = Math.round(this.subtotal * (cupon.descuento / 100));
           this.couponMessage = `Cupón aplicado: -${cupon.descuento}% (${this.formatearMoneda(this.descuento)})`;
           this.descuentoPorcentaje = cupon.descuento;
+          this.toastr.success(`Cupón '${this.couponCode}' aplicado con éxito!`, '¡Descuento Obtenido!');
         } else {
           this.descuento = 0;
           this.couponMessage = 'Cupón no válido';
+          this.toastr.warning('El cupón ingresado no es válido.', 'Cupón Inválido');
         }
         this.calcularTotales();
       },
@@ -113,6 +129,7 @@ export class CheckoutComponent implements OnInit {
         this.descuento = 0;
         this.couponMessage = err.error?.msg || 'Cupón no válido';
         this.calcularTotales();
+        this.toastr.error(err.error?.msg || 'El cupón no es válido o ha expirado.', 'Error de Cupón');
       }
     });
   }
@@ -121,43 +138,71 @@ export class CheckoutComponent implements OnInit {
     return `$${valor.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   }
 
-// checkout.ts
-  onSubmit() {
-    if (this.checkoutForm.invalid) return;
+  async finalizarPedido() {
+    console.log("El pago fue exitoso, procediendo a guardar el pedido...");
 
-    const items = this.cartItems.map(item => ({
-      _id: '',
-      producto: {
-        _id: item.producto._id,
-        nombre: item.producto.nombre
-      },
-      cantidad: item.cantidad,
-      subtotal: item.producto.precio * item.cantidad
-    }));
+    if (this.checkoutForm.invalid) {
+      this.toastr.error('Por favor, completa todos los campos de envío antes de pagar.', 'Formulario Incompleto');
+      return;
+    }
+    const requiredFields = ['fullName', 'address', 'city', 'zip', 'email'];
+    for (const field of requiredFields) {
+      if (this.checkoutForm.get(field)?.invalid) return;
+    }
 
-    const pedido = {
-      emailCliente: this.checkoutForm.value.email,
-      items,
-      total: this.total,
-      estado: 'pendiente',
-      metodoPago: 'tarjeta',
-      direccion: {
-        _id: '', // Completa según tu lógica
+    // Construye los items según la interfaz de Pedido del service
+    const itemIds: string[] = [];
+    for (const item of this.cartItems) {
+      const itemCreado = await firstValueFrom(
+        this.itemPedidoService.createItemPedido({
+          producto: item.producto._id,
+          cantidad: item.cantidad,
+          subtotal: item.producto.precio * item.cantidad
+        })
+      );
+      itemIds.push(itemCreado._id!);
+    }
+    const direccionCreada = await firstValueFrom(
+      this.direccionService.createDireccion({
         calle: this.checkoutForm.value.address,
         ciudad: this.checkoutForm.value.city,
-        provincia: '', // Completa según tu lógica
+        provincia: '',
         codigoPostal: this.checkoutForm.value.zip
-      },
-      cupon: this.couponCode
-        ? { _id: '', codigo: this.couponCode, descuento: this.descuentoPorcentaje }
-        : undefined
-    };
+      })
+    );
+
+    // Construye el pedido según la interfaz del service
+    const pedido = {
+      emailCliente: this.checkoutForm.value.email,
+      items: itemIds,
+      total: this.total,
+      estado: 'pendiente',
+      fecha: new Date().toISOString(),
+      direccion: direccionCreada._id,
+      metodoPago: 'qr',
+      cupon: this.couponCode ? this.couponCode : undefined
+    } as unknown as Partial<Pedido>;
 
     this.pedidoService.createPedidos(pedido).subscribe({
-      next: () => {
+      next: (pedidoGuardado) => {
+        this.toastr.success('Tu pedido ha sido confirmado y se está preparando.', '¡Gracias por tu compra!');
         this.itemPedidoService.clearCart();
-        // Redirigir o mostrar mensaje de éxito
+        this.mostrarQR = false;
+        setTimeout(() => {
+          this.router.navigate(['/gracias', pedidoGuardado._id]);
+        }, 2000);
+      },
+      error: () => {
+        this.toastr.error('Hubo un problema al guardar tu pedido. Por favor, contacta a soporte.', 'Error Crítico');
       }
     });
+  }
+  onPagoFallido(error?: any) {
+      this.mostrarQR = false;
+      let message = 'El pago fue cancelado o falló. Por favor, intenta de nuevo.';
+      if (error?.message) {
+        message = error.message;
+      }
+      this.toastr.error(message, 'Pago Fallido');
   }
 }

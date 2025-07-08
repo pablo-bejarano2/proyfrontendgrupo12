@@ -1,7 +1,26 @@
-<div class="admin-container">
-  <app-admin-sidebar></app-admin-sidebar>
+<div class="admin-container d-flex">
+  <button class="btn btn-outline-secondary d-lg-none m-2 position-fixed z-3"
+          type="button"
+          data-bs-toggle="offcanvas"
+          data-bs-target="#adminSidebarOffcanvas"
+          aria-controls="adminSidebarOffcanvas">
+    <i class="fas fa-bars"></i>
+  </button>
 
-  <div class="admin-content">
+  <div class="offcanvas-lg offcanvas-start border-end dashboard-sidebar bg-white"
+       tabindex="-1"
+       id="adminSidebarOffcanvas"
+       aria-labelledby="adminSidebarLabel">
+    <div class="offcanvas-header d-lg-none">
+      <h5 class="offcanvas-title" id="adminSidebarLabel">Menú Admin</h5>
+      <button type="button" class="btn-close" (click)="closeSidebar()" aria-label="Cerrar"></button>
+    </div>
+    <div class="offcanvas-body p-0">
+      <app-admin-sidebar></app-admin-sidebar>
+    </div>
+  </div>
+
+  <div class="admin-content flex-grow-1 p-3">
     <router-outlet></router-outlet>
   </div>
 </div>

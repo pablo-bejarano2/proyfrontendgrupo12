@@ -11,6 +11,7 @@ import { MisValidadores } from '../../../validadores/mis-validadores';
 import { Usuario } from '../../../models/usuario';
 import { LoginService } from '../../../services/login';
 import { ToastrService } from 'ngx-toastr';
+import { PedidoService, Pedido } from '../../../services/pedido';
 
 @Component({
   selector: 'app-cuenta-usuario',
@@ -32,88 +33,11 @@ export class CuentaUsuario implements OnInit {
   //Usuario para el update
   userUpdated: Usuario = new Usuario();
   //quitar
-  pedidos = [
-    {
-      fecha: '2025-06-20',
-      estado: 'Entregado',
-      direccion: 'Calle Falsa 123, Buenos Aires',
-      metodoPago: 'Tarjeta de crédito',
-      total: 12500,
-    },
-    {
-      fecha: '2025-06-15',
-      estado: 'Pendiente',
-      direccion: 'Av. Siempre Viva 742, Córdoba',
-      metodoPago: 'MercadoPago',
-      total: 8450,
-    },
-    {
-      fecha: '2025-06-10',
-      estado: 'Cancelado',
-      direccion: 'San Martín 456, Rosario',
-      metodoPago: 'Efectivo',
-      total: 3200,
-    },
-    {
-      fecha: '2025-06-10',
-      estado: 'Cancelado',
-      direccion: 'San Martín 456, Rosario',
-      metodoPago: 'Efectivo',
-      total: 3200,
-    },
-    {
-      fecha: '2025-06-20',
-      estado: 'Entregado',
-      direccion: 'Calle Falsa 123, Buenos Aires',
-      metodoPago: 'Tarjeta de crédito',
-      total: 12500,
-    },
-    {
-      fecha: '2025-06-10',
-      estado: 'Cancelado',
-      direccion: 'San Martín 456, Rosario',
-      metodoPago: 'Efectivo',
-      total: 3200,
-    },
-    {
-      fecha: '2025-06-10',
-      estado: 'Cancelado',
-      direccion: 'San Martín 456, Rosario',
-      metodoPago: 'Efectivo',
-      total: 3200,
-    },
-    {
-      fecha: '2025-06-20',
-      estado: 'Entregado',
-      direccion: 'Calle Falsa 123, Buenos Aires',
-      metodoPago: 'Tarjeta de crédito',
-      total: 12500,
-    },
-    {
-      fecha: '2025-06-10',
-      estado: 'Cancelado',
-      direccion: 'San Martín 456, Rosario',
-      metodoPago: 'Efectivo',
-      total: 3200,
-    },
-    {
-      fecha: '2025-06-10',
-      estado: 'Cancelado',
-      direccion: 'San Martín 456, Rosario',
-      metodoPago: 'Efectivo',
-      total: 3200,
-    },
-    {
-      fecha: '2025-06-20',
-      estado: 'Entregado',
-      direccion: 'Calle Falsa 123, Buenos Aires',
-      metodoPago: 'Tarjeta de crédito',
-      total: 12500,
-    },
-  ];
+  pedidos: Pedido[] = [];
 
   constructor(
     private loginService: LoginService,
+    private PedidoService: PedidoService,
     private toastr: ToastrService,
     private fb: FormBuilder
   ) {
@@ -158,6 +82,7 @@ export class CuentaUsuario implements OnInit {
     this.imagenUsuario = sessionStorage.getItem('imagen') || 'assets/user.jpg';
     // Inicializa el formulario con los valores
     this.formUsuario.patchValue(this.obtenerDatosUsuarioDesdeStorage());
+    this.obtenerPedidos();
   }
 
   private obtenerDatosUsuarioDesdeStorage(): any {
@@ -233,5 +158,16 @@ export class CuentaUsuario implements OnInit {
     sessionStorage.setItem('username', datos.username);
     sessionStorage.setItem('nombres', datos.nombres);
     sessionStorage.setItem('apellido', datos.apellido);
+  }
+
+  obtenerPedidos(): void {
+  this.PedidoService.obtenerPedidoPorClienteId(this.idUsuario).subscribe({
+    next: (data) => {
+      this.pedidos = data;
+    },
+    error: (err) => {
+      console.error('Error al cargar pedidos', err);
+    }
+  });
   }
 }

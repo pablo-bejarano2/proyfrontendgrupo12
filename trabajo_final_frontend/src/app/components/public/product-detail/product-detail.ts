@@ -4,11 +4,11 @@ import { CommonModule } from '@angular/common';
 import { ItemPedidoService } from '../../../services/item-pedido';
 import { ProductoService, Producto, Talla } from '../../../services/producto';
 import { ItemPedido } from '../../../models/item-pedido';
-
+import {RouterModule} from '@angular/router';
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './product-detail.html',
   styleUrl: './product-detail.css'
 })

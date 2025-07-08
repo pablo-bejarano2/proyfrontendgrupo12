@@ -18,6 +18,7 @@ import { ErrorPage } from './components/public/error-page/error-page';
 import {
   CheckoutComponent
 } from '@/app/components/public/checkout/checkout';
+import { AdminGuard } from './services/admin.guard';
 
 
 export const routes: Routes = [
@@ -48,6 +49,7 @@ export const routes: Routes = [
   // Admin routes
   {
     path: 'admin', component: AdminLayout,
+    canActivate: [AdminGuard],
     children: [
       { path: '', component: Dashboard },
       { path: 'dashboard', component: Dashboard },

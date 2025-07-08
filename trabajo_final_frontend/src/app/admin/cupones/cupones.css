@@ -1,146 +1,138 @@
 .cupones-admin-container {
-    background: #fff;
-    border-radius: 18px;
-    box-shadow: 0 2px 12px rgba(0, 188, 212, 0.07);
-    padding: 32px 28px;
-    max-width: 1100px;
-    margin: 40px auto;
-    font-family: 'Segoe UI', sans-serif;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-.cupones-admin-container h2 {
-    color: #00bcd4;
-    font-weight: 700;
-    font-size: 1.6rem;
-}
-
-.btn-info,
-.btn-outline-info {
-    border-radius: 20px;
-    font-weight: 600;
-    padding: 8px 22px;
-    transition: background 0.2s, color 0.2s;
-}
-
-.btn-info.text-white:hover,
-.btn-info.text-white:focus {
-    background: #0097a7 !important;
-    color: #fff !important;
-}
-
-.btn-outline-info.active,
-.btn-outline-info:active {
-    background: #00bcd4 !important;
-    color: #fff !important;
-    border-color: #00bcd4 !important;
-    font-weight: 700;
-    box-shadow: 0 2px 8px rgba(0, 188, 212, 0.08);
-}
-
-.form-control {
-    border-radius: 10px;
-    border: 1.5px solid #e0f7fa;
-    font-size: 1rem;
-    transition: border 0.2s;
-}
-
-.form-control:focus {
-    border-color: #00bcd4;
-    box-shadow: 0 0 0 2px #e0f7fa;
+.text-custom {
+  color: #00bcd4 !important;
 }
 
 .cupon-card {
-    border-radius: 16px;
-    box-shadow: 0 2px 8px rgba(0, 188, 212, 0.07);
-    transition: box-shadow 0.2s;
-    background: #fafdff;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  border-radius: 15px;
+  overflow: hidden;
 }
 
 .cupon-card:hover {
-    box-shadow: 0 6px 24px rgba(0, 188, 212, 0.13);
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 188, 212, 0.15) !important;
 }
 
-.cupon-card .badge.bg-info {
-    background: #e0f7fa !important;
-    color: #00bcd4 !important;
-    font-weight: 600;
-    font-size: 1rem;
-    border-radius: 12px;
-    padding: 6px 16px;
+.cupon-card.border-info {
+  border-color: #00bcd4 !important;
+  border-width: 2px !important;
 }
 
-.cupon-card .badge.bg-secondary {
-    background: #ececec !important;
-    color: #757575 !important;
-    font-weight: 600;
-    font-size: 1rem;
-    border-radius: 12px;
-    padding: 6px 16px;
+.cupon-card.border-secondary {
+  border-color: #6c757d !important;
+  border-width: 2px !important;
 }
 
-.cupon-card .fw-bold.text-info {
-    color: #0097a7 !important;
-    font-size: 1.1rem;
+.codigo-cupon {
+  font-family: 'Courier New', monospace;
+  letter-spacing: 1px;
 }
 
-.cupon-card .fw-bold.text-secondary {
-    color: #757575 !important;
-    font-size: 1.1rem;
+.card-body {
+  padding: 1.5rem;
 }
 
-.cupon-card .btn-outline-secondary,
-.cupon-card .btn-outline-primary,
-.cupon-card .btn-outline-danger,
-.cupon-card .btn-outline-success {
-    border-radius: 16px;
-    font-weight: 600;
-    padding: 6px 16px;
-    font-size: 0.98rem;
-    transition: background 0.2s, color 0.2s;
+.badge {
+  font-size: 0.75rem;
+  padding: 0.5rem 0.75rem;
 }
 
-.cupon-card .btn-outline-secondary:hover {
-    background: #bdbdbd;
-    color: #fff;
-    border-color: #bdbdbd;
+.btn-sm {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.875rem;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease-in-out;
 }
 
-.cupon-card .btn-outline-primary:hover {
-    background: #00bcd4;
-    color: #fff;
-    border-color: #00bcd4;
+.btn-outline-primary:hover {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+  color: white;
 }
 
-.cupon-card .btn-outline-danger:hover {
-    background: #e53935;
-    color: #fff;
-    border-color: #e53935;
+.btn-outline-success:hover {
+  background-color: #198754;
+  border-color: #198754;
+  color: white;
 }
 
-.cupon-card .btn-outline-success:hover {
-    background: #43a047;
-    color: #fff;
-    border-color: #43a047;
+.btn-outline-warning:hover {
+  background-color: #ffc107;
+  border-color: #ffc107;
+  color: #000;
 }
 
-@media (max-width: 700px) {
-    .cupones-admin-container {
-        padding: 18px 6px;
-    }
-
-    .cupon-card {
-        min-width: 100%;
-    }
+.btn-outline-danger:hover {
+  background-color: #dc3545;
+  border-color: #dc3545;
+  color: white;
 }
 
-/* Centra la alerta en el medio de la pantalla */
+.form-control:focus {
+  border-color: #00bcd4;
+  box-shadow: 0 0 0 0.2rem rgba(0, 188, 212, 0.25);
+}
+
+.form-control-lg {
+  padding: 12px 16px;
+  font-size: 1rem;
+  border-radius: 8px;
+}
+
+.modal-content {
+  border: none;
+  overflow: hidden;
+}
+
+.btn-close-white {
+  filter: brightness(0) invert(1);
+}
+
 .alerta-centro {
   position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 2000;
-  min-width: 320px;
-  max-width: 90vw;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+  top: 20px;
+  right: 20px;
+  z-index: 1055;
+  min-width: 300px;
+}
+
+@media (max-width: 768px) {
+  .cupones-admin-container {
+    margin: 10px;
+    padding: 20px;
+  }
+  
+  .d-flex.flex-md-row {
+    flex-direction: column;
+    align-items: stretch !important;
+  }
+  
+  .gap-3 {
+    gap: 1rem !important;
+  }
+  
+  .cupon-card {
+    margin-bottom: 1rem;
+  }
+  
+  .btn-sm {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .d-flex.gap-2 {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .btn-sm {
+    margin: 0.2rem;
+  }
 }

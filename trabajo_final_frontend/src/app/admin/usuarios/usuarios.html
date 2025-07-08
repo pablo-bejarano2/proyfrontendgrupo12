@@ -1,7 +1,7 @@
 <div class="usuarios-admin-container">
   <div class="usuarios-admin-header">
     <h2>Centro de Control de Usuarios</h2>
-    <button class="btn-nuevo-usuario" (click)="crearUsuario()">
+    <button class="btn btn-nuevo-usuario" (click)="crearUsuario()">
       <i class="fas fa-plus"></i> Nuevo Usuario
     </button>
   </div>
@@ -15,7 +15,7 @@
       [(ngModel)]="username"
       name="username"
     />
-    <button class="btn-buscar-usuario" type="submit">
+    <button class="btn btn-buscar-usuario" type="submit">
       <i class="fas fa-search"></i> Buscar
     </button>
     <button
@@ -59,26 +59,23 @@
           <td>{{ usuario.rol }}</td>
           <td>
             <div
-              class="d-flex flex-column flex-md-row justify-content-center align-items-stretch"
+              class="d-flex flex-column flex-md-row justify-content-center align-items-stretch gap-2"
             >
               <button
-                class="btn-accion btn-ver"
+                class="btn btn-sm btn-accion btn-ver"
                 (click)="mostrarDetallesUsuario(usuario._id)"
-                title="Ver"
               >
                 <i class="fas fa-eye"></i>
               </button>
               <button
-                class="btn-accion btn-editar"
-                title="Editar"
+                class="btn btn-sm btn-accion btn-editar"
                 (click)="editarUsuario(usuario._id)"
               >
                 <i class="fas fa-pencil-alt"></i>
               </button>
               <button
-                class="btn-accion btn-eliminar"
-                (click)="eliminarUsuario(usuario._id)"
-                title="Eliminar"
+                class="btn btn-sm btn-accion btn-eliminar"
+                (click)="eliminarUsuario(usuario._id, usuario.username)"
               >
                 <i class="fas fa-trash"></i>
               </button>

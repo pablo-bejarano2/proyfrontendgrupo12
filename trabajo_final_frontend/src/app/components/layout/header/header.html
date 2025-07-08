@@ -22,10 +22,11 @@
       <div class="offcanvas-body">
         <ul class="navbar-nav justify-content-center flex-grow-1 pe-3">
           <li class="nav-item">
-            <a class="nav-link" [routerLink]="['/home']">Inicio</a>
+            <a class="nav-link" routerLinkActive="active" [routerLink]="['/home']">Inicio</a>
           </li>
           <li class="nav-item dropdown hover-dropdown">
             <a
+            routerLinkActive="active"
               class="nav-link dropdown-toggle mx-lg-2"
               [routerLink]="['/product-list']"
               id="tiendaDropdown"
@@ -47,10 +48,10 @@
             </ul>-->
           </li>
           <li class="nav-item">
-            <a class="nav-link mx-lg-2" [routerLink]="['/contact']">Contacto</a>
+            <a routerLinkActive="active" class="nav-link mx-lg-2" [routerLink]="['/contact']">Contacto</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link mx-lg-2" [routerLink]="['/policy']">Políticas</a>
+            <a routerLinkActive="active" class="nav-link mx-lg-2" [routerLink]="['/policy']">Políticas</a>
           </li>
           <li *ngIf="rol === 'administrador'" class="nav-item">
             <button id="adminBtn" class="admin-btn" (click)="irADashboard()">

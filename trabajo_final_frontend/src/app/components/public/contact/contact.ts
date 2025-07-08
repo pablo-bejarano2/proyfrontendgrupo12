@@ -19,7 +19,7 @@ import emailjs, {
 export class ContactComponent {
   public sendEmail(e: Event) {
     e.preventDefault();
-    
+    //Datos de EmailJs
     emailjs.sendForm(
       'service_l5nandf',     // Reemplaza con tu ID
       'template_z48exti',    // Reemplaza con tu ID

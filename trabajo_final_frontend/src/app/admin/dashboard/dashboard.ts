@@ -10,16 +10,16 @@ import { DashboardService } from '@/app/services/dashboardService';
   styleUrls: ['./dashboard.css']
 })
 export class Dashboard implements OnInit {
-  usuariosLabels: string[] = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
-  usuariosData: { labels: string[], datasets: { data: number[], label: string }[] } = { labels: this.usuariosLabels, datasets: [{ data: [], label: 'Usuarios nuevos' }] };
+  // Etiquetas para los últimos 7 días (puedes personalizar para mostrar fechas reales si lo deseas)
+  diasLabels: string[] = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
 
-  pedidosData: { labels: string[], datasets: { data: number[], label: string }[] } = { labels: this.usuariosLabels, datasets: [{ data: [], label: 'Pedidos semanales' }] };
+  usuariosData = { labels: this.diasLabels, datasets: [{ data: [] as number[], label: 'Usuarios nuevos' }] };
+  pedidosData = { labels: this.diasLabels, datasets: [{ data: [] as number[], label: 'Pedidos semanales' }] };
 
   dineroLabels: string[] = ['Pedido 1', 'Pedido 2', 'Pedido 3', 'Pedido 4'];
-  dineroData: { labels: string[], datasets: { data: number[], label: string }[] } = { labels: this.dineroLabels, datasets: [{ data: [], label: 'Dinero por pedido' }] };
+  dineroData = { labels: this.dineroLabels, datasets: [{ data: [] as number[], label: 'Monto ($)' }] };
 
-  cuponesLabels: string[] = [];
-  cuponesData: { labels: string[], datasets: { data: number[], label: string }[] } = { labels: this.cuponesLabels, datasets: [{ data: [], label: 'Cupones usados' }] };
+  cuponesData = { labels: [] as string[], datasets: [{ data: [] as number[], label: 'Cupones usados' }] };
 
   constructor(private dashboardService: DashboardService) {}
 
@@ -31,6 +31,8 @@ export class Dashboard implements OnInit {
       this.pedidosData.datasets[0].data = data;
     });
     this.dashboardService.getDineroPorPedido().subscribe(data => {
+      // Ajusta labels dinámicamente si hay menos de 4 pedidos
+      this.dineroData.labels = data.map((_, i) => `Pedido ${i + 1}`);
       this.dineroData.datasets[0].data = data;
     });
     this.dashboardService.getCuponesUsados().subscribe(res => {

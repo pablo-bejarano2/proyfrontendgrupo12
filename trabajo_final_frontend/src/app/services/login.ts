@@ -46,9 +46,7 @@ export class LoginService {
   //Actualizar cuenta de usuario
   public updateCount(updatedUser: Usuario): Observable<any> {
     let body = JSON.stringify({
-      _id: updatedUser._id,
       username: updatedUser.username,
-      email: updatedUser.email,
       nombres: updatedUser.nombres,
       apellido: updatedUser.apellido,
     });

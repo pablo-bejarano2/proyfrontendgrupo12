@@ -1,31 +1,41 @@
 body {
-      background-color: #ffffff;
-      color: #000000;
-    }
+  background-color: #ffffff;
+  color: #000000;
+}
 
-    .highlight {
-      color: #00bcd4;
-    }
+.highlight {
+  color: #00bcd4;
+}
 
-    .contact-section {
-      padding: 2rem 1rem;
-    }
+.contact-section {
+  padding: 2rem 1rem;
+}
 
-    .contact-info h5 {
-      color: #00bcd4;
-    }
+.contact-info h5 {
+  color: #00bcd4;
+}
 
-    .form-control:focus {
-      border-color: #00bcd4;
-      box-shadow: 0 0 0 0.2rem rgba(0, 188, 212, 0.25);
-    }
+.contact-text {
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  color: #222;
+  word-break: break-all;
+}
 
-    .btn-custom {
-      background-color: #00bcd4;
-      color: #fff;
-      border: none;
-    }
+.form-control:focus {
+  border-color: #00bcd4;
+  box-shadow: 0 0 0 0.2rem rgba(0, 188, 212, 0.25);
+}
 
-    .btn-custom:hover {
-      background-color: #0097a7;
-    }
+.btn-custom {
+  background-color: #00bcd4;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  transition: 0.3s background-color;
+}
+
+.btn-custom:hover {
+  background-color: #0097a7;
+}

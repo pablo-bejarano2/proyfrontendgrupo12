@@ -29,7 +29,7 @@ export class Formulario implements OnInit {
   mostrarPassword: boolean = false; //para mostrar la contraseña
   mostrarConfirmPassword: boolean = false; //para mostrar la confirmación de contraseña
   ingresoDesdeAdmin: boolean = false; //Indica si el formulario se abre desde el admin
-  returnUrl!: string;
+  returnUrl!: string; //URL de retorno después del login o registro
 
   constructor(
     private router: Router,
@@ -125,8 +125,8 @@ export class Formulario implements OnInit {
   handleCredentialResponse(response: any): void {
     this.ngZone.run(() => {
       const token = response.credential;
-      this.loginService.loginGoogle(token).subscribe(
-        (result) => {
+      this.loginService.loginGoogle(token).subscribe({
+        next: (result) => {
           if (this.ingresoDesdeAdmin) {
             this.toastr.success('Usuario creado correctamente');
             this.router.navigate([this.returnUrl]);
@@ -136,31 +136,27 @@ export class Formulario implements OnInit {
             this.router.navigate([this.returnUrl]);
           }
         },
-        (error) => {
-          this.toastr.error(error.error.msg || 'Error procensado la operación');
-        }
-      );
+        error: (error) => {
+          this.toastr.error(error.error.msg || 'Error procesando la operación');
+        },
+      });
     });
   }
 
-  //Login normal
+  //Login normal con credenciales de username y password
   login() {
     this.loginService
       .login(this.userform.username, this.userform.password)
-      .subscribe(
-        (result) => {
-          if (result.status == 1) {
-            this.guardarUsuarioEnStorage(result);
-            this.router.navigate([this.returnUrl]);
-          } else {
-            this.toastr.error(result.msg);
-          }
+      .subscribe({
+        next: (result) => {
+          this.guardarUsuarioEnStorage(result);
+          this.formUsuario.reset();
+          this.router.navigate([this.returnUrl]);
         },
-        (error) => {
+        error: (error) => {
           this.toastr.error(error.error.msg || 'Error procensado la operación');
-        }
-      );
-    this.formUsuario.reset(); //Limpiar el formulario
+        },
+      });
   }
 
   //Guarda los datos del usuario en sessionStorage
@@ -177,19 +173,20 @@ export class Formulario implements OnInit {
 
   //Crear cuenta
   createCount() {
-    this.loginService.createCount(this.userform).subscribe(
-      (result) => {
-        if (result.status == 1) {
-          this.toastr.success(result.msg);
+    this.loginService.createCount(this.userform).subscribe({
+      next: (result) => {
+        this.toastr.success(result.msg);
+        this.formUsuario.reset(); //Limpiar el formulario
+        if (this.ingresoDesdeAdmin) {
+          this.router.navigate([this.returnUrl]); //Redirigir al admin
         } else {
-          this.toastr.error(result.msg);
+          this.accion = 'login';
         }
       },
-      (error) => {
+      error: (error) => {
         this.toastr.error(error.error.msg || 'Error procensado la operación');
-      }
-    );
-    this.formUsuario.reset(); //Limpiar el formulario
+      },
+    });
   }
 
   //Crear cuenta o Inicio de Sesión de acuerdo al valor de 'accion'
@@ -209,7 +206,6 @@ export class Formulario implements OnInit {
       this.asignarValores();
       this.login();
     }
-    this.formUsuario.reset();
   }
 
   asignarValores() {

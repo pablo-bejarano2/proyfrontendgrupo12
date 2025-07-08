@@ -1,7 +1,8 @@
 import { Component, inject, OnInit } from '@angular/core';
 import {
   ActivatedRoute,
-  RouterLink
+  RouterLink,
+  RouterModule
 } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ItemPedidoService } from '../../../services/item-pedido';
@@ -10,7 +11,7 @@ import { ProductoService, Producto } from '../../../services/producto';
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterModule,RouterLink],
   templateUrl: './product-detail.html',
   styleUrl: './product-detail.css'
 })

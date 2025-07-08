@@ -76,15 +76,20 @@ export class Usuarios implements OnInit {
   }
 
   cargarUsuarios() {
-    this.loginService.getUsers().subscribe((result) => {
-      this.usuarios = result;
+    this.loginService.getUsers().subscribe({
+      next: (result) => {
+        this.usuarios = result.data;
+      },
+      error: (error) => {
+        this.mostrarError(error, 'Error al cargar los usuarios');
+      },
     });
   }
 
   mostrarDetallesUsuario(id: string, paraEditar: boolean = false) {
-    this.loginService.getUserById(id).subscribe(
-      (result) => {
-        this.usuario = result;
+    this.loginService.getUserById(id).subscribe({
+      next: (result) => {
+        this.usuario = result.data;
         if (paraEditar) {
           this.editandoUsuario = true;
           this.usuarioOriginal = { ...this.usuario }; // Clona el usuario para restaurar si se cancela
@@ -95,11 +100,10 @@ export class Usuarios implements OnInit {
             nombres: this.usuario.nombres,
             apellido: this.usuario.apellido,
           });
-          console.log('Formulario después del patch:', this.formUsuario.value);
         }
       },
-      (error) => this.mostrarError(error)
-    );
+      error: (error) => this.mostrarError(error),
+    });
   }
 
   editarUsuario(id: string) {
@@ -112,53 +116,69 @@ export class Usuarios implements OnInit {
       ...this.formUsuario.value, // Actualiza los valores del usuario con el formulario
     };
 
-    this.loginService.updateCount(this.usuario).subscribe(
-      (result) => {
-        if (result.status == 1) {
-          this.editandoUsuario = false;
-          this.cargarUsuarios();
-          this.toastr.success('Usuario actualizado correctamente');
-        } else {
-          this.toastr.error(result.msg);
-        }
+    this.loginService.updateCount(this.usuario).subscribe({
+      next: (result) => {
+        this.editandoUsuario = false;
+        this.actualizarSessionStorage();
+        this.cargarUsuarios();
+        this.toastr.success(result.msg);
       },
-      (error) => {
-        this.mostrarError(error, 'Error al actualizar el usuario.');
-      }
-    );
+      error: (error) => {
+        this.mostrarError(error, 'Error al actualizar el usuario');
+      },
+    });
+  }
+
+  // Actualiza los datos del usuario en el sessionStorage
+  // para que se reflejen en otras partes de la app (cuenta del usuario, etc.)
+  actualizarSessionStorage() {
+    const { username, nombres, apellido } = this.formUsuario.value;
+    sessionStorage.setItem('username', username);
+    sessionStorage.setItem('nombres', nombres);
+    sessionStorage.setItem('apellido', apellido);
   }
 
   filtrarUsuarios() {
     const username = this.username?.trim();
     if (!username) {
-      this.msgError = 'Debe ingresar un nombre de usuario para buscar.';
+      this.msgError = 'Debe ingresar un nombre de usuario para buscar';
       return;
     }
 
     //Evitar llamadas si el filtro no cambió
     this.msgError = '';
-    if (username === this.ultimoUsernameBuscado) return;
+    if (username === this.ultimoUsernameBuscado) {
+      this.toastr.info('Acaba de realizar la misma búsqueda');
+      return;
+    }
 
     this.ultimoUsernameBuscado = username;
-    this.loginService.getUsersByUsername(this.username).subscribe(
-      (result) => {
-        this.usuarios = result;
-        this.filtrado = true;
 
-        if (this.usuarios.length === 0) {
-          this.toastr.info('No se encontraron usuarios con ese nombre.');
+    this.loginService.getUsersByUsername(username).subscribe({
+      next: (result) => {
+        if (result.data.length === 0) {
+          this.toastr.info('No se encontraron usuarios con ese nombre');
           return;
         }
 
+        this.usuarios = result.data;
+        this.filtrado = true;
         this.toastr.success('Usuarios encontrados: ' + this.usuarios.length);
       },
-      (error) => {
+      error: (error) => {
         this.mostrarError(error);
-      }
-    );
+      },
+    });
   }
 
-  eliminarUsuario(id: string) {
+  eliminarUsuario(id: string, username: string) {
+    const usuarioLogueado = sessionStorage.getItem('username');
+
+    if (usuarioLogueado === username) {
+      this.toastr.error('No puedes eliminar tu usuario estando conectado');
+      return;
+    }
+
     this.confirmarEliminacion().then((result) => {
       if (result.isConfirmed) {
         this.loginService.deleteUser(id).subscribe({
@@ -167,7 +187,7 @@ export class Usuarios implements OnInit {
             this.cargarUsuarios();
           },
           error: (error) => {
-            this.mostrarError(error, 'Error al eliminar el usuario.');
+            this.mostrarError(error, 'Error al eliminar el usuario');
           },
         });
       }
@@ -204,14 +224,13 @@ export class Usuarios implements OnInit {
 
   cerrarModal() {
     this.editandoUsuario = false;
-    // Limpia el usuario y el usuarioOriginal al cerrar el modal
     this.usuario = null;
     this.usuarioOriginal = null;
   }
 
   private mostrarError(
     error: any,
-    fallbackMessage: string = 'Error procesando la operación.'
+    fallbackMessage: string = 'Error procesando la operación'
   ) {
     const errorMessage = error?.error?.msg || fallbackMessage;
     this.toastr.error(errorMessage);

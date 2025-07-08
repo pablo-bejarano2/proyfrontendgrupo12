@@ -35,7 +35,7 @@
 .nav-tabs .nav-link.active {
   border-bottom: 3px solid #00bcd4;
   color: #00bcd4;
-  background-color: transparent;
+  background-color: rgba(13, 202, 240, 0.1);
 }
 
 .nav-tabs .nav-link {
@@ -59,18 +59,24 @@
   font-size: 1rem;
 }
 
-.btn-form {
-  background: #00bcd4;
-  border-color: #00bcd4;
-  border-width: 1px;
+.btn-password {
+  background-color: #0097a7;
   color: #fff;
+}
+
+.btn-form {
+  background-color: #00bcd4;
+  color: #fff;
+  font-size: 18px;
   font-weight: 600;
-  transition: background 0.3s ease, color 0.3s ease;
+  padding: 8px 20px;
+  border: none;
+  transition: 0.3s background-color;
 }
 
 .btn-form:hover {
-  background: #fff;
-  color: #00bcd4;
+  background-color: #0097a7;
+  color: #fff;
 }
 
 @media (max-width: 475px) {

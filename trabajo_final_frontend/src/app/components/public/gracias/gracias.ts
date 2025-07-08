@@ -39,14 +39,22 @@ export class Gracias implements OnInit {
 
   cargarPedido(): void {
     this.pedidoService.getPedidoById(this.pedidoId).subscribe({
-      next: (data) => {
-        this.pedido = data;
+      next: (data: any) => {
+        this.pedido = data.pedido;
       },
       error: (err) => {
         this.toastr.error('No se pudo cargar la información del pedido', 'Error');
         this.router.navigate(['/']);
       }
     });
+  }
+  verMisPedidos() {
+    if (this.estaAutenticado()) {
+      this.router.navigate(['/cuenta'], { queryParams: { tab: 'pedidos' } });
+    } else {
+      this.toastr.info('Debes iniciar sesión para ver tus pedidos');
+      this.router.navigate(['/login']);
+    }
   }
 
   formatearMoneda(valor?: number): string {

@@ -1,14 +1,17 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import {
+  ActivatedRoute,
+  RouterLink,
+  RouterModule
+} from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ItemPedidoService } from '../../../services/item-pedido';
-import { ProductoService, Producto, Talla } from '../../../services/producto';
-import { ItemPedido } from '../../../models/item-pedido';
-import {RouterModule} from '@angular/router';
+import { ProductoService, Producto } from '../../../services/producto';
+
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule,RouterLink],
   templateUrl: './product-detail.html',
   styleUrl: './product-detail.css'
 })
@@ -25,14 +28,33 @@ export class ProductDetailComponent implements OnInit {
   products: any[] = [];
   mainImages: string[] = [];
   thumbnails: { src: string, alt: string }[] = [];
+  recommendedProducts: Producto[] = [];
+
 
   ngOnInit(): void {
-    const productId = this.route.snapshot.paramMap.get('id');
-    if (productId) {
-      this.loadProduct(productId);
-    } else {
-      this.loadExampleProduct();
-    }
+     this.route.paramMap.subscribe(params => {
+       const productId = params.get('id');
+       if (productId) {
+         this.loadProduct(productId);
+       } else {
+         this.loadExampleProduct();
+         this.loadRecommendedProducts();
+       }
+     });
+   }
+  private loadRecommendedProducts(): void {
+    this.productoService.obtenerProductos().subscribe(
+      (productos) => {
+        // Filtra el producto actual y toma 4 aleatorios
+        this.recommendedProducts = productos
+          .filter(p => p._id !== this.currentProduct?._id)
+          .sort(() => 0.5 - Math.random())
+          .slice(0, 4);
+      },
+      (error) => {
+        console.error('Error al cargar recomendados:', error);
+      }
+    );
   }
 
   private loadProduct(id: string): void {
@@ -40,6 +62,7 @@ export class ProductDetailComponent implements OnInit {
       (producto) => {
         this.currentProduct = producto;
         this.initImages();
+        this.loadRecommendedProducts(); // Llama aquí, después de setear currentProduct
       },
       (error) => {
         console.error('Error al cargar el producto:', error);
@@ -118,21 +141,23 @@ export class ProductDetailComponent implements OnInit {
       alert(`La talla ${this.selectedSize} no tiene stock disponible`);
       return;
     }
-    const itemPedido: ItemPedido = {
-      _id: this.generateItemId(),
-      producto: this.currentProduct,
+
+    this.itemProductService.crearItemPedido({
+      producto: this.currentProduct._id,
       cantidad: 1,
       talla: this.selectedSize,
-      precio_unitario: this.currentProduct.precio,
-      color: this.currentProduct.color,
-      subtotal: this.currentProduct.precio*1
-    };
-    try {
-      this.itemProductService.addItem(itemPedido);
-      this.itemProductService.abrirCarrito();
-    } catch (error) {
-      alert('Hubo un error al agregar el producto al carrito');
-    }
+    }).subscribe({
+      next: (itemPedido) => {
+        console.log('Item guardado en la base de datos:', itemPedido);
+        itemPedido.producto = this.currentProduct!;
+        this.itemProductService.addItem(itemPedido);
+        this.itemProductService.abrirCarrito();
+      },
+      error: (err) => {
+        console.error('Error al guardar el item en la base de datos:', err);
+        alert('Hubo un error al agregar el producto al carrito');
+      }
+    });
   }
 
   private generateItemId(): string {

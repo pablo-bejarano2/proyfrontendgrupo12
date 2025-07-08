@@ -46,9 +46,26 @@
       <div class="mb-2" *ngIf="producto?.imagenes?.length">
         <label>Imágenes existentes:</label>
         <div class="d-flex flex-wrap gap-2">
-          <img *ngFor="let img of producto?.imagenes" [src]="img" alt="Imagen existente" class="img-thumbnail"
-            style="width: 100px;">
+          <div *ngFor="let img of producto?.imagenes; let i = index" class="position-relative">
+            <img [src]="img" alt="Imagen existente" class="img-thumbnail" style="width: 100px;">
+            <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0"
+              (click)="eliminarImagenExistente(i)">
+              <i class="fa fa-trash"></i>
+            </button>
+            <!-- Botón para reemplazar imagen -->
+            <button type="button" class="btn btn-warning btn-sm position-absolute bottom-0 end-0"
+              (click)="abrirInputReemplazo(i)">
+              <i class="fa fa-edit"></i>
+            </button>
+            <input type="file" #inputReemplazo style="display: none" (change)="reemplazarImagen($event, i)" />
+          </div>
         </div>
+      </div>
+      <div class="mb-2">
+        <button type="button" class="btn btn-success btn-sm" (click)="inputAgregarImagen.click()">
+          <i class="fa fa-plus"></i> Agregar imagen
+        </button>
+        <input type="file" #inputAgregarImagen style="display: none" (change)="agregarImagenes($event)" multiple />
       </div>
 
       <div class="col-md-12">

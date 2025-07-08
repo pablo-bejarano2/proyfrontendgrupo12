@@ -1,0 +1,93 @@
+.payment-option {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 2px solid #dee2e6 !important;
+}
+
+.payment-option:hover {
+  border-color: #0099cc !important;
+  background-color: #f8f9fa;
+}
+
+.payment-option.selected {
+  border-color: #0099cc !important;
+  background-color: #e7f3ff;
+}
+
+.qr-payment-container {
+  max-width: 350px;
+  margin: 0 auto;
+}
+
+.qr-code-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.payment-status {
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.modal-content {
+  border: none;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.modal-header {
+  background: linear-gradient(135deg, #0099cc 0%, #0077cc 100%);
+  color: white;
+  border-radius: 0.375rem 0.375rem 0 0;
+}
+
+.modal-header .btn-close {
+  filter: invert(1);
+}
+
+.modal-title {
+  color: white;
+}
+
+.modal-backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+@media (max-width: 768px) {
+  .qr-code-wrapper {
+    max-width: 250px;
+  }
+}
+:host-context(body) {
+  overflow: hidden;
+}
+.modal-open {
+  overflow: hidden !important;
+  padding-right: 0 !important;
+}
+
+.modal-dialog {
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+/* Evitar que el contenido del modal se desborde */
+.modal-body {
+  max-height: calc(90vh - 120px);
+  overflow-y: auto;
+}
+.btn-primary {
+  background-color: #0099cc !important;
+  border-color: #0099cc !important;
+}
+
+.btn-primary:hover {
+  background-color: #0077cc !important;
+  border-color: #0077cc !important;
+}
+
+.text-primary {
+  color: #0099cc !important;
+}

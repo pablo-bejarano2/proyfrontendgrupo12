@@ -228,8 +228,12 @@
                   </span>
                 </td>
                 <td>
-                  {{ pedido.direccion.calle }}, {{ pedido.direccion.ciudad }},
-                  {{ pedido.direccion.provincia }}
+                  <ng-container *ngIf="pedido.direccion && typeof pedido.direccion === 'object'; else sinDireccion">
+                    {{ pedido.direccion.calle }}, {{ pedido.direccion.ciudad }}
+                  </ng-container>
+                  <ng-template #sinDireccion>
+                    Dirección no disponible
+                  </ng-template>
                 </td>
                 <td>{{ pedido.metodoPago }}</td>
                 <td>${{ pedido.total }}</td>

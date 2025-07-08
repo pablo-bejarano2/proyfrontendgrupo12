@@ -5,7 +5,6 @@ import { switchMap, takeWhile } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { ToastrService } from 'ngx-toastr';
 import { QRCodeComponent } from 'angularx-qrcode';
-import { CurrencyPipe } from '@angular/common';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -14,7 +13,6 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./qr-payment.css'],
   standalone: true,
   imports: [
-    CurrencyPipe,
     QRCodeComponent,
     CommonModule
   ]
@@ -22,9 +20,10 @@ import { CommonModule } from '@angular/common';
 export class QrPayment {
   @Input() amount!: number;
   @Input() description!: string;
-  @Output() pagoExitoso = new EventEmitter<any>();
-  @Output() pagoFallido = new EventEmitter<any>();
+  @Output() paymentSuccess = new EventEmitter<any>();
+  @Output() paymentFailure = new EventEmitter<any>();
   qrDataString: string | null = null;
+  window = window;
   isLoading = true;
   isPolling = false;
   statusMessage = 'Esperando pago...';
@@ -35,6 +34,7 @@ export class QrPayment {
   constructor(private http: HttpClient, private toastr: ToastrService) {}
 
   ngOnInit() {
+    this.statusMessage=''
     this.generateDynamicQR(this.amount, this.description);
   }
 
@@ -55,7 +55,8 @@ export class QrPayment {
       },
       error: (error: any) => {
         this.toastr.error('No pudimos generar el código QR en este momento.', 'Error de Pago');
-        this.pagoFallido.emit(error);
+        this.paymentFailure.emit(error);
+        this.isLoading = false;
       }
     });
   }
@@ -66,7 +67,7 @@ export class QrPayment {
 
   startPaymentVerification(externalReference: string) {
     this.paymentState = 'polling';
-    this.statusMessage = 'Esperando pago...';
+    this.statusMessage=''
     this.isPolling = true;
     this.verificationActive = true;
 
@@ -80,22 +81,29 @@ export class QrPayment {
           if (response.payment_status === 'approved') {
             this.statusMessage = '¡Pago Aprobado!';
             this.paymentState = 'approved';
-            this.onPaymentSuccess(response);
+            this.paymentSuccess.emit(response); // Cambiado de pagoExitoso a paymentSuccess
             this.stopPolling();
           } else if (response.payment_status === 'rejected') {
             this.paymentState = 'rejected';
             this.statusMessage = 'Pago Rechazado. Intenta de nuevo.';
-            this.onPaymentFailure(response);
+            this.paymentFailure.emit(response); // Cambiado de pagoFallido a paymentFailure
             this.stopPolling();
           }
         },
         error: (error) => {
           this.toastr.error('Error al verificar el estado del pago.', 'Error');
-          this.pagoFallido.emit(error);
+          this.paymentFailure.emit(error); // Cambiado de pagoFallido a paymentFailure
         }
       });
 
     setTimeout(() => this.stopPolling(), 300000);
+  }
+  reintentar() {
+    this.paymentState = 'polling';
+    this.statusMessage = 'Esperando pago...';
+    this.isLoading = true;
+    this.qrDataString = null;
+    this.generateDynamicQR(this.amount, this.description);
   }
 
   stopPolling() {
@@ -108,18 +116,10 @@ export class QrPayment {
   cancelarPago() {
     this.stopPolling();
     this.paymentState = 'cancelled';
-    this.pagoFallido.emit({ message: 'Pago cancelado por el usuario' });
+    this.paymentFailure.emit({ message: 'Pago cancelado por el usuario' }); // Cambiado de pagoFallido a paymentFailure
   }
 
   ngOnDestroy() {
     this.stopPolling();
-  }
-
-  onPaymentSuccess(paymentData: any) {
-    this.pagoExitoso.emit(paymentData);
-  }
-
-  onPaymentFailure(paymentData: any) {
-    this.pagoFallido.emit(paymentData);
   }
 }

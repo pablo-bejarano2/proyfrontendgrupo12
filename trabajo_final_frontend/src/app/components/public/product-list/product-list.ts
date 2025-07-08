@@ -72,20 +72,37 @@ export class ProductList implements OnInit {
 
   loadProducts() {
     if (this.selectedCategory) {
-      // Si hay una categoría seleccionada, cargar productos por categoría
       this.productoService.obtenerProductosPorCategoria(this.selectedCategory).subscribe(
         (productos) => {
-          this.allProducts = productos;
-          this.products = [...productos];
+          if (productos && productos.length > 0) {
+            this.allProducts = productos;
+            this.products = [...productos];
+          } else {
+            // Si la categoría no existe o no tiene productos, mostrar toda la tienda
+            this.productoService.obtenerProductos().subscribe(
+              (all) => {
+                this.allProducts = all;
+                this.products = [...all];
+              }
+            );
+          }
           this.totalProducts = this.products.length;
-
-          // Inicializar filtros con datos de estos productos
           this.colors = this.getAllColors();
           this.categories = this.getAllCategories();
-          this.priceRange.max = Math.max(...productos.map(p => p.precio), 0);
+          this.priceRange.max = Math.max(...this.products.map(p => p.precio), 0);
         },
         (error) => {
-          console.error('Error al obtener productos por categoría:', error);
+          // En caso de error, también mostrar toda la tienda
+          this.productoService.obtenerProductos().subscribe(
+            (all) => {
+              this.allProducts = all;
+              this.products = [...all];
+              this.totalProducts = this.products.length;
+              this.colors = this.getAllColors();
+              this.categories = this.getAllCategories();
+              this.priceRange.max = Math.max(...all.map(p => p.precio), 0);
+            }
+          );
         }
       );
     } else {
@@ -95,13 +112,9 @@ export class ProductList implements OnInit {
           this.allProducts = productos;
           this.products = [...productos];
           this.totalProducts = this.products.length;
-
           this.colors = this.getAllColors();
           this.categories = this.getAllCategories();
           this.priceRange.max = Math.max(...productos.map(p => p.precio), 0);
-        },
-        (error) => {
-          console.error('Error al obtener productos:', error);
         }
       );
     }
@@ -210,5 +223,11 @@ export class ProductList implements OnInit {
       return product.categoria.nombre || 'Productos';
     }
     return 'Productos';
+  }
+  getProductImage(product: any, index: number): string {
+    if (this.hoveredIndex === index && product.imagenes?.length > 1) {
+      return product.imagenes[1];
+    }
+    return product.imagenes[0] || 'assets/images/no-image.jpg';
   }
 }

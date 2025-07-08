@@ -1,4 +1,17 @@
-import { Component, Input, Output, EventEmitter, OnInit, output, SimpleChange, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  OnInit,
+  output,
+  SimpleChange,
+  SimpleChanges,
+  ViewChildren,
+  ViewChild,
+  ElementRef,
+  QueryList
+} from '@angular/core';
 import { FormArray, FormBuilder, FormsModule, Validators } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { Producto } from '../../../services/producto';
@@ -16,6 +29,8 @@ export class ProductoForm implements OnInit {
   @Input() producto: Producto | null = null; // Producto a editar o crear
   @Output() cerrar = new EventEmitter<void>(); // Evento para cerrar el modal y notificar al componente padre
   @Output() guardarForm = new EventEmitter<FormData>(); // Evento para notificar al componente padre cuando se guarda un producto
+  @ViewChildren('inputReemplazo') inputsReemplazo!: QueryList<ElementRef>;
+  @ViewChild('inputAgregarImagen') inputAgregarImagen!: ElementRef<HTMLInputElement>;
   productoForm!: FormGroup;
   categorias: Categoria[] = [];
   imagenesSeleccionadas: File[] = []; // Array para almacenar las imágenes seleccionadas
@@ -70,7 +85,7 @@ export class ProductoForm implements OnInit {
           ? this.producto.categoria._id
           : this.producto.categoria
       });
-  
+
       // Limpiar tallas actuales
       while (this.tallas.length !== 0) {
         this.tallas.removeAt(0);
@@ -107,6 +122,38 @@ export class ProductoForm implements OnInit {
       });
       this.guardarForm.emit(formData); // Emitimos el evento con los datos del formulario
     }
+  }
+  eliminarImagenExistente(index: number) {
+    if (this.producto && this.producto.imagenes) {
+      this.producto.imagenes.splice(index, 1);
+    }
+  }
+  abrirInputReemplazo(index: number) {
+    this.inputsReemplazo.toArray()[index].nativeElement.click();
+  }
+  reemplazarImagen(event: any, index: number) {
+    const file: File = event.target.files[0];
+    if (file) {
+      // Reemplaza la imagen en el array de imágenes seleccionadas para enviar al backend
+      if (this.producto && this.producto.imagenes) {
+        // Opcional: previsualización inmediata
+        const reader = new FileReader();
+        reader.onload = (e: any) => {
+          this.producto!.imagenes[index] = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+      // Guarda el archivo para enviar al backend
+      this.imagenesSeleccionadas[index] = file;
+    }
+  }
+  agregarImagenes(event: any) {
+    const files: FileList = event.target.files;
+    for (let i = 0; i < files.length; i++) {
+      this.imagenesSeleccionadas.push(files[i]);
+    }
+    // Limpiar el input para permitir volver a seleccionar las mismas imágenes si se desea
+    event.target.value = '';
   }
 
   cargarCategorias(): void {

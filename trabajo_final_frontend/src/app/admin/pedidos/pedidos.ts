@@ -42,12 +42,15 @@ export class Pedidos {
       const texto = this.busqueda.trim().toLowerCase();
       pedidosFiltrados = pedidosFiltrados.filter(p =>
         p._id.toLowerCase().includes(texto) ||
-        (p.cliente?.nombres?.toLowerCase().includes(texto)) ||
+        (typeof p.cliente === 'object' && p.cliente?.nombres?.toLowerCase().includes(texto)) ||
         (p.emailCliente?.toLowerCase().includes(texto))
       );
     }
 
     return pedidosFiltrados;
+  }
+  getNombreCliente(cliente?: string | { _id: string; nombres: string }): string {
+    return typeof cliente === 'object' && cliente?.nombres ? cliente.nombres : '-';
   }
 //Crea un nuevo pedido
   crearPedido() {

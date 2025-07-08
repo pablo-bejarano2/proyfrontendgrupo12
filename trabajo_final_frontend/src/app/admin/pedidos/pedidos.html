@@ -29,7 +29,9 @@
                             <span class="badge text-dark" [ngClass]="getBadgeClass(pedido.estado)">{{ pedido.estado ||
                                 'Pendiente' }}</span>
                         </div>
-                        <p class="mb-1"><strong>Cliente:</strong> {{ pedido.cliente?.nombres || '-' }}</p>
+                      <p class="mb-1"><strong>Cliente:</strong>
+                        {{ getNombreCliente(pedido.cliente) }}
+                      </p>
                         <p class="mb-1"><strong>Email:</strong> {{ pedido.emailCliente }}</p>
                         <p class="mb-1"><strong>Fecha:</strong> {{ pedido.fecha | date:'dd/MM/yyyy' }}</p>
                         <p class="mb-2"><strong>Total:</strong> ${{ pedido.total | number:'1.0-0' }}</p>
@@ -67,11 +69,12 @@
                             </div>
                             <div class="col-12 col-md-6">
                                 <span class="badge bg-secondary me-2">Dirección</span>
-                                <span>
-                                    {{ pedido.direccion.calle }}, {{ pedido.direccion.ciudad }},
-                                    {{ pedido.direccion.provincia }}, {{ pedido.direccion.codigoPostal }}
-                                    {{ pedido.transportadora ? 'Transportadora: ' + pedido.transportadora : '' }}
-                                </span>
+                                  <span *ngIf="pedido.direccion && typeof pedido.direccion === 'object'">
+                                    {{ pedido.direccion.calle }}, {{ pedido.direccion.ciudad }}
+                                  </span>
+                                  <span *ngIf="!pedido.direccion || typeof pedido.direccion === 'string'">
+                                    Dirección no disponible
+                                  </span>
                             </div>
                         </div>
                         <div class="mb-2">

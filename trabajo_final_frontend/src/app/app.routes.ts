@@ -19,6 +19,9 @@ import {
   CheckoutComponent
 } from '@/app/components/public/checkout/checkout';
 import { AdminGuard } from './services/admin.guard';
+import {
+  Gracias
+} from '@/app/components/public/gracias/gracias';
 
 
 export const routes: Routes = [
@@ -40,10 +43,12 @@ export const routes: Routes = [
       { path: 'contact', component: ContactComponent },
       { path: 'policy', component: PolicyComponent },
       { path: 'product-list', component: ProductList },
+      { path: 'tienda', component: ProductList },
       { path: 'products/:categoryName', component: ProductList },
       { path: 'home', component: Home },
       { path: 'form', component: Formulario },
       { path: 'cuenta', component: CuentaUsuario },
+      { path: 'gracias/:id', component: Gracias },
     ]
   },
   // Admin routes

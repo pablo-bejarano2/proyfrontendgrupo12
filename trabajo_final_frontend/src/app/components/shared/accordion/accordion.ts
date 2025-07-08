@@ -14,6 +14,7 @@ import {
 @Directive({ selector: 'ng-template[accordionItem]' })
 export class AccordionItemDirective {
   @Input() title!: string;
+  @Input () expanded!: boolean;
   constructor(public _template: TemplateRef<any>) {}
 }
 export interface AccordionItem{

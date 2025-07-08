@@ -97,13 +97,35 @@
               <input type="number" class="form-control" placeholder="Máx" [(ngModel)]="priceRange.max" (change)="onFilterChange()" min="0">
             </div>
           </ng-template>
-          <ng-template accordionItem title="Categoría">
-            <select class="form-select" [(ngModel)]="selectedCategory" (change)="onFilterChange()">
-              <option value="">Todas</option>
+          <ng-template accordionItem title="Categoría" [expanded]="true">
+            <div class="category-list">
+              <div class="form-check mb-2">
+                <input class="form-check-input"
+                       type="radio"
+                       name="category"
+                       id="category-todas"
+                       value=""
+                       [(ngModel)]="selectedCategory"
+                       (change)="onFilterChange()">
+                <label class="form-check-label" for="category-todas">
+                  Todas
+                </label>
+              </div>
               @for (category of categories; track category) {
-                <option [value]="category">{{ category | titlecase }}</option>
+                <div class="form-check mb-2">
+                  <input class="form-check-input"
+                         type="radio"
+                         name="category"
+                         [id]="'category-' + category"
+                         [value]="category"
+                         [(ngModel)]="selectedCategory"
+                         (change)="onFilterChange()">
+                  <label class="form-check-label" [for]="'category-' + category">
+                    {{ category | titlecase }}
+                  </label>
+                </div>
               }
-            </select>
+            </div>
           </ng-template>
         </app-accordion>
       </div>
@@ -168,7 +190,7 @@
                  style="cursor: pointer;">
               <div class="product-image-container">
                 <!-- Usar la imagen del producto o una imagen por defecto -->
-                <img [src]="product.imagenes[0] || 'assets/images/no-image.jpg'"
+                <img [src]="getProductImage(product, i)"
                      class="card-img-top product-image"
                      [alt]="product.nombre">
               </div>
@@ -176,18 +198,17 @@
                 <div class="product-content" [class.opacity-0]="hoveredIndex === i">
                   <h5 class="card-title product-name">{{ product.nombre }}</h5>
                   <p class="card-text product-price">${{ product.precio }}</p>
-                  @if (product.categoria) {
-                    <p class="card-text product-category">
-                      {{ getCategoriaNombre(product) }}
-                    </p>
-                  }
                 </div>
                 <div class="product-hover position-absolute top-50 start-50 translate-middle w-100"
                      [class.opacity-0]="hoveredIndex !== i">
-                  <h6 class="text-muted mb-2">Detalles</h6>
-                  <p class="mb-1">Color: {{ product.color }}</p>
-                  <p class="mb-1">Stock: {{ getStockTotal(product) }}</p>
-                  <p class="mb-0">{{ product.descripcion }}</p>
+                  <div *ngIf="product.tallas?.length; else noTalles">
+                    <span *ngFor="let talla of product.tallas; let last = last">
+                      {{ talla.talla }}<span *ngIf="!last">, </span>
+                    </span>
+                  </div>
+                  <ng-template #noTalles>
+                    <span class="text-muted">Sin talles</span>
+                  </ng-template>
                 </div>
               </div>
             </div>

@@ -18,6 +18,9 @@ import { ErrorPage } from './components/public/error-page/error-page';
 import {
   CheckoutComponent
 } from '@/app/components/public/checkout/checkout';
+import {
+  Gracias
+} from '@/app/components/public/gracias/gracias';
 
 
 export const routes: Routes = [
@@ -44,6 +47,7 @@ export const routes: Routes = [
       { path: 'home', component: Home },
       { path: 'form', component: Formulario },
       { path: 'cuenta', component: CuentaUsuario },
+      { path: 'gracias/:id', component: Gracias },
     ]
   },
   // Admin routes

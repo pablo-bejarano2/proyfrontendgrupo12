@@ -25,13 +25,13 @@ export class Pedidos {
   ngOnInit() {
     this.obtenerPedidos();
   }
-
+// Obtiene los pedidos al iniciar el componente
   obtenerPedidos() {
     this.pedidoService.getPedidos().subscribe(pedidos => {
       this.pedidos = pedidos;
     });
   }
-
+//Filtra los pedidos según el estado y la búsqueda
   filtrarPedidos() {
     let pedidosFiltrados = this.pedidos;
 
@@ -49,8 +49,9 @@ export class Pedidos {
 
     return pedidosFiltrados;
   }
-
+//Crea un nuevo pedido
   crearPedido() {
+    //Validación del formulario
     if (!this.nuevoPedido.cliente || !this.nuevoPedido.items || !this.nuevoPedido.total) {
       this.mensajeError = 'Por favor, complete todos los campos obligatorios.';
       setTimeout(() => this.mensajeError = null, 4000);
@@ -70,6 +71,7 @@ export class Pedidos {
       }
     );
   }
+  //Edita un pedido
   editarPedido(pedido: Pedido) {
     this.pedidoEditado = { ...pedido };
     if (!this.pedidoEditado.cupon) {
@@ -84,6 +86,7 @@ export class Pedidos {
       }
     });
   }
+  //Elimina un pedido
   eliminarPedido(pedido: Pedido) {
     if (!pedido._id) return;
     this.pedidoService.deletePedido(pedido._id).subscribe(
@@ -100,13 +103,15 @@ export class Pedidos {
     );
   }
 
-
+//Actualiza un pedido
   actualizarPedido(formEditar?: NgForm) {
+    // Validación del formulario
     if (formEditar && formEditar.invalid) {
       this.mensajeError = 'Por favor, complete todos los campos obligatorios.';
       setTimeout(() => this.mensajeError = null, 4000);
       return;
     }
+    // Verifica que el pedido editado tenga un ID
     if (!this.pedidoEditado || !this.pedidoEditado._id) return;
     this.pedidoService.updatePedido(this.pedidoEditado._id, this.pedidoEditado).subscribe(
       (pedidoActualizado) => {
@@ -134,7 +139,7 @@ export class Pedidos {
       }
     );
   }
-
+// Expande o contrae un pedido
   toggleExpandirPedido(pedidoId: string) {
     if (this.pedidosExpandidos.has(pedidoId)) {
       this.pedidosExpandidos.delete(pedidoId);
@@ -142,7 +147,7 @@ export class Pedidos {
       this.pedidosExpandidos.add(pedidoId);
     }
   }
-
+// Obtiene la clase CSS para el estado del pedido
   getEstadoClass(estado: string): string {
     switch ((estado || '').toLowerCase()) {
       case 'pendiente': return 'border-warning bg-light';
@@ -151,6 +156,7 @@ export class Pedidos {
       default: return 'border-secondary bg-light';
     }
   }
+  //Obtiene la clase CSS para el badge del estado del pedido
   getBadgeClass(estado: string): string {
     switch ((estado || '').toLowerCase()) {
       case 'pendiente': return 'bg-warning text-dark';
@@ -159,7 +165,7 @@ export class Pedidos {
       default: return 'bg-secondary text-white';
     }
   }
-
+// Marca un pedido como enviado o pendiente
   marcarEnviado(pedido: Pedido) {
     const nuevoEstado = pedido.estado === 'enviado' ? 'pendiente' : 'enviado';
     this.pedidoService.updatePedido(pedido._id, { ...pedido, estado: nuevoEstado }).subscribe(
@@ -176,6 +182,7 @@ export class Pedidos {
       }
     );
   }
+  // Marca un pedido como cancelado o pendiente
   marcarCancelado(pedido: Pedido) {
     const nuevoEstado = pedido.estado === 'cancelado' ? 'pendiente' : 'cancelado';
     this.pedidoService.updatePedido(pedido._id, { ...pedido, estado: nuevoEstado }).subscribe(

@@ -7,18 +7,16 @@ import {
   Validators
 } from '@angular/forms';
 import { ItemPedidoService } from 'src/app/services/item-pedido';
-import { DireccionService} from '@/app/services/direccion';
+import { DireccionService } from '@/app/services/direccion';
 import { CuponService } from 'src/app/services/cupon/cupon';
-import { PedidoService, Pedido } from 'src/app/services/pedido';
+import { PedidoService } from 'src/app/services/pedido';
 import { MisValidadores } from '../../../validadores/mis-validadores';
-import { QrPayment} from '@/app/components/public/qr-payment/qr-payment';
+import { QrPayment } from '@/app/components/public/qr-payment/qr-payment';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { firstValueFrom }  from 'rxjs';
-import { CodigoPostalService, LocalidadCP} from '@/app/services/codigo-postal';
-import {
-  NgClass
-} from '@angular/common';
+import { firstValueFrom } from 'rxjs';
+import { CodigoPostalService, LocalidadCP } from '@/app/services/codigo-postal';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-checkout',
@@ -43,60 +41,11 @@ export class CheckoutComponent implements OnInit {
   descuento = 0;
   public mostrarQR = false;
   public descuentoPorcentaje = 0;
-  public pagoCompletado=false;
+  public pagoCompletado = false;
   codigoPostal: string = '';
   localidades: LocalidadCP[] = [];
   provinciaSeleccionada: string = '';
   localidadSeleccionada: string = '';
-
-  pagarConQR() {
-    if (this.checkoutForm.invalid) {
-      this.mostrarCamposFaltantes();
-      return;
-    }
-
-    this.mostrarQR = true;
-    document.body.classList.add('modal-open');
-    setTimeout(() => {
-      document.body.classList.add('modal-open');
-      document.body.style.overflow = 'hidden';
-      document.body.style.paddingRight = '0px';
-    }, 10);
-  }
-  mostrarCarritoVacio() {
-    this.toastr.warning('Tu carrito está vacío', 'No hay productos');
-    this.router.navigate(['/tienda']);
-  }
-  mostrarCamposFaltantes() {
-    const campos = [
-      { key: 'fullName', nombre: 'Nombre completo' },
-      { key: 'address', nombre: 'Dirección' },
-      { key: 'zip', nombre: 'Código postal' },
-      { key: 'localidad', nombre: 'Localidad' },
-      { key: 'email', nombre: 'Email' }
-    ];
-
-    const camposFaltantes = campos
-      .filter(campo => this.checkoutForm.get(campo.key)?.invalid)
-      .map(campo => campo.nombre);
-
-    if (camposFaltantes.length > 0) {
-      this.toastr.warning(
-        `Completa los siguientes campos: ${camposFaltantes.join(', ')}`,
-        'Formulario incompleto'
-      );
-    }
-  }
-  // En tu CheckoutComponent
-  verEstadoFormulario() {
-    console.log(this.checkoutForm.status); // 'VALID' o 'INVALID'
-    console.log(this.checkoutForm.errors); // Errores generales
-    console.log(this.checkoutForm.value);  // Valores actuales
-    Object.keys(this.checkoutForm.controls).forEach(key => {
-      const control = this.checkoutForm.get(key);
-      console.log(key, control?.status, control?.errors);
-    });
-  }
 
   constructor(
     private fb: FormBuilder,
@@ -131,10 +80,78 @@ export class CheckoutComponent implements OnInit {
       ]]
     });
   }
+
+  ngOnInit() {
+    this.checkoutForm.patchValue({
+      fullName: `${sessionStorage.getItem('nombres') || ''} ${sessionStorage.getItem('apellido') || ''}`,
+      email: sessionStorage.getItem('email') || '',
+    });
+    this.itemPedidoService.cartItems$.subscribe(items => {
+      this.cartItems = items;
+      if (items.length === 0) {
+        setTimeout(() => {
+          this.mostrarCarritoVacio();
+        }, 300);
+      } else {
+        this.calcularTotales();
+      }
+    });
+  }
+
+  pagarConQR() {
+    if (this.checkoutForm.invalid) {
+      this.mostrarCamposFaltantes();
+      return;
+    }
+    this.mostrarQR = true;
+    document.body.classList.add('modal-open');
+    setTimeout(() => {
+      document.body.classList.add('modal-open');
+      document.body.style.overflow = 'hidden';
+      document.body.style.paddingRight = '0px';
+    }, 10);
+  }
+  irATienda() {
+    this.router.navigate(['/tienda']);
+  }
+  mostrarCarritoVacio() {
+    this.toastr.warning('Tu carrito está vacío', 'No hay productos');
+  }
+
+  mostrarCamposFaltantes() {
+    const campos = [
+      { key: 'fullName', nombre: 'Nombre completo' },
+      { key: 'address', nombre: 'Dirección' },
+      { key: 'zip', nombre: 'Código postal' },
+      { key: 'localidad', nombre: 'Localidad' },
+      { key: 'email', nombre: 'Email' }
+    ];
+    const camposFaltantes = campos
+      .filter(campo => this.checkoutForm.get(campo.key)?.invalid)
+      .map(campo => campo.nombre);
+    if (camposFaltantes.length > 0) {
+      this.toastr.warning(
+        `Completa los siguientes campos: ${camposFaltantes.join(', ')}`,
+        'Formulario incompleto'
+      );
+    }
+  }
+
+  verEstadoFormulario() {
+    console.log(this.checkoutForm.status);
+    console.log(this.checkoutForm.errors);
+    console.log(this.checkoutForm.value);
+    Object.keys(this.checkoutForm.controls).forEach(key => {
+      const control = this.checkoutForm.get(key);
+      console.log(key, control?.status, control?.errors);
+    });
+  }
+
   camposEnvioValidos(): boolean {
     const campos = ['fullName', 'address', 'localidad', 'zip', 'email'];
     return campos.every(campo => this.checkoutForm.get(campo)?.valid);
   }
+
   onPaymentSuccess(paymentData: any) {
     this.pagoCompletado = true;
     this.mostrarQR = false;
@@ -153,25 +170,10 @@ export class CheckoutComponent implements OnInit {
     this.toastr.error(message, 'Pago Fallido');
   }
 
-  ngOnInit() {
-    this.checkoutForm.patchValue({
-      fullName: `${sessionStorage.getItem('nombres') || ''} ${sessionStorage.getItem('apellido') || ''}`,
-      email: sessionStorage.getItem('email') || '',
-    });
-    this.itemPedidoService.cartItems$.subscribe(items => {
-      this.cartItems = items;
-      if (items.length === 0) {
-        setTimeout(() => {
-          this.mostrarCarritoVacio();
-        }, 300);
-      } else {
-        this.calcularTotales();
-      }
-    });
-  }
   trackByItem(index: number, item: any): any {
     return item?.id || index;
   }
+
   calcularTotales() {
     this.subtotal = this.cartItems.reduce((acc, item) => acc + (item.producto.precio * item.cantidad), 0);
     this.tax = Math.round(this.subtotal * 0.07);
@@ -213,7 +215,13 @@ export class CheckoutComponent implements OnInit {
       return;
     }
 
-    const checkoutData = {
+    const itemsParaBackend = this.cartItems.map(item => ({
+      producto: item.producto._id,
+      cantidad: item.cantidad,
+      talla: item.talla
+    }));
+
+    const checkoutData: any = {
       email: this.checkoutForm.value.email,
       direccion: {
         calle: this.checkoutForm.value.address,
@@ -221,34 +229,33 @@ export class CheckoutComponent implements OnInit {
         provincia: this.provinciaSeleccionada,
         codigoPostal: this.checkoutForm.value.zip
       },
-      items: this.cartItems,
+      items: itemsParaBackend,
       total: this.total,
       cuponCode: this.couponCode
     };
 
     try {
-      console.log('Enviando datos de pedido:', JSON.stringify(checkoutData));
       const pedido = await firstValueFrom(this.pedidoService.crearPedidoCompleto(checkoutData));
-      console.log('Pedido creado:', pedido);
       this.toastr.success('Pedido creado con éxito', 'Éxito');
       this.itemPedidoService.clearCart();
       this.router.navigate(['/gracias', pedido._id]);
     } catch (error: any) {
-      console.error('Error al crear pedido:', error);
       this.toastr.error(
         error.error?.msg || error.message || 'Error desconocido al crear el pedido',
         'Error'
       );
     }
   }
+
   onPagoFallido(error?: any) {
-      this.mostrarQR = false;
-      let message = 'El pago fue cancelado o falló. Por favor, intenta de nuevo.';
-      if (error?.message) {
-        message = error.message;
-      }
-      this.toastr.error(message, 'Pago Fallido');
+    this.mostrarQR = false;
+    let message = 'El pago fue cancelado o falló. Por favor, intenta de nuevo.';
+    if (error?.message) {
+      message = error.message;
+    }
+    this.toastr.error(message, 'Pago Fallido');
   }
+
   buscarCodigoPostal() {
     const codigoPostal = this.checkoutForm.get('zip')?.value;
     if (codigoPostal?.length === 4) {
@@ -257,8 +264,6 @@ export class CheckoutComponent implements OnInit {
           this.localidades = data;
           if (data.length > 0) {
             this.provinciaSeleccionada = data[0].provincia;
-
-            // Limpiamos el campo de localidad para que el usuario seleccione una
             this.checkoutForm.get('localidad')?.setValue('');
           } else {
             this.toastr.warning('No se encontraron localidades para este código postal', 'Advertencia');

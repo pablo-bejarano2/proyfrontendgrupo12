@@ -150,7 +150,6 @@ export class Formulario implements OnInit {
       .subscribe({
         next: (result) => {
           this.guardarUsuarioEnStorage(result);
-          this.toastr.success(result.msg);
           this.formUsuario.reset();
           this.router.navigate([this.returnUrl]);
         },

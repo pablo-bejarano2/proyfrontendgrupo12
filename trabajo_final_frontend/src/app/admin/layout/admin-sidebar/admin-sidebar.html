@@ -5,25 +5,53 @@
   <nav>
     <ul class="sidebar-nav list-unstyled nav flex-column">
       <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-        <a [routerLink]="['/admin']" class="nav-link d-block py-2"><i class="fas fa-chart-line me-2"></i> Dashboard</a>
+        <a [routerLink]="['/admin']" class="nav-link d-block py-2"
+          ><i class="fas fa-chart-line me-2"></i> Dashboard</a
+        >
       </li>
       <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-        <a [routerLink]="['/']" class="nav-link d-block py-2"><i class="fas fa-store me-2"></i> Tienda</a>
+        <a [routerLink]="['/home']" class="nav-link d-block py-2">
+          <i class="fas fa-home me-2"></i> Inicio
+        </a>
       </li>
-      <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: false }">
-        <a [routerLink]="['/admin/products']" class="nav-link d-block py-2"><i class="fas fa-tshirt me-2"></i> Productos</a>
+
+      <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+        <a [routerLink]="['/']" class="nav-link d-block py-2"
+          ><i class="fas fa-store me-2"></i> Tienda</a
+        >
       </li>
-      <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: false }">
-        <a [routerLink]="['/admin/users']" class="nav-link d-block py-2"><i class="fas fa-users me-2"></i> Usuarios</a>
+      <li
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: false }"
+      >
+        <a [routerLink]="['/admin/products']" class="nav-link d-block py-2"
+          ><i class="fas fa-tshirt me-2"></i> Productos</a
+        >
       </li>
-      <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: false }">
-        <a [routerLink]="['/admin/orders']" class="nav-link d-block py-2"><i class="fas fa-shopping-cart me-2"></i> Pedidos</a>
+      <li
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: false }"
+      >
+        <a [routerLink]="['/admin/users']" class="nav-link d-block py-2"
+          ><i class="fas fa-users me-2"></i> Usuarios</a
+        >
       </li>
-      <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: false }">
-        <a [routerLink]="['/admin/coupons']" class="nav-link d-block py-2"><i class="fas fa-ticket-alt me-2"></i> Cupones</a>
+      <li
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: false }"
+      >
+        <a [routerLink]="['/admin/orders']" class="nav-link d-block py-2"
+          ><i class="fas fa-shopping-cart me-2"></i> Pedidos</a
+        >
+      </li>
+      <li
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: false }"
+      >
+        <a [routerLink]="['/admin/coupons']" class="nav-link d-block py-2"
+          ><i class="fas fa-ticket-alt me-2"></i> Cupones</a
+        >
       </li>
     </ul>
-
-
   </nav>
 </aside>

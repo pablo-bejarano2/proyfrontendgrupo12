@@ -45,47 +45,51 @@ export class AddToCart implements OnInit {
     return item._id || index;
   }
 
-  increaseQuantity(item: ItemPedido): void {
-    if (!item._id) {
-      console.error('Item ID is required');
-      return;
-    }
-    const stockDisponible = item.producto.tallas?.find((t: any) => t.talla === item.talla)?.stock ?? 0;
-    if (item.cantidad >= stockDisponible) {
-      console.warn('No hay más stock disponible para este producto y talla');
-      return;
-    }
-    this.itemProductService.updateQuantity(
-      item._id,
-      item.cantidad + 1
-    );
-  }
 
+increaseQuantity(item: ItemPedido): void {
+   if (!item._id) return;
+   const stockDisponible = item.producto.tallas?.find((t: any) => t.talla === item.talla)?.stock ?? 0;
+   if (item.cantidad >= stockDisponible) return;
+
+   this.itemProductService.updateItemPedido(item._id, { cantidad: item.cantidad + 1 }).subscribe({
+     next: (updatedItem) => {
+       if (updatedItem && updatedItem._id) {
+         this.itemProductService.updateQuantityLocal(updatedItem._id, updatedItem.cantidad);
+       }
+     },
+     error: (err) => {
+       console.error('Error actualizando cantidad en backend:', err);
+     }
+   });
+ }
   decreaseQuantity(item: ItemPedido): void {
-    if (!item._id) {
-      console.error('Item ID is required');
-      return;
-    }
+    if (!item._id) return;
     if (item.cantidad <= 1) {
       this.removeItem(item);
       return;
     }
-    try {
-      this.itemProductService.updateQuantity(
-        item._id,
-        item.cantidad - 1
-      );
-    } catch (error) {
-      console.error('Error updating quantity:', error);
-    }
+    this.itemProductService.updateItemPedido(item._id, { cantidad: item.cantidad - 1 }).subscribe({
+      next: (updatedItem) => {
+        if (updatedItem && updatedItem._id) {
+          this.itemProductService.updateQuantityLocal(updatedItem._id, updatedItem.cantidad);
+        }
+      },
+      error: (err) => {
+        console.error('Error actualizando cantidad en backend:', err);
+      }
+    });
   }
 
   removeItem(item: ItemPedido): void {
-    if (!item._id) {
-      console.error('Item ID is required for removal');
-      return;
-    }
-    this.itemProductService.removeItem(item._id);
+    if (!item._id) return;
+    this.itemProductService.deleteItemPedido(item._id as string).subscribe({
+      next: () => {
+        this.itemProductService.removeItem(item._id as string);
+      },
+      error: (err) => {
+        console.error('Error eliminando item en backend:', err);
+      }
+    });
   }
 
   proceedToCheckout(): void {
@@ -154,7 +158,6 @@ export class AddToCart implements OnInit {
   getProductInfo(item: ItemPedido): string {
     const info = [];
     if (item.talla) info.push(`Talla: ${item.talla}`);
-    if (item.color) info.push(`Color: ${item.color}`);
     return info.join(' | ');
   }
 

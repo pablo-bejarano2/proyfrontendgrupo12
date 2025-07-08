@@ -6,6 +6,4 @@ export interface ItemPedido {
   cantidad: number;
   subtotal: number;
   talla: string;
-  precio_unitario: number;
-  color?: string;
 }

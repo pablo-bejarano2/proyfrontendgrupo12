@@ -66,9 +66,14 @@ export class Productos implements OnInit {
           this.toastr.success('Producto actualizado con éxito');
           this.cerrarModal();
         },
-        error: () => {
+        error: (error) => {
+        // Mostrar mensaje específico si viene del backend
+        if (error?.error?.msg) {
+          this.toastr.error(error.error.msg);
+        } else {
           this.toastr.error('Error al actualizar el producto');
         }
+      }
       });
 
     } else {
@@ -79,9 +84,14 @@ export class Productos implements OnInit {
           this.toastr.success('Producto creado con éxito');
           this.cerrarModal();
         },
-        error: () => {
-          this.toastr.error('Error al crear el producto');
+         error: (error) => {
+        // Mostrar mensaje específico si viene del backend
+        if (error?.error?.msg) {
+          this.toastr.error(error.error.msg);
+        } else {
+          this.toastr.error('Error al actualizar el producto');
         }
+      }
       });
     }
   }

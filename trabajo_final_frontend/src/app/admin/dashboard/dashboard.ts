@@ -10,7 +10,7 @@ import { DashboardService } from '@/app/services/dashboardService';
   styleUrls: ['./dashboard.css']
 })
 export class Dashboard implements OnInit {
-  // Etiquetas para los últimos 7 días (puedes personalizar para mostrar fechas reales si lo deseas)
+  // Etiquetas para los últimos 7 días
   diasLabels: string[] = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
 
   usuariosData = { labels: this.diasLabels, datasets: [{ data: [] as number[], label: 'Usuarios nuevos' }] };

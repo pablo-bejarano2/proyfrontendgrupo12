@@ -67,8 +67,16 @@ export class ItemPedidoService {
     );
   }
 
-  // Solo elimina localmente
+  //
   removeItem(id: string) {
+    this.deleteItemPedido(id).subscribe({
+      next: () => {
+        this.removeItem(id);
+      },
+  error: (err) => {
+    console.error('Error eliminando producto del backend:', err);
+  }
+});
     const items = this.cartItemsSubject.value.filter(item => item._id !== id);
     this.cartItemsSubject.next(items);
     this.saveCartToStorage(items);

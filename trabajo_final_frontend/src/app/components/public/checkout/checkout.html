@@ -1,128 +1,19 @@
 <div class="container py-5">
   <div class="row">
-    <!-- Columna Formulario -->
-    <div class="col-md-7">
-      <h2>Checkout</h2>
-      <form [formGroup]="checkoutForm" (ngSubmit)="finalizarPedido()">
-        <h4>Información de envío</h4>
-        <div class="mb-3">
-          <label>Nombre completo</label>
-          <input class="form-control" formControlName="fullName" required>
-          @if (checkoutForm.get('fullName')?.touched && checkoutForm.get('fullName')?.invalid) {
-            <div class="text-danger small">
-              @if (checkoutForm.get('fullName')?.errors?.['required']) {
-                <div>El nombre es obligatorio.</div>
-              }
-              @if (checkoutForm.get('fullName')?.errors?.['minlength']) {
-                <div>Debe tener al menos 3 caracteres.</div>
-              }
-              @if (checkoutForm.get('fullName')?.errors?.['pattern']) {
-                <div>Solo letras y espacios.</div>
-              }
-              @if (checkoutForm.get('fullName')?.errors?.['sinPrimerLetraMayuscula']) {
-                <div>La primera letra debe ser mayúscula.</div>
-              }
-            </div>
-          }
+    <!-- Columna Formulario de Checkout -->
+    <div class="col-md-7 form-checkout">
+      <div class="whatsapp-banner mb-4">
+        <span class="whatsapp-banner__icon">
+          <i class="fab fa-whatsapp"></i>
+        </span>
+        <div class="whatsapp-banner__text">
+          <h2 class="mb-2">Para continuar tocá el botón para redirigirte al whatsapp de OversizeX</h2>
+          <p class="mb-1"><strong>Confirma el pago con un encargado de ventas a través de WhatsApp.</strong></p>
+          <p class="mb-0"><strong>Se enviará un mensaje con un resumen de tu pedido!</strong></p>
         </div>
-        <div class="mb-3">
-          <label>Dirección</label>
-          <input class="form-control" formControlName="address" required>
-          @if (checkoutForm.get('address')?.touched && checkoutForm.get('address')?.invalid) {
-            <div class="text-danger small">
-              @if (checkoutForm.get('address')?.errors?.['required']) {
-                <div>La dirección es obligatoria.</div>
-              }
-              @if (checkoutForm.get('address')?.errors?.['minlength']) {
-                <div>Debe tener al menos 5 caracteres.</div>
-              }
-            </div>
-          }
-        </div>
+        <button class="whatsapp-banner__button"><i class="fab fa-whatsapp"></i> Contactar por WhatsApp</button>
+      </div>
 
-        <!-- Sección de Código Postal y Provincia -->
-        <div class="row mb-3">
-          <div class="col-md-6">
-            <label>Código postal</label>
-            <div class="input-group">
-              <input class="form-control" formControlName="zip" required
-                     (blur)="buscarCodigoPostal()">
-              <button class="btn btn-outline-secondary" type="button"
-                      (click)="buscarCodigoPostal()">
-                <i class="fas fa-search"></i>
-              </button>
-            </div>
-            @if (checkoutForm.get('zip')?.touched && checkoutForm.get('zip')?.invalid) {
-              <div class="text-danger small">
-                @if (checkoutForm.get('zip')?.errors?.['required']) {
-                  <div>El código postal es obligatorio.</div>
-                }
-                @if (checkoutForm.get('zip')?.errors?.['pattern']) {
-                  <div>Formato inválido. Debe tener entre 4 y 10 dígitos.</div>
-                }
-              </div>
-            }
-          </div>
-          <div class="col-md-6">
-            <label>Provincia</label>
-            <input class="form-control" [value]="provinciaSeleccionada" readonly>
-          </div>
-        </div>
-
-        <div class="row mb-3">
-          <!-- Eliminar el input de ciudad y modificar la validación del select de localidad -->
-          <div class="col-md-6">
-            <label>Localidad</label>
-            <select class="form-control" formControlName="localidad" required>
-              <option value="">Seleccione una localidad</option>
-              @for (loc of localidades; track loc.localidad) {
-                <option [value]="loc.localidad">{{loc.localidad}}</option>
-              }
-            </select>
-            @if (checkoutForm.get('localidad')?.touched && checkoutForm.get('localidad')?.invalid) {
-              <div class="text-danger small">
-                <div>Seleccione una localidad.</div>
-              </div>
-            }
-          </div>
-        </div>
-
-        <div class="mb-3 mt-3">
-          <label>Email</label>
-          <input type="email" class="form-control" formControlName="email" required>
-          @if (checkoutForm.get('email')?.touched && checkoutForm.get('email')?.invalid) {
-            <div class="text-danger small">
-              @if (checkoutForm.get('email')?.errors?.['required']) {
-                <div>El email es obligatorio.</div>
-              }
-              @if (checkoutForm.get('email')?.errors?.['email']) {
-                <div>Formato de email inválido.</div>
-              }
-              @if (checkoutForm.get('email')?.errors?.['emailInvalido']) {
-                <div>Email inválido. Debe tener un dominio válido.</div>
-              }
-            </div>
-          }
-        </div>
-
-        <!-- Sección de pago QR -->
-        <h4>Método de pago</h4>
-
-        <!-- Botón de pago QR -->
-        <button type="button"
-                class="btn btn-primary w-100"
-                [disabled]="!camposEnvioValidos()"
-                (click)="pagarConQR()">
-          <i class="fas fa-qrcode me-2"></i> Pagar con QR
-        </button>
-
-        <!-- Botón de finalizar pedido (solo aparece cuando el pago está completado) -->
-        @if (pagoCompletado) {
-          <button type="submit" class="btn btn-success w-100 mt-3">
-            <i class="fas fa-check-circle me-2"></i> Finalizar pedido
-          </button>
-        }
-      </form>
     </div>
 
     <!-- Columna Resumen Carrito -->
@@ -163,19 +54,6 @@
               }
             </div>
           }
-          <!-- Cupón -->
-          <div class="mb-3">
-            <label>¿Tienes un cupón?</label>
-            <div class="input-group">
-              <input type="text" class="form-control" [(ngModel)]="couponCode" [ngModelOptions]="{standalone: true}">
-              <button class="btn btn-outline-secondary" type="button" (click)="applyCoupon()">Aplicar</button>
-            </div>
-            @if (couponMessage) {
-              <div class="small mt-1" [ngClass]="{'text-success': descuento > 0, 'text-danger': descuento === 0}">
-                {{couponMessage}}
-              </div>
-            }
-          </div>
 
           <!-- Totales -->
           <div class="mt-4">
@@ -203,26 +81,3 @@
     </div>
   </div>
 </div>
-
-<!-- Modal de pago QR -->
-@if (mostrarQR) {
-  <div class="modal fade show" style="display: block;" tabindex="-1" aria-labelledby="qrPaymentModalLabel">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="qrPaymentModalLabel">Pago con QR</h5>
-          <button type="button" class="btn-close" (click)="onPaymentFailure()"></button>
-        </div>
-        <div class="modal-body">
-          <app-qr-payment
-            [amount]="total"
-            [description]="'Pago de compra en Mi Tienda'"
-            (paymentSuccess)="onPaymentSuccess($event)"
-            (paymentFailure)="onPaymentFailure($event)">
-          </app-qr-payment>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="modal-backdrop fade show"></div>
-}
